@@ -1,0 +1,15 @@
+# secret keys - NEVER commit these
+claude_key.txt
+gh_token.txt
+serp_key.txt
+
+# personal save data
+catches.db
+
+# runtime / junk
+__pycache__/
+*.pyc
+*.bak
+*.log
+capture.jpg
+pokedex.log
