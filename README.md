@@ -9,7 +9,6 @@
 ![model](https://img.shields.io/badge/AI-MobileNetV2_int8-FF6F00?style=flat-square&logo=tensorflow)
 ![accuracy](https://img.shields.io/badge/accuracy-95.8%25-3DDC84?style=flat-square)
 ![pokemon](https://img.shields.io/badge/Pokédex-1025_entries-A78BFA?style=flat-square)
-![license](https://img.shields.io/badge/license-MIT-blue?style=flat-square)
 ![challenge](https://img.shields.io/badge/Arduino_Physical_AI_Challenge-2026-CC0000?style=flat-square)
 
 > A real handheld Pokédex with on-device AI, a voice assistant, and camera-based Pokémon recognition — built on the Arduino UNO Q for the **Arduino Physical AI Challenge India 2026**.
@@ -57,9 +56,6 @@ See the [**Repository Map**](https://jzofalltrades.github.io/Q-dex/#repo) for ev
 
 **1 month** to build from scratch. With this guide, the code, and copy-paste commands: **under a week** to replicate.
 
-## 📜 License
-
-MIT — see [LICENSE](LICENSE). Fan-made educational project, not affiliated with Nintendo / Creatures Inc. / Game Freak.
 
 ## 👤 Built by
 
