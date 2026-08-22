@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Q-dexter — Build Guide | Arduino Physical AI Challenge India 2026</title>
+<title>Q-dex — Build Guide | Arduino Physical AI Challenge India 2026</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 
@@ -150,7 +150,7 @@ footer a{color:var(--red);text-decoration:none}
 <body>
 
 <nav>
-  <a class="nl" href="#top">Q-DEXTER</a>
+  <a class="nl" href="#top">Q-DEX</a>
   <ul class="nav-links">
     <li><a href="#overview">Overview</a></li>
     <li><a href="#innovation">Innovation</a></li>
@@ -165,6 +165,7 @@ footer a{color:var(--red);text-decoration:none}
     <li><a href="#test">Validation</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
     <li><a href="#repo">Repo Map</a></li>
+    <li><a href="features.html" style="color:var(--green);font-weight:700">◆ Features</a></li>
     <li><a href="physical-ai.html" style="color:var(--blue);font-weight:700">◆ Physical AI</a></li>
     <li><a href="viewer.html" style="color:var(--gold);font-weight:700">◆ 3D Model</a></li>
   </ul>
@@ -172,7 +173,7 @@ footer a{color:var(--red);text-decoration:none}
 
 <section class="hero" id="top">
   <div class="eyebrow">Arduino Physical AI Challenge India 2026 · Gaming, Robotics &amp; Interactive AI</div>
-  <h1>Build Your Own<br/><span>Real Pokédex</span><br/>— Q-dexter</h1>
+  <h1>Build Your Own<br/><span>Real Pokédex</span><br/>— Q-dex</h1>
   <p class="hsub">
     This guide walks you through your childhood dream — catching a Pokémon, registering it in your
     very own Pokédex, and living the life of a real trainer. No emulator. No phone app.
@@ -192,9 +193,9 @@ footer a{color:var(--red);text-decoration:none}
   <div class="stat"><span class="n">1025</span><span class="l">Pokémon DB</span></div>
   <div class="stat"><span class="n">1</span><span class="l">Processor</span></div>
   <div class="stat"><span class="n">72</span><span class="l">Badges · 9 Regions</span></div>
-  <div class="stat"><span class="n">10</span><span class="l">Physical Buttons</span></div>
-  <div class="stat"><span class="n">1 month</span><span class="l">Original Build</span></div>
-  <div class="stat"><span class="n">&lt;1 week</span><span class="l">To Replicate</span></div>
+  <div class="stat"><span class="n">9</span><span class="l">Physical Buttons</span></div>
+  <div class="stat"><span class="n">2 months</span><span class="l">Original Build</span></div>
+  <div class="stat"><span class="n">&lt;2 weeks</span><span class="l">To Replicate</span></div>
 </div>
 
 <main class="wrap">
@@ -202,7 +203,7 @@ footer a{color:var(--red);text-decoration:none}
 <div class="toc">
   <h2>Contents</h2>
   <ol>
-    <li><a href="#overview">What Q-dexter Is</a></li>
+    <li><a href="#overview">What Q-dex Is</a></li>
     <li><a href="#innovation">Why We Built It This Way</a></li>
     <li><a href="#arch">System Architecture</a></li>
     <li><a href="#bom">Bill of Materials</a></li>
@@ -220,10 +221,10 @@ footer a{color:var(--red);text-decoration:none}
 
 <!-- ════ OVERVIEW ════ -->
 <section class="sec" id="overview">
-  <div class="sh"><div class="snum">01</div><h2>What Q-dexter Is</h2></div>
+  <div class="sh"><div class="snum">01</div><h2>What Q-dex Is</h2></div>
 
   <p>
-    Q-dexter is a real, handheld Pokédex — not a simulation, not a phone app. Point it at a Pokémon
+    Q-dex is a real, handheld Pokédex — not a simulation, not a phone app. Point it at a Pokémon
     card or figure, press <strong>SCAN</strong>, and an on-device neural network identifies it,
     registers it to your trainer profile, awards XP, and unlocks badges. Press <strong>OAK</strong>
     and ask a question out loud; Professor Oak answers back in his own voice.
@@ -237,7 +238,7 @@ footer a{color:var(--red);text-decoration:none}
 
   <div class="grid">
     <div class="card"><div class="ic">🖥️</div><h3>Display Layer</h3><p>Waveshare 2.8" HDMI IPS driven directly off the UNO Q's HDMI-out. Zero driver work.</p></div>
-    <div class="card"><div class="ic">🕹️</div><h3>Input Layer</h3><p>ESP32-C3 satellite MCU polls 10 buttons and streams events over USB serial.</p></div>
+    <div class="card"><div class="ic">🕹️</div><h3>Input Layer</h3><p>ESP32-C3 satellite MCU polls 9 buttons and streams events over USB serial.</p></div>
     <div class="card"><div class="ic">🧠</div><h3>Intelligence Layer</h3><p>MobileNetV2 vision + whisper.cpp speech, both running locally on the UNO Q.</p></div>
     <div class="card"><div class="ic">🖨️</div><h3>Physical Layer</h3><p>Fusion 360 enclosure: hinged lid, flush button caps, dome lens, press-fit inserts.</p></div>
   </div>
@@ -246,7 +247,7 @@ footer a{color:var(--red);text-decoration:none}
     <div class="co-ic">🎯</div>
     <div class="co-b">
       <strong>Who this guide is for</strong>
-      <p>Anyone with a 3D printer and basic soldering skills. Every command is copy-pasteable.
+      <p>Anyone who wants to build their own Pokédex and has basic soldering and electronics skills. Every command is copy-pasteable.
       Every phase ends with a verification checkpoint so you know it works before moving on —
       no debugging four problems at once.</p>
     </div>
@@ -266,8 +267,8 @@ footer a{color:var(--red);text-decoration:none}
   <p>
     The Arduino UNO Q is a Linux board. Linux is not real-time: polling GPIO from Python means
     missed button presses whenever the scheduler is busy running inference. So the UNO Q does
-    <em>zero</em> GPIO. An ESP32-C3 Super Mini polls all 10 buttons at a steady 50 Hz and streams
-    single-byte events over USB serial. The UNO Q reads those bytes in a daemon thread and drops
+    <em>zero</em> GPIO. An ESP32-C3 Super Mini polls all 9 buttons at a steady 50 Hz and streams
+    a keyword per press over USB serial. The UNO Q reads those events in a daemon thread and drops
     them into a queue.
   </p>
   <p>
@@ -275,11 +276,20 @@ footer a{color:var(--red);text-decoration:none}
     This is the single most important architectural choice in the build.
   </p>
 
-  <h4>Decision 2 — Run the AI on-device, not in the cloud</h4>
+  <h4>Decision 2 — Two recognition paths: on-device AND cloud</h4>
   <p>
-    Both the vision model (MobileNetV2 via <span class="tag">ai_edge_litert</span>) and the speech
-    model (whisper.cpp, tiny.en) run locally on the UNO Q. No round trip, no API latency, no
-    connectivity requirement for the core scan loop. A real Pokédex works in a cave.
+    Q-dex identifies Pokémon two ways, and keeping both is deliberate. The
+    <strong>Reverse Image Version</strong> uploads the camera photo and queries Google Lens
+    (via SerpAPI) — powerful, covering all 1025 Pokémon, but it needs an internet connection.
+    The <strong>PhyAI Challenge</strong> runs our own MobileNetV2 vision model
+    (via <span class="tag">ai_edge_litert</span>) <em>entirely on the UNO Q</em> — only four
+    Pokémon so far, but no connection, no latency, no per-use cost. The speech model
+    (whisper.cpp, tiny.en) for Professor Oak also runs locally.
+  </p>
+  <p>
+    The cloud path gives breadth; the on-device path gives independence and proves the "Physical AI"
+    concept — intelligence computed on the device itself. Having both means the Pokédex is powerful
+    when online and still useful in a cave.
   </p>
 
   <h4>Decision 3 — Make the enclosure a functional part, not a shell</h4>
@@ -324,17 +334,17 @@ footer a{color:var(--red);text-decoration:none}
       <text x="107" y="32" text-anchor="middle" font-size="9" fill="#5A5A6A" letter-spacing="1">PHYSICAL INPUT</text>
 
       <rect x="30" y="55" width="155" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
-      <text x="107" y="76" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">10× Tactile Buttons</text>
+      <text x="107" y="76" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">9× Tactile Buttons</text>
       <text x="107" y="92" text-anchor="middle" font-size="8" fill="#8C8C9E">D-pad ×4 · Action ×6</text>
 
       <rect x="30" y="120" width="155" height="58" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
       <text x="107" y="141" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">ESP32-C3 Super Mini</text>
       <text x="107" y="156" text-anchor="middle" font-size="8" fill="#8C8C9E">50 Hz poll · debounce</text>
-      <text x="107" y="170" text-anchor="middle" font-size="8" fill="#5A5A6A">1-byte event encode</text>
+      <text x="107" y="170" text-anchor="middle" font-size="8" fill="#5A5A6A">keyword event encode</text>
 
       <rect x="30" y="192" width="155" height="46" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
-      <text x="107" y="211" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">Shoulder LED</text>
-      <text x="107" y="226" text-anchor="middle" font-size="8" fill="#8C8C9E">Status · under dome lens</text>
+      <text x="107" y="211" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">WS2812 lens LED</text>
+      <text x="107" y="226" text-anchor="middle" font-size="8" fill="#8C8C9E">blinks teal when speaking</text>
 
       <line x1="107" y1="107" x2="107" y2="118" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
       <line x1="107" y1="190" x2="107" y2="180" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
@@ -424,51 +434,96 @@ footer a{color:var(--red);text-decoration:none}
       <line x1="613" y1="372" x2="525" y2="372" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
       <text x="569" y="365" text-anchor="middle" font-size="7" fill="#3DDC84">5V</text>
     </svg>
-    <div class="dg-cap">Fig. 1 — Q-dexter full system architecture. Green = input/power, yellow = serial, blue = vision/display, purple = audio.</div>
+    <div class="dg-cap">Fig. 1 — Q-dex full system architecture. Green = input/power, yellow = serial, blue = vision/display, purple = audio.</div>
   </div>
 
   <h3>Runtime data flow — the SCAN action</h3>
-  <p>This is the critical path. Every millisecond here is user-visible.</p>
+  <p>
+    Pressing SCAN can take one of <strong>two paths</strong>, depending on which mode you are in —
+    and this split is the core of the project. Both start the same way (a button byte from the
+    ESP32 reaches the app), then diverge:
+  </p>
 
+  <h4 style="font-size:.95rem;margin-top:1.2rem">Path 1 — Reverse Image Version (cloud, all 1025 Pokémon)</h4>
   <div class="dg">
     <svg viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg">
       <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#CC0000"/></marker></defs>
-      <g font-size="8.5" fill="#8C8C9E" text-anchor="middle">
-        <rect x="5" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
-        <text x="60" y="57" font-size="9.5" fill="#3DDC84" font-weight="700">SCAN pressed</text>
-        <text x="60" y="72">ESP32 → byte 'C'</text>
+      <g font-size="8.2" fill="#8C8C9E" text-anchor="middle">
+        <rect x="5" y="35" width="105" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+        <text x="57" y="55" font-size="9" fill="#3DDC84" font-weight="700">SCAN pressed</text>
+        <text x="57" y="70">capture frame</text>
 
-        <rect x="145" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
-        <text x="200" y="57" font-size="9.5" fill="#FFD233" font-weight="700">Queue → loop</text>
-        <text x="200" y="72">state = SCANNING</text>
+        <rect x="135" y="35" width="105" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="187" y="55" font-size="9" fill="#3B9EFF" font-weight="700">Upload photo</text>
+        <text x="187" y="70">to GitHub (raw URL)</text>
 
-        <rect x="285" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
-        <text x="340" y="57" font-size="9.5" fill="#3B9EFF" font-weight="700">Capture frame</text>
-        <text x="340" y="72">/dev/video0</text>
+        <rect x="265" y="35" width="105" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="317" y="55" font-size="9" fill="#3B9EFF" font-weight="700">Google Lens</text>
+        <text x="317" y="70">via SerpAPI</text>
 
-        <rect x="425" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
-        <text x="480" y="57" font-size="9.5" fill="#3B9EFF" font-weight="700">MobileNetV2</text>
-        <text x="480" y="72">224×224 → top-3</text>
+        <rect x="395" y="35" width="105" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+        <text x="447" y="55" font-size="9" fill="#FFD233" font-weight="700">Match name</text>
+        <text x="447" y="70">→ DB lookup</text>
 
-        <rect x="565" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
-        <text x="620" y="57" font-size="9.5" fill="#FFD233" font-weight="700">DB lookup</text>
-        <text x="620" y="72">species record</text>
+        <rect x="525" y="35" width="105" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+        <text x="577" y="55" font-size="9" fill="#FFD233" font-weight="700">Show entry</text>
+        <text x="577" y="70">speak name</text>
 
-        <rect x="695" y="35" width="100" height="52" rx="6" fill="#141417" stroke="#CC0000" stroke-width="1.5"/>
-        <text x="745" y="57" font-size="9.5" fill="#CC0000" font-weight="700">Register</text>
-        <text x="745" y="72">+XP · badge</text>
+        <rect x="655" y="35" width="100" height="52" rx="6" fill="#141417" stroke="#CC0000" stroke-width="1.5"/>
+        <text x="705" y="55" font-size="9" fill="#CC0000" font-weight="700">Register</text>
+        <text x="705" y="70">+XP · badge</text>
       </g>
       <g stroke="#CC0000" stroke-width="1.8" marker-end="url(#a2)">
-        <line x1="117" y1="61" x2="141" y2="61"/>
-        <line x1="257" y1="61" x2="281" y2="61"/>
-        <line x1="397" y1="61" x2="421" y2="61"/>
-        <line x1="537" y1="61" x2="561" y2="61"/>
-        <line x1="677" y1="61" x2="691" y2="61"/>
+        <line x1="112" y1="61" x2="131" y2="61"/>
+        <line x1="242" y1="61" x2="261" y2="61"/>
+        <line x1="372" y1="61" x2="391" y2="61"/>
+        <line x1="502" y1="61" x2="521" y2="61"/>
+        <line x1="632" y1="61" x2="651" y2="61"/>
       </g>
-      <text x="400" y="112" text-anchor="middle" font-size="8" fill="#5A5A6A">Inference runs in a worker thread — the UI keeps rendering a scan animation throughout</text>
+      <text x="400" y="112" text-anchor="middle" font-size="8" fill="#5A5A6A">Needs internet · recognises any of the 1025 Pokémon · this path counts toward XP and badges</text>
     </svg>
-    <div class="dg-cap">Fig. 2 — SCAN pipeline. Vision inference is threaded so the event loop never blocks.</div>
+    <div class="dg-cap">Fig. 2a — Reverse Image Version: camera → GitHub → Google Lens → Pokédex entry.</div>
   </div>
+
+  <h4 style="font-size:.95rem;margin-top:1.4rem">Path 2 — PhyAI Challenge (on-device, offline)</h4>
+  <div class="dg">
+    <svg viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg">
+      <g font-size="8.2" fill="#8C8C9E" text-anchor="middle">
+        <rect x="5" y="35" width="120" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+        <text x="65" y="55" font-size="9" fill="#3DDC84" font-weight="700">Live camera</text>
+        <text x="65" y="70">/dev/video0</text>
+
+        <rect x="155" y="35" width="120" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="215" y="55" font-size="9" fill="#3B9EFF" font-weight="700">Preprocess</text>
+        <text x="215" y="70">160×160 · uint8</text>
+
+        <rect x="305" y="35" width="120" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="365" y="55" font-size="9" fill="#3B9EFF" font-weight="700">MobileNetV2</text>
+        <text x="365" y="70">int8 · on UNO Q</text>
+
+        <rect x="455" y="35" width="120" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+        <text x="515" y="55" font-size="9" fill="#FFD233" font-weight="700">argmax + conf</text>
+        <text x="515" y="70">threshold 60%</text>
+
+        <rect x="605" y="35" width="150" height="52" rx="6" fill="#141417" stroke="#CC0000" stroke-width="1.5"/>
+        <text x="680" y="55" font-size="9" fill="#CC0000" font-weight="700">Show name live</text>
+        <text x="680" y="70">demo — no XP/badge</text>
+      </g>
+      <g stroke="#CC0000" stroke-width="1.8" marker-end="url(#a2)">
+        <line x1="127" y1="61" x2="151" y2="61"/>
+        <line x1="277" y1="61" x2="301" y2="61"/>
+        <line x1="427" y1="61" x2="451" y2="61"/>
+        <line x1="577" y1="61" x2="601" y2="61"/>
+      </g>
+      <text x="400" y="112" text-anchor="middle" font-size="8" fill="#5A5A6A">No internet · recognises 4 Pokémon · runs continuously ~2×/sec · demo mode, does not affect progress</text>
+    </svg>
+    <div class="dg-cap">Fig. 2b — PhyAI Challenge: the on-device model, computed entirely on the UNO Q.</div>
+  </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    Both paths run their heavy work in a worker thread, so the event loop keeps rendering a scan
+    animation and never blocks. The reverse-image path is the primary one and advances trainer
+    progress; the on-device path is a demonstration of true Physical AI.
+  </p>
 </section>
 
 <!-- ════ BOM ════ -->
@@ -476,93 +531,88 @@ footer a{color:var(--red);text-decoration:none}
   <div class="sh"><div class="snum">04</div><h2>Bill of Materials</h2></div>
 
   <p>
-    Every component needed for one complete Q-dexter. Prices are indicative INR retail
-    (Robu.in / Robokits / Amazon India, mid-2026) and will vary — treat them as budgeting
-    guidance, not quotes.
+    Every component needed for one complete Q-dex. Prices are the actual INR retail prices paid
+    (Robu.in / Zbotic / Amazon India, 2026) with product links where available. Prices will vary
+    over time — treat them as a real-world budgeting guide.
   </p>
 
   <h4>A · Core Electronics</h4>
   <div class="tbl-scroll">
   <table class="tbl">
-    <thead><tr><th>#</th><th>Component</th><th>Spec / Part</th><th>Qty</th><th>~₹ Each</th><th>Notes</th></tr></thead>
+    <thead><tr><th>#</th><th>Component</th><th>Spec / Part</th><th>Qty</th><th>~₹</th><th>Link</th></tr></thead>
     <tbody>
-      <tr><td>A1</td><td>Arduino UNO Q</td><td>Linux SBC, HDMI-out, USB-A ×2</td><td class="q">1</td><td class="q">—</td><td class="n">Main compute. Runs Ubuntu 24.</td></tr>
-      <tr><td>A2</td><td>Waveshare 2.8" HDMI LCD (H)</td><td>640×480 IPS, HDMI + micro-USB</td><td class="q">1</td><td class="q">2,800</td><td class="n">Plug-and-play over HDMI, no driver.</td></tr>
-      <tr><td>A3</td><td>ESP32-C3 Super Mini</td><td>RISC-V, USB-C, 11 usable GPIO</td><td class="q">1</td><td class="q">250</td><td class="n">Keypad controller only.</td></tr>
-      <tr><td>A4</td><td>USB Camera Module</td><td>UVC-compatible, ≥2 MP</td><td class="q">1</td><td class="q">900</td><td class="n">Must be UVC — no proprietary drivers.</td></tr>
-      <tr><td>A5</td><td>USB PnP Sound Card</td><td>C-Media CM108 or equivalent</td><td class="q">1</td><td class="q">300</td><td class="n">Required — onboard audio is insufficient.</td></tr>
-      <tr><td>A6</td><td>Mini USB Microphone</td><td>Omnidirectional, ALSA-compatible</td><td class="q">1</td><td class="q">250</td><td class="n">Plugs into A5.</td></tr>
-      <tr><td>A7</td><td>Mini Speaker 8Ω 2W</td><td>28–40 mm driver</td><td class="q">1</td><td class="q">150</td><td class="n">Professor Oak TTS output.</td></tr>
-      <tr><td>A8</td><td>Powered USB Hub</td><td>4-port, external 5 V supply</td><td class="q">1</td><td class="q">700</td><td class="n">Critical — see power note below.</td></tr>
+      <tr><td>A1</td><td>Arduino UNO Q</td><td>4&nbsp;GB RAM / 32&nbsp;GB eMMC, Linux SBC (ABX00173)</td><td class="q">1</td><td class="q">9,039</td><td><a href="https://robu.in/product/official-arduino-uno-q-4gb-single-board-computer-abx00173/" target="_blank" rel="noopener">robu.in</a></td></tr>
+      <tr><td>A2</td><td>Waveshare 2.8" HDMI IPS LCD</td><td>640×480 IPS, HDMI + USB touch</td><td class="q">1</td><td class="q">5,039</td><td><a href="https://robu.in/product/waveshare-2-8inch-hdmi-ips-lcd-display/" target="_blank" rel="noopener">robu.in</a></td></tr>
+      <tr><td>A3</td><td>ESP32-C3 Super Mini</td><td>RISC-V, USB-C — the keypad controller</td><td class="q">1</td><td class="q">300</td><td class="n">local / online</td></tr>
+      <tr><td>A4</td><td>USB Camera (OV5693 5MP)</td><td>USB UVC, auto-focus (fixed-focus also works)</td><td class="q">1</td><td class="q">2,718</td><td><a href="https://zbotic.in/product/waveshare-ov5693-5mp-usb-camera-b-fixed-focus-auto-focusing/" target="_blank" rel="noopener">zbotic.in</a></td></tr>
+      <tr><td>A5</td><td>USB Sound Card</td><td>5.1-channel USB audio (mic + speaker on one dongle)</td><td class="q">1</td><td class="q">~350</td><td><a href="https://robu.in/product/5-1-channel-usb-sound-card-for-raspberry-pi-and-computers/" target="_blank" rel="noopener">robu.in</a></td></tr>
+      <tr><td>A6</td><td>PAM8403 Amplifier</td><td>Class-D 3W+3W audio amp for the speaker</td><td class="q">1</td><td class="q">~80</td><td class="n">local / online</td></tr>
+      <tr><td>A7</td><td>Speaker 8Ω</td><td>Small driver for Professor Oak's voice</td><td class="q">1</td><td class="q">~120</td><td class="n">local / online</td></tr>
+      <tr><td>A8</td><td>USB Hub (multiport)</td><td>Zebronics Type-C multiport — feeds camera, sound, ESP32</td><td class="q">1–2</td><td class="q">~1,200</td><td><a href="https://www.amazon.in/dp/B0D3B1GS7B" target="_blank" rel="noopener">amazon.in</a></td></tr>
     </tbody>
   </table>
   </div>
 
-  <h4>B · Passives, Buttons &amp; Wiring</h4>
+  <h4>B · Passives, LEDs &amp; Wiring</h4>
   <div class="tbl-scroll">
   <table class="tbl">
-    <thead><tr><th>#</th><th>Component</th><th>Spec</th><th>Qty</th><th>~₹ Total</th><th>Notes</th></tr></thead>
+    <thead><tr><th>#</th><th>Component</th><th>Spec</th><th>Qty</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>B1</td><td>Tactile Push Button</td><td>6×6×5 mm, 4-pin THT</td><td class="q">10</td><td class="q">60</td><td class="n">4 D-pad + 6 action.</td></tr>
-      <tr><td>B2</td><td>LED 5 mm</td><td>Green, diffused</td><td class="q">1</td><td class="q">5</td><td class="n">Shoulder status indicator.</td></tr>
-      <tr><td>B3</td><td>Resistor 330 Ω</td><td>¼ W, 5%</td><td class="q">1</td><td class="q">2</td><td class="n">LED current limit @ 3.3 V.</td></tr>
-      <tr><td>B4</td><td>Resistor 10 kΩ</td><td>¼ W, 5%</td><td class="q">10</td><td class="q">20</td><td class="n">Optional external pull-ups (see §05).</td></tr>
-      <tr><td>B5</td><td>Capacitor 100 nF</td><td>Ceramic, 50 V</td><td class="q">10</td><td class="q">25</td><td class="n">Hardware debounce across each button.</td></tr>
-      <tr><td>B6</td><td>Silicone Hookup Wire</td><td>26 AWG, 3 colours</td><td class="q">3 m</td><td class="q">180</td><td class="n">Flexible — critical inside a hinged shell.</td></tr>
-      <tr><td>B7</td><td>Mini HDMI → HDMI Cable</td><td>30 cm, flexible</td><td class="q">1</td><td class="q">350</td><td class="n">Short length matters for routing.</td></tr>
-      <tr><td>B8</td><td>USB-A → USB-C Cable</td><td>20 cm</td><td class="q">1</td><td class="q">150</td><td class="n">ESP32-C3 → UNO Q serial link.</td></tr>
-      <tr><td>B9</td><td>USB-C Power Adapter</td><td>5 V 3 A minimum</td><td class="q">1</td><td class="q">500</td><td class="n">Do not undersize.</td></tr>
-      <tr><td>B10</td><td>Heat-shrink Tubing</td><td>Assorted 2–5 mm</td><td class="q">1 set</td><td class="q">100</td><td class="n">All solder joints.</td></tr>
-    </tbody>
-  </table>
-  </div>
-
-  <h4>C · Mechanical &amp; 3D Printed</h4>
-  <div class="tbl-scroll">
-  <table class="tbl">
-    <thead><tr><th>#</th><th>Part</th><th>Material</th><th>Qty</th><th>Print Notes</th></tr></thead>
-    <tbody>
-      <tr><td>C1</td><td>Left Shell</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">0.2 mm layer, 20% infill, supports at hinge.</td></tr>
-      <tr><td>C2</td><td>Right Shell</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Same as C1. Houses ESP32 + buttons.</td></tr>
-      <tr><td>C3</td><td>Lid</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Print hinge-side down.</td></tr>
-      <tr><td>C4</td><td>LidFacePlate</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Recessed field z = −9…−7 mm. Do not scale.</td></tr>
-      <tr><td>C5</td><td>BackPlate (outer cover)</td><td class="q">PLA — Dark Grey</td><td class="q">1</td><td class="n">Snap-fit rear cover with perimeter clips.</td></tr>
-      <tr><td>C6</td><td>Button Caps</td><td class="q">PLA — White/Yellow</td><td class="q">6</td><td class="n">0.12 mm layer, 0% infill, 4 walls. Top at z = −3.7 mm.</td></tr>
-      <tr><td>C7</td><td>D-Pad Cap</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Engraved triangles face up. No supports.</td></tr>
-      <tr><td>C8</td><td>Dome Lens</td><td class="q">PETG — Clear</td><td class="q">1</td><td class="n">0.12 mm, 100% infill for optical clarity.</td></tr>
-      <tr><td>C9</td><td>Display Bezel</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Frames the 2.8" panel.</td></tr>
-      <tr><td>C10</td><td>UNO Q Mount</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Standalone body; board seats rotated 90°.</td></tr>
-      <tr><td>C11</td><td>Right-Panel Dummy Inserts</td><td class="q">PLA — Assorted</td><td class="q">18</td><td class="n">Retention flanges — press fit, no glue.</td></tr>
-      <tr><td>C12</td><td>Hinge Pin</td><td class="q">M3 × 20 mm bolt</td><td class="q">1</td><td class="n">Through all knuckles.</td></tr>
-      <tr><td>C13</td><td>Screws M2.5 × 6 mm</td><td class="q">Steel</td><td class="q">4</td><td class="n">UNO Q to mount.</td></tr>
-      <tr><td>C14</td><td>Screws M3 × 8 mm</td><td class="q">Steel</td><td class="q">6</td><td class="n">Shell closure at bosses.</td></tr>
+      <tr><td>B1</td><td>Tactile Push Buttons</td><td>6×6 mm, 4-pin THT</td><td class="q">9</td><td class="n">4 D-pad + 5 action buttons. Wired directly to ESP32 GPIO.</td></tr>
+      <tr><td>B2</td><td>Indicator LEDs</td><td>Red, Yellow, Blue (5&nbsp;mm)</td><td class="q">3</td><td class="n">Top status lights, like the real Pokédex. On the 5&nbsp;V rail.</td></tr>
+      <tr><td>B3</td><td>WS2812 (NeoPixel)</td><td>Single addressable RGB LED</td><td class="q">1</td><td class="n">The lens LED — blinks teal (0,128,128) when Oak / Q-dex speaks. On GPIO&nbsp;21.</td></tr>
+      <tr><td>B4</td><td>Resistors 1&nbsp;kΩ</td><td>¼&nbsp;W</td><td class="q">3</td><td class="n">One per indicator LED.</td></tr>
+      <tr><td>B5</td><td>HDMI → HDMI Cable</td><td>Short, flexible</td><td class="q">1</td><td class="n">UNO Q HDMI-out to the display. Keep it short (see note).</td></tr>
+      <tr><td>B6</td><td>USB-C → USB-C Cable</td><td>For power</td><td class="q">1</td><td class="n">Power into the UNO Q.</td></tr>
+      <tr><td>B7</td><td>Hookup Wire + Heat-shrink</td><td>Assorted</td><td class="q">—</td><td class="n">Flexible wire matters inside a hinged shell.</td></tr>
     </tbody>
   </table>
   </div>
 
   <div class="co d">
-    <div class="co-ic">⚡</div>
+    <div class="co-ic">🔧</div>
     <div class="co-b">
-      <strong>Power budget — read this before buying</strong>
-      <p>The camera, sound card and mic together can draw over 1 A in bursts. Running them
-      from the UNO Q's own USB ports on a single 3 A supply causes xHCI host-controller
-      resets — the symptom is USB devices silently vanishing mid-session. Item <strong>A8
-      (powered USB hub)</strong> is not optional. Put the camera and sound card on the hub;
-      keep only the ESP32-C3 on a direct UNO Q port.</p>
+      <strong>Wiring choices worth knowing</strong>
+      <p>The buttons are wired <em>directly</em> to the ESP32-C3 GPIOs (active-low, using the chip's
+      internal pull-ups). A series capacitor and a 1N4148 diode per line are <em>recommended</em> for
+      cleaner debounce and protection, but this build does not use them and works fine without.
+      For a tidier future version, a <strong>3×3 button matrix</strong> would need fewer GPIO pins —
+      if a custom PCB is ever made for this, that is the way to go.</p>
+      <p>The three indicator LEDs are wired directly to the <strong>5&nbsp;V rail and ground</strong>
+      (the same rail feeding the PAM8403 amp), not through the ESP32 — driving them from the board
+      was power-hungry enough to cause restarts. One side effect: without a smoothing capacitor the
+      indicator LEDs flicker slightly when the WS2812 or audio is active. A capacitor across the rail
+      fixes the flicker.</p>
     </div>
   </div>
 
-  <h4>Budget summary</h4>
+  <h4>C · Mechanical &amp; 3D-Printed</h4>
+  <div class="tbl-scroll">
   <table class="tbl">
-    <thead><tr><th>Group</th><th>Approx. Cost</th></tr></thead>
+    <thead><tr><th>#</th><th>Part / Item</th><th>Material / Spec</th><th>Notes</th></tr></thead>
     <tbody>
-      <tr><td>A · Core electronics (excl. UNO Q)</td><td class="q">₹ 5,350</td></tr>
-      <tr><td>B · Passives &amp; wiring</td><td class="q">₹ 1,392</td></tr>
-      <tr><td>C · Filament (~350 g PLA + 30 g PETG)</td><td class="q">₹ 700</td></tr>
-      <tr><td>C · Fasteners</td><td class="q">₹ 100</td></tr>
+      <tr><td>C1</td><td>Enclosure parts</td><td class="q">PLA (Red shell)</td><td class="n">Tub, backplate, lid, bezel, button caps, D-pad, mounts. 0.20&nbsp;mm layers.</td></tr>
+      <tr><td>C2</td><td>Dome Lens</td><td class="q">PETG — Clear</td><td class="n">Printed in clear PETG for the light-up lens; everything else is PLA.</td></tr>
+      <tr><td>C3</td><td>Brass heat-set inserts</td><td class="q">M2 and M3</td><td class="n">Melted into the plastic for screw threads.</td></tr>
+      <tr><td>C4</td><td>Screws</td><td class="q">M2×3, M2×6, M2×8</td><td class="n">Sizes to match your inserts and boss depths.</td></tr>
+      <tr><td>C5</td><td>Hinge</td><td class="q">No separate hinge pin</td><td class="n">The hinge is part of the printed geometry — no metal pin needed.</td></tr>
+      <tr><td>C6</td><td>Tools</td><td class="q">Screwdriver set, soldering iron</td><td class="n">The ESP32 + keypad wiring requires soldering.</td></tr>
     </tbody>
-    <tfoot><tr><td>Total (excluding Arduino UNO Q)</td><td>≈ ₹ 7,542</td></tr></tfoot>
   </table>
+  </div>
+
+  <div class="co">
+    <div class="co-ic">💰</div>
+    <div class="co-b">
+      <strong>Budget summary</strong>
+      <p>The three big-ticket items dominate the cost: the Arduino UNO Q (₹9,039), the Waveshare
+      2.8" display (₹5,039), and the OV5693 camera (₹2,718). Everything else — ESP32-C3 (₹300),
+      sound card, amp, speaker, LEDs, resistors, cables, hub, print material, inserts and screws —
+      adds roughly ₹2,000–2,500 more. A realistic all-in figure is around
+      <strong>₹19,000–20,000</strong>, most of it in those three core parts.</p>
+    </div>
+  </div>
+
 </section>
 
 <!-- ════ SCHEMATICS ════ -->
@@ -570,8 +620,8 @@ footer a{color:var(--red);text-decoration:none}
   <div class="sh"><div class="snum">05</div><h2>Circuit Schematics</h2></div>
 
   <p>
-    There are only two circuits in this build: the keypad matrix-free direct-GPIO wiring on the
-    ESP32-C3, and the USB/HDMI interconnect on the UNO Q. Both are given here at pin level.
+    There are two parts to the wiring: the ESP32-C3 side (9 buttons wired directly to GPIO, plus the
+    WS2812 lens LED), and the USB/HDMI interconnect on the UNO Q. Both are given here at pin level.
   </p>
 
   <h3>5.1 — ESP32-C3 keypad schematic</h3>
@@ -579,8 +629,9 @@ footer a{color:var(--red);text-decoration:none}
   <p>
     Each button connects its GPIO pin to <strong>GND</strong>. The firmware enables the ESP32's
     internal pull-up, so an unpressed button reads <span class="tag">HIGH</span> and a pressed
-    button reads <span class="tag">LOW</span> (active-low). A 100 nF capacitor across each button
-    suppresses contact bounce in hardware; the firmware adds a software debounce window on top.
+    button reads <span class="tag">LOW</span> (active-low). The firmware debounces each press in
+    software (a short delay after a press). A small capacitor across each button would suppress
+    bounce in hardware too, but this build relies on the firmware debounce and does not use them.
   </p>
 
   <div class="dg">
@@ -599,9 +650,9 @@ footer a{color:var(--red);text-decoration:none}
       <g font-size="9" fill="#C6D0F5" font-family="monospace">
         <text x="285" y="140">GPIO 0</text>
         <text x="285" y="168">GPIO 1</text>
-        <text x="285" y="196">GPIO 3</text>
-        <text x="285" y="224">GPIO 4</text>
-        <text x="285" y="252">GPIO 5</text>
+        <text x="285" y="196">GPIO 2</text>
+        <text x="285" y="224">GPIO 3</text>
+        <text x="285" y="252">GPIO 4</text>
       </g>
       <g stroke="#FFD233" stroke-width="1.5">
         <line x1="270" y1="136" x2="215" y2="136"/>
@@ -614,25 +665,24 @@ footer a{color:var(--red);text-decoration:none}
       <!-- buttons left -->
       <g>
         <rect x="150" y="126" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
-        <text x="182" y="140" text-anchor="middle" font-size="8" fill="#FFD233">SW1 · UP</text>
+        <text x="182" y="140" text-anchor="middle" font-size="8" fill="#FFD233">Select</text>
         <rect x="150" y="154" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
-        <text x="182" y="168" text-anchor="middle" font-size="8" fill="#FFD233">SW2 · DOWN</text>
+        <text x="182" y="168" text-anchor="middle" font-size="8" fill="#FFD233">Back</text>
         <rect x="150" y="182" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
-        <text x="182" y="196" text-anchor="middle" font-size="8" fill="#FFD233">SW3 · LEFT</text>
+        <text x="182" y="196" text-anchor="middle" font-size="8" fill="#FFD233">Tab</text>
         <rect x="150" y="210" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
-        <text x="182" y="224" text-anchor="middle" font-size="8" fill="#FFD233">SW4 · RIGHT</text>
+        <text x="182" y="224" text-anchor="middle" font-size="8" fill="#FFD233">Up</text>
         <rect x="150" y="238" width="65" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="182" y="252" text-anchor="middle" font-size="8" fill="#CC0000">SW5 · A</text>
+        <text x="182" y="252" text-anchor="middle" font-size="8" fill="#FFD233">Down</text>
       </g>
 
       <!-- RIGHT PINS -->
       <g font-size="9" fill="#C6D0F5" font-family="monospace" text-anchor="end">
-        <text x="485" y="140">GPIO 6</text>
-        <text x="485" y="168">GPIO 7</text>
-        <text x="485" y="196">GPIO 10</text>
-        <text x="485" y="224">GPIO 20</text>
+        <text x="485" y="140">GPIO 5</text>
+        <text x="485" y="168">GPIO 6</text>
+        <text x="485" y="196">GPIO 7</text>
+        <text x="485" y="224">GPIO 10</text>
         <text x="485" y="252">GPIO 21</text>
-        <text x="485" y="292">GPIO 2</text>
       </g>
       <g stroke="#CC0000" stroke-width="1.5">
         <line x1="500" y1="136" x2="555" y2="136"/>
@@ -645,15 +695,15 @@ footer a{color:var(--red);text-decoration:none}
 
       <g>
         <rect x="555" y="126" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="591" y="140" text-anchor="middle" font-size="8" fill="#CC0000">SW6 · B</text>
+        <text x="591" y="140" text-anchor="middle" font-size="8" fill="#CC0000">Right</text>
         <rect x="555" y="154" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="591" y="168" text-anchor="middle" font-size="8" fill="#CC0000">SW7 · START</text>
+        <text x="591" y="168" text-anchor="middle" font-size="8" fill="#CC0000">Left</text>
         <rect x="555" y="182" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="591" y="196" text-anchor="middle" font-size="8" fill="#CC0000">SW8 · SELECT</text>
+        <text x="591" y="196" text-anchor="middle" font-size="8" fill="#CC0000">Scan</text>
         <rect x="555" y="210" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="591" y="224" text-anchor="middle" font-size="8" fill="#CC0000">SW9 · SCAN</text>
+        <text x="591" y="224" text-anchor="middle" font-size="8" fill="#CC0000">Mute</text>
         <rect x="555" y="238" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
-        <text x="591" y="252" text-anchor="middle" font-size="8" fill="#CC0000">SW10 · OAK</text>
+        <text x="591" y="252" text-anchor="middle" font-size="8" fill="#3DDC84">WS2812 LED</text>
       </g>
 
       <!-- LED branch -->
@@ -675,7 +725,7 @@ footer a{color:var(--red);text-decoration:none}
         <line x1="627" y1="136" x2="660" y2="136"/><line x1="660" y1="136" x2="660" y2="330"/>
         <line x1="627" y1="164" x2="650" y2="164"/><line x1="650" y1="164" x2="650" y2="330"/>
       </g>
-      <text x="385" y="325" text-anchor="middle" font-size="8" fill="#5A5A6A">all switch commons → GND rail  ·  100 nF across each switch (not drawn)</text>
+      <text x="385" y="325" text-anchor="middle" font-size="8" fill="#5A5A6A">all switch commons → GND rail  ·  firmware debounce (no caps used)</text>
 
       <!-- GND pin from ESP -->
       <line x1="385" y1="345" x2="385" y2="330" stroke="#8C8C9E" stroke-width="2"/>
@@ -689,24 +739,51 @@ footer a{color:var(--red);text-decoration:none}
   </div>
 
   <h4>Pin assignment table</h4>
+  <p>
+    This is the exact mapping from the firmware (<span class="tag">keypad_led.ino</span>). Each button
+    connects its GPIO to <strong>GND</strong>; the ESP32's internal pull-ups make them active-low, so
+    they need <span class="tag">INPUT_PULLUP</span> — no external resistors. On each press the ESP32
+    prints a keyword over USB serial, which the app maps to an action.
+  </p>
   <div class="tbl-scroll">
   <table class="tbl">
-    <thead><tr><th>Ref</th><th>Function</th><th>ESP32-C3 GPIO</th><th>Mode</th><th>Serial Byte</th><th>Notes</th></tr></thead>
+    <thead><tr><th>#</th><th>Button</th><th>GPIO</th><th>Serial keyword</th><th>App action</th></tr></thead>
     <tbody>
-      <tr><td>SW1</td><td>D-pad UP</td><td class="q">GPIO 0</td><td>INPUT_PULLUP</td><td class="q">U</td><td class="n">Active low</td></tr>
-      <tr><td>SW2</td><td>D-pad DOWN</td><td class="q">GPIO 1</td><td>INPUT_PULLUP</td><td class="q">D</td><td class="n">Active low</td></tr>
-      <tr><td>SW3</td><td>D-pad LEFT</td><td class="q">GPIO 3</td><td>INPUT_PULLUP</td><td class="q">L</td><td class="n">Active low</td></tr>
-      <tr><td>SW4</td><td>D-pad RIGHT</td><td class="q">GPIO 4</td><td>INPUT_PULLUP</td><td class="q">R</td><td class="n">Active low</td></tr>
-      <tr><td>SW5</td><td>A · Confirm</td><td class="q">GPIO 5</td><td>INPUT_PULLUP</td><td class="q">A</td><td class="n">Active low</td></tr>
-      <tr><td>SW6</td><td>B · Back</td><td class="q">GPIO 6</td><td>INPUT_PULLUP</td><td class="q">B</td><td class="n">Active low</td></tr>
-      <tr><td>SW7</td><td>START · Menu</td><td class="q">GPIO 7</td><td>INPUT_PULLUP</td><td class="q">S</td><td class="n">Active low</td></tr>
-      <tr><td>SW8</td><td>SELECT · Profile</td><td class="q">GPIO 10</td><td>INPUT_PULLUP</td><td class="q">s</td><td class="n">Active low</td></tr>
-      <tr><td>SW9</td><td>SCAN · Camera AI</td><td class="q">GPIO 20</td><td>INPUT_PULLUP</td><td class="q">C</td><td class="n">Active low</td></tr>
-      <tr><td>SW10</td><td>OAK · Voice</td><td class="q">GPIO 21</td><td>INPUT_PULLUP</td><td class="q">O</td><td class="n">Toggle: press to start, press to stop</td></tr>
-      <tr><td>D1</td><td>Shoulder status LED</td><td class="q">GPIO 2</td><td>OUTPUT</td><td class="q">—</td><td class="n">Via 330 Ω. GPIO 2 is safe as an <em>output</em>.</td></tr>
-      <tr><td>—</td><td><strong>Reserved</strong></td><td class="q">GPIO 8, 9</td><td>—</td><td class="q">—</td><td class="n">Strapping pins. Leave unconnected.</td></tr>
+      <tr><td>1</td><td>Select</td><td class="q">GPIO 0</td><td class="q">enter</td><td class="n">Confirm / select</td></tr>
+      <tr><td>2</td><td>Back</td><td class="q">GPIO 1</td><td class="q">cancel</td><td class="n">Go back</td></tr>
+      <tr><td>3</td><td>Tab</td><td class="q">GPIO 2</td><td class="q">tab</td><td class="n">Switch tab / region</td></tr>
+      <tr><td>4</td><td>Up</td><td class="q">GPIO 3</td><td class="q">up</td><td class="n">Navigate up</td></tr>
+      <tr><td>5</td><td>Down</td><td class="q">GPIO 4</td><td class="q">down</td><td class="n">Navigate down</td></tr>
+      <tr><td>6</td><td>Right</td><td class="q">GPIO 5</td><td class="q">right</td><td class="n">Navigate right</td></tr>
+      <tr><td>7</td><td>Left</td><td class="q">GPIO 6</td><td class="q">left</td><td class="n">Navigate left</td></tr>
+      <tr><td>8</td><td>Scan</td><td class="q">GPIO 7</td><td class="q">pageleft</td><td class="n">Trigger a scan</td></tr>
+      <tr><td>9</td><td>Mute</td><td class="q">GPIO 10</td><td class="q">pageright</td><td class="n">Mute / stop audio mid-sentence</td></tr>
     </tbody>
   </table>
+  </div>
+
+  <h4 style="font-size:.95rem">The lens LED (WS2812)</h4>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Item</th><th>GPIO</th><th>Wiring</th><th>Behaviour</th></tr></thead>
+    <tbody>
+      <tr><td>WS2812 (NeoPixel) — the lens LED</td><td class="q">GPIO 21</td><td class="n">DIN → GPIO&nbsp;21, VCC → 5&nbsp;V, GND → GND</td><td class="n">Blinks teal (0,&nbsp;128,&nbsp;128) at 250&nbsp;ms while Professor Oak or Q-dex is speaking. The app sends '1' to start blinking and '0' to stop.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="co d">
+    <div class="co-ic">⚠️</div>
+    <div class="co-b">
+      <strong>Two firmware gotchas</strong>
+      <p>GPIO&nbsp;21 now drives the WS2812 LED — do not put a button there. GPIO&nbsp;2 is a strapping
+      pin; it is used here for the "tab" button and works, but do not move the LED onto it. Also:
+      because the three indicator LEDs share the 5&nbsp;V rail without a smoothing capacitor, they
+      flicker slightly when the WS2812 or audio is active — a capacitor across the rail removes the
+      flicker.</p>
+      <p><strong>This ESP32 + keypad wiring requires soldering.</strong> The full firmware is in the
+      repo as <span class="tag">keypad_led.ino</span> — flash it to the ESP32-C3 (see Phase 2).</p>
+    </div>
   </div>
 
   <h3>5.2 — UNO Q interconnect</h3>
@@ -716,7 +793,7 @@ footer a{color:var(--red);text-decoration:none}
   <table class="tbl">
     <thead><tr><th>From</th><th>Interface</th><th>To</th><th>Enumerates As</th><th>Power Source</th></tr></thead>
     <tbody>
-      <tr><td>UNO Q HDMI-out</td><td class="q">Mini HDMI</td><td>Waveshare 2.8" LCD</td><td class="q">/dev/fb0</td><td class="n">Display micro-USB → hub</td></tr>
+      <tr><td>UNO Q HDMI-out</td><td class="q">HDMI</td><td>Waveshare 2.8" LCD</td><td class="q">/dev/fb0</td><td class="n">Display micro-USB → hub</td></tr>
       <tr><td>Powered hub</td><td class="q">USB 2.0</td><td>USB Camera</td><td class="q">/dev/video0</td><td class="n">Hub external supply</td></tr>
       <tr><td>Powered hub</td><td class="q">USB 2.0</td><td>USB Sound Card</td><td class="q">plughw:1,0</td><td class="n">Hub external supply</td></tr>
       <tr><td>UNO Q USB-A</td><td class="q">USB 2.0</td><td>ESP32-C3 Super Mini</td><td class="q">/dev/ttyACM0</td><td class="n">UNO Q (low draw, safe)</td></tr>
@@ -834,7 +911,7 @@ nmcli device wifi connect "YOUR_WIFI_NAME" password "YOUR_WIFI_PASSWORD"</pre>
 
   <ol class="steps">
     <li><div class="sn">1</div><div class="sb"><strong>Connect HDMI</strong>
-      <p>Mini HDMI end into the UNO Q's HDMI-out, full HDMI end into the Waveshare input. Use the 30 cm cable — longer cables will not route cleanly inside the shell later.</p></div></li>
+      <p>HDMI end into the UNO Q's HDMI-out, full HDMI end into the Waveshare input. Use the 30 cm cable — longer cables will not route cleanly inside the shell later.</p></div></li>
     <li><div class="sn">2</div><div class="sb"><strong>Power the display separately</strong>
       <p>The Waveshare panel takes power over its own micro-USB port. Run it from the powered hub, not from the UNO Q, so display current never competes with the camera.</p></div></li>
     <li><div class="sn">3</div><div class="sb"><strong>Power the UNO Q</strong>
@@ -856,6 +933,35 @@ cat /sys/class/drm/*/status | head
 # expect at least one: connected</pre>
   </div>
 
+  <h4>Rotate the display</h4>
+  <p>
+    The Waveshare 2.8" panel comes up in <strong>vertical (portrait)</strong> orientation, but the
+    Pokédex layout is landscape. Rotate it <strong>left</strong> so the image is the right way up in
+    the shell:
+  </p>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># Rotate the connected display left (temporary, for testing)
+DISPLAY=:0 xrandr --output HDMI-1 --rotate left
+# (your output name may differ — run 'DISPLAY=:0 xrandr' to list it)</pre>
+  </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    To make the rotation permanent it is set in the display manager's startup script, so the panel
+    is always landscape from boot.
+  </p>
+
+  <div class="co d">
+    <div class="co-ic">💡</div>
+    <div class="co-b">
+      <strong>Check the display actually works first</strong>
+      <p>Even before any image appears, the display's <strong>backlight</strong> should switch on when
+      it has power — a faint even glow across the panel. If the backlight is on but you see no image,
+      the problem is the HDMI signal or rotation, not a dead panel. If the backlight is off entirely,
+      fix the display's own USB power before touching anything else. (One of our panels failed with
+      frozen blue bands — a genuinely dead display looks different from a signal problem.)</p>
+    </div>
+  </div>
+
   <h4>Render a test frame</h4>
   <div class="cb">
     <div class="cl">PYTHON — screen_test.py</div>
@@ -870,7 +976,7 @@ screen = pygame.display.set_mode((640, 480))
 screen.fill((204, 0, 0))                      # Pokedex red
 
 font = pygame.font.SysFont(None, 42)
-label = font.render("Q-DEXTER ONLINE", True, (255, 255, 255))
+label = font.render("Q-DEX ONLINE", True, (255, 255, 255))
 rect  = label.get_rect(center=(320, 240))
 screen.blit(label, rect)
 
@@ -916,80 +1022,113 @@ pygame.quit()</pre>
 
   <h3>7.1 — Firmware</h3>
   <p>
-    Flash with Arduino IDE (board: <em>ESP32C3 Dev Module</em>) or PlatformIO. The firmware does
-    three jobs: poll, debounce, encode.
+    The ESP32-C3 is flashed <strong>once</strong> and then never touched again — all application
+    logic lives on the UNO Q. I flashed it using the <strong>Arduino IDE from my laptop</strong>
+    (not from the UNO Q): connect the ESP32-C3 to the laptop over USB-C, select the board
+    <em>ESP32C3 Dev Module</em>, and before flashing set <em>Tools → USB CDC On Boot → Enabled</em>
+    and install the <em>Adafruit NeoPixel</em> library. The firmware does two jobs: read the 9
+    buttons and drive the WS2812 lens LED.
+  </p>
+
+  <div class="co d">
+    <div class="co-ic">🔌</div>
+    <div class="co-b">
+      <strong>If the upload fails ("can't connect" / "no serial data")</strong>
+      <p>The ESP32-C3 Super Mini sometimes needs to be put into bootloader mode by hand. Do this:
+      <strong>hold the BOOT button, press and release RESET, then click Upload in the IDE</strong>.
+      The moment you see "Connecting…" / "Uploading…" begin, <strong>release BOOT</strong>. If it
+      still fails, drop the upload speed to 115200. This is the single most common ESP32-C3 flashing
+      snag.</p>
+    </div>
+  </div>
+
+  <p>
+    The complete firmware is in the repo as <span class="tag">keypad_led.ino</span> — the current
+    version, with the LED support. It sends a keyword (like <span class="tag">enter</span> or
+    <span class="tag">cancel</span>) over USB serial on each press, and blinks the WS2812 teal while
+    audio plays:
   </p>
 
   <div class="cb">
-    <div class="cl">C++ — qdexter_keypad.ino</div>
-<pre>/*
- * Q-dexter Keypad Controller — ESP32-C3 Super Mini
- * Polls 10 buttons at 50 Hz, sends 1 ASCII byte per press over USB Serial.
- *
- * Wiring: each button connects its GPIO to GND.
- *         Internal pull-ups are enabled, so buttons are ACTIVE LOW.
- * Note:   GPIO 8 and 9 are strapping pins and are deliberately unused.
- */
+    <div class="cl">C++ — keypad_led.ino (ESP32-C3, in the repo)</div>
+<pre>#include &lt;Adafruit_NeoPixel.h&gt;
 
-#define NUM_BTN     10
-#define DEBOUNCE_MS 40
-#define LED_PIN      2      // safe as an output
-
-// GPIO for each button, in the same order as CODES[]
-const uint8_t PINS[NUM_BTN] = {
-   0,   1,   3,   4,   5,   6,   7,  10,  20,  21
+const int NUM_BTN = 9;
+int btnPins[NUM_BTN] = {0, 1, 2, 3, 4, 5, 6, 7, 10};
+const char* btnKeys[NUM_BTN] = {
+  "enter",     // GPIO 0  - SELECT
+  "cancel",    // GPIO 1  - BACK
+  "tab",       // GPIO 2  - TAB
+  "up",        // GPIO 3
+  "down",      // GPIO 4
+  "right",     // GPIO 5
+  "left",      // GPIO 6
+  "pageleft",  // GPIO 7  - SCAN
+  "pageright"  // GPIO 10 - MUTE
 };
+bool lastState[NUM_BTN];
 
-// Byte sent to the UNO Q when the matching button is pressed
-const char CODES[NUM_BTN] = {
-  'U', 'D', 'L', 'R', 'A', 'B', 'S', 's', 'C', 'O'
-};
-
-bool     lastStable[NUM_BTN];    // last accepted level
-uint32_t lastChange[NUM_BTN];    // millis of last accepted change
+// ---- WS2812 LED ----
+#define LED_PIN   21
+#define LED_COUNT 1
+Adafruit_NeoPixel led(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
+bool audioActive = false;      // set by shimi's '1'/'0' bytes
+bool blinkOn     = false;
+unsigned long lastBlink = 0;
+const unsigned long BLINK_MS = 250;
 
 void setup() {
   Serial.begin(115200);
-
-  for (uint8_t i = 0; i &lt; NUM_BTN; i++) {
-    pinMode(PINS[i], INPUT_PULLUP);
-    lastStable[i] = HIGH;        // released
-    lastChange[i] = 0;
+  for (int i = 0; i &lt; NUM_BTN; i++) {
+    pinMode(btnPins[i], INPUT_PULLUP);
+    lastState[i] = HIGH;
   }
-
-  pinMode(LED_PIN, OUTPUT);
-  digitalWrite(LED_PIN, HIGH);   // solid = keypad ready
+  led.begin();
+  led.setBrightness(120);
+  led.show();
 }
 
 void loop() {
-  uint32_t now = millis();
-
-  for (uint8_t i = 0; i &lt; NUM_BTN; i++) {
-    bool level = digitalRead(PINS[i]);
-
-    // ignore any change inside the debounce window
-    if (now - lastChange[i] &lt; DEBOUNCE_MS) continue;
-
-    if (level != lastStable[i]) {
-      lastStable[i] = level;
-      lastChange[i] = now;
-
-      // falling edge (HIGH -> LOW) == press
-      if (level == LOW) {
-        Serial.write(CODES[i]);
-        Serial.flush();
-      }
+  // ---- read audio on/off signal from the UNO Q ----
+  while (Serial.available() &gt; 0) {
+    char c = Serial.read();
+    if (c == '1') {
+      audioActive = true;
+    } else if (c == '0') {
+      audioActive = false;
+      blinkOn = false;
+      led.setPixelColor(0, 0, 0, 0);
+      led.show();
     }
   }
-
-  delay(20);   // 50 Hz poll
+  // ---- blink teal while audio is active ----
+  if (audioActive) {
+    unsigned long now = millis();
+    if (now - lastBlink &gt;= BLINK_MS) {
+      lastBlink = now;
+      blinkOn = !blinkOn;
+      if (blinkOn) led.setPixelColor(0, 0, 128, 128);  // teal
+      else         led.setPixelColor(0, 0, 0, 0);
+      led.show();
+    }
+  }
+  // ---- keypad ----
+  for (int i = 0; i &lt; NUM_BTN; i++) {
+    bool state = digitalRead(btnPins[i]);
+    if (lastState[i] == HIGH &amp;&amp; state == LOW) {
+      Serial.println(btnKeys[i]);
+      delay(50);  // debounce
+    }
+    lastState[i] = state;
+  }
+  delay(10);
 }</pre>
   </div>
 
   <h4>Why active-low</h4>
   <p>
     The ESP32-C3's internal pull-ups are far more reliable than its pull-downs, and wiring every
-    switch common to a single GND rail means one shared wire instead of ten routed to 3V3. Inside
+    switch common to a single GND rail means one shared wire instead of nine separate returns. Inside
     a hinged enclosure with limited wire space, that difference matters.
   </p>
 
@@ -999,99 +1138,62 @@ void loop() {
     The pygame loop drains that queue each frame. The read never blocks rendering.
   </p>
 
-  <div class="cb">
-    <div class="cl">PYTHON — serial_keypad.py</div>
-<pre>"""Keypad bridge: ESP32-C3 USB serial -> thread-safe event queue."""
+  <p>
+    In this build that reader is <span class="tag">key_serial.py</span>, run alongside the app. The
+    firmware sends a whole <em>keyword</em> per line (like <span class="tag">enter</span> or
+    <span class="tag">up</span>), so the reader reads lines, not single bytes. It maps each keyword to
+    an action the app understands and hands it over. Here is a simplified version of the idea:
+  </p>
 
-import queue
-import threading
+  <div class="cb">
+    <div class="cl">PYTHON — key_serial.py (simplified)</div>
+<pre>"""Keypad bridge: read keyword lines from the ESP32-C3 over USB serial."""
+
 import serial
 
-BAUD = 115200
-
-CODE_MAP = {
-    b'U': 'UP',    b'D': 'DOWN',  b'L': 'LEFT',   b'R': 'RIGHT',
-    b'A': 'A',     b'B': 'B',     b'S': 'START',  b's': 'SELECT',
-    b'C': 'SCAN',  b'O': 'OAK',
+# The firmware prints one of these words per button press
+KEY_MAP = {
+    "enter": "SELECT",  "cancel": "BACK",   "tab": "TAB",
+    "up": "UP",         "down": "DOWN",     "left": "LEFT",  "right": "RIGHT",
+    "pageleft": "SCAN", "pageright": "MUTE",
 }
 
+ser = serial.Serial('/dev/ttyACM0', 115200, timeout=0.1)
 
-class Keypad:
-    """Owns the serial port; exposes a non-blocking poll()."""
-
-    def __init__(self, port='/dev/ttyACM0', baud=BAUD):
-        self.port = port
-        self.baud = baud
-        self.events = queue.Queue()
-        self._stop = threading.Event()
-        self._thread = None
-
-    def start(self):
-        self._thread = threading.Thread(target=self._run, daemon=True)
-        self._thread.start()
-        return self
-
-    def _run(self):
-        while not self._stop.is_set():
-            try:
-                with serial.Serial(self.port, self.baud, timeout=0.1) as ser:
-                    ser.reset_input_buffer()
-                    while not self._stop.is_set():
-                        byte = ser.read(1)
-                        if byte in CODE_MAP:
-                            self.events.put(CODE_MAP[byte])
-            except serial.SerialException:
-                # cable pulled or device re-enumerated: retry, don't crash
-                self._stop.wait(1.0)
-
-    def poll(self):
-        """Return the next event, or None. Never blocks."""
-        try:
-            return self.events.get_nowait()
-        except queue.Empty:
-            return None
-
-    def stop(self):
-        self._stop.set()</pre>
+while True:
+    line = ser.readline().decode(errors="ignore").strip()
+    if line in KEY_MAP:
+        action = KEY_MAP[line]
+        # hand this action to the app (e.g. write to a pipe / inject a key event)
+        deliver(action)</pre>
   </div>
 
   <p>
-    The reconnect loop matters: if the ESP32-C3 re-enumerates (common after a USB power blip),
-    a naive reader raises and takes the whole app down. This one waits a second and reopens.
+    <span class="tag">key_serial.py</span> also works the other way: when the app is speaking it sends
+    a <span class="tag">'1'</span> (start) or <span class="tag">'0'</span> (stop) byte back to the
+    ESP32 so the lens LED blinks in time with the voice. Reading whole lines and reconnecting on a
+    serial error (common after a USB power blip) keeps the input responsive without crashing the app.
   </p>
 
-  <h4>Consuming events in the main loop</h4>
-  <div class="cb">
-    <div class="cl">PYTHON — usage in main.py</div>
-<pre>from serial_keypad import Keypad
-
-keypad = Keypad('/dev/ttyACM0').start()
-
-while running:
-    # 1. physical keypad
-    while (ev := keypad.poll()) is not None:
-        current_screen.handle(ev)
-
-    # 2. keyboard fallback for development over SSH
-    for e in pygame.event.get():
-        if e.type == pygame.KEYDOWN:
-            current_screen.handle(KEYBOARD_MAP.get(e.key))
-
-    current_screen.draw(surface)
-    pygame.display.flip()
-    clock.tick(60)</pre>
-  </div>
+  <p>
+    Because <span class="tag">key_serial.py</span> delivers button presses as normal key events, the
+    main app in <span class="tag">pokedex_app.py</span> just reads its input in the usual pygame way —
+    it does not need to know the presses came from a physical keypad over serial. That is why you
+    start <span class="tag">key_serial.py</span> first (it holds the serial port) and then start
+    <span class="tag">pokedex_app.py</span> (see §8.7). During development over SSH you can also use a
+    normal keyboard, since both arrive as the same key events.
+  </p>
 
   <h3>7.3 — Wiring the buttons</h3>
   <ol class="steps">
     <li><div class="sn">1</div><div class="sb"><strong>Build the GND rail first</strong>
-      <p>Cut one length of black 26 AWG wire. Strip a 2 mm window every 15 mm and solder each button's common leg to those windows. One wire, ten taps — far tidier than ten separate returns.</p></div></li>
+      <p>Cut one length of black wire. Strip a small window every ~15 mm and solder each button's common leg to those windows. One shared ground wire with nine taps is far tidier than nine separate returns inside a hinged shell.</p></div></li>
     <li><div class="sn">2</div><div class="sb"><strong>Run signal wires</strong>
-      <p>One wire from each button's other leg to its assigned GPIO per the pin table. Keep every run under 15 cm.</p></div></li>
-    <li><div class="sn">3</div><div class="sb"><strong>Add debounce caps</strong>
-      <p>Solder a 100 nF ceramic directly across each button's two legs. This is optional if the firmware debounce is sufficient, but it noticeably improves feel on cheap switches.</p></div></li>
-    <li><div class="sn">4</div><div class="sb"><strong>Solder the status LED</strong>
-      <p>GPIO 2 → 330 Ω → LED anode; LED cathode → GND rail. Mind the polarity: the longer leg is the anode.</p></div></li>
+      <p>One wire from each button's other leg to its assigned GPIO, following the pin table (enter→GPIO 0, cancel→GPIO 1, tab→GPIO 2, up→GPIO 3, down→GPIO 4, right→GPIO 5, left→GPIO 6, scan→GPIO 7, mute→GPIO 10). Keep every run short.</p></div></li>
+    <li><div class="sn">3</div><div class="sb"><strong>Wire the WS2812 lens LED</strong>
+      <p>DIN → GPIO 21, VCC → 5 V, GND → GND. This is the LED that blinks teal when the Pokédex speaks.</p></div></li>
+    <li><div class="sn">4</div><div class="sb"><strong>Optional — cap and diode</strong>
+      <p>A small capacitor across each button and a 1N4148 diode per line improve debounce and protection. This build does not use them and works fine; add them if you want the cleanest possible signal, or move to a 3×3 matrix on a future PCB.</p></div></li>
   </ol>
 
   <h4>Test the link before assembly</h4>
@@ -1103,7 +1205,7 @@ ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
 # Grant serial access (once; log out and back in after)
 sudo usermod -a -G dialout $USER
 
-# Watch raw bytes — press each button and watch a letter appear
+# Watch the output — press each button and watch its keyword appear
 python3 -c "
 import serial
 s = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
@@ -1118,9 +1220,9 @@ while True:
     <div class="hd">▶ CHECKPOINT 2</div>
     <ul>
       <li>ESP32-C3 enumerates as <span class="tag">/dev/ttyACM0</span></li>
-      <li>Status LED is solid on after boot</li>
-      <li>All 10 buttons print their correct distinct letter</li>
-      <li>No repeated letters from a single press (debounce working)</li>
+      <li>The lens LED blinks teal when the Pokédex speaks (audio signal reaches the ESP32)</li>
+      <li>All 9 buttons print their correct keyword (enter, cancel, tab, up, down, right, left, pageleft, pageright)</li>
+      <li>No repeated words from a single press (debounce working)</li>
       <li>No stray characters when nothing is pressed</li>
     </ul>
   </div>
@@ -1138,7 +1240,7 @@ while True:
 
   <h3>8.0 — Accounts, API keys &amp; getting the code</h3>
   <p>
-    Before installing anything, set up three free accounts and get the project code. Q-dexter uses
+    Before installing anything, set up three free accounts and get the project code. Q-dex uses
     three external services — each needs a key, and each key goes in its own text file on the board.
     <strong>These key files are never committed to GitHub</strong> (they are excluded by
     <span class="tag">.gitignore</span>); anyone replicating the build uses their own keys.
@@ -1164,7 +1266,7 @@ cd Q-dex</pre>
 
   <h3 style="font-size:.95rem">Step 2 — SerpAPI key (reverse image search)</h3>
   <ol>
-    <li>Go to <strong>serpapi.com</strong> and create a free account (the free tier gives 100 searches a month — plenty for testing).</li>
+    <li>Go to <strong>serpapi.com</strong> and create a free account. The free tier gives <strong>250 searches a month</strong>, which is plenty for building and testing — you can buy more if you ever need them, but 250 covered all our development.</li>
     <li>After signing up, open your <strong>Dashboard → API Key</strong>.</li>
     <li>Copy the key and save it on the board:</li>
   </ol>
@@ -1176,7 +1278,7 @@ cd Q-dex</pre>
   <h3 style="font-size:.95rem">Step 3 — Claude API key (Professor Oak)</h3>
   <ol>
     <li>Go to <strong>console.anthropic.com</strong> and create an account.</li>
-    <li>Add a small amount of credit under <strong>Billing</strong> — a few dollars lasts a long time, since each question costs a fraction of a cent.</li>
+    <li>Add a small amount of credit under <strong>Billing</strong>. I put in <strong>$5</strong> and it barely moves — each question uses very few tokens, so even the minimum top-up (around $1, if Claude allows it) lasts a long time.</li>
     <li>Open <strong>API Keys → Create Key</strong>, copy it (it starts with <span class="tag">sk-ant-</span>), and save it:</li>
   </ol>
   <div class="cb">
@@ -1186,10 +1288,22 @@ cd Q-dex</pre>
 
   <h3 style="font-size:.95rem">Step 4 — GitHub token (image hosting)</h3>
   <p>
-    The camera capture has to be readable by Google Lens at a public web address. Q-dexter uploads
+    The camera capture has to be readable by Google Lens at a public web address. Q-dex uploads
     each photo to a GitHub repository and uses the public raw URL, so the board needs a token to
     upload.
   </p>
+  <div class="co">
+    <div class="co-ic">🔎</div>
+    <div class="co-b">
+      <strong>Why GitHub, after trying everything else</strong>
+      <p>Getting a public image URL was surprisingly hard. We tried Yandex and several free
+      image-hosting sites first — but after 10–15 uploads in quick succession our IP kept getting
+      blocked, because the hosts flagged the rapid automated uploads as bot activity. GitHub turned
+      out to be the most reliable: it accepts the uploads through its API, serves a stable public raw
+      URL, and does not rate-block a normal token. That is why the final design hosts captures on
+      GitHub.</p>
+    </div>
+  </div>
   <ol>
     <li>On GitHub: <strong>Settings → Developer settings → Personal access tokens → Tokens (classic)</strong>.</li>
     <li>Click <strong>Generate new token (classic)</strong> and tick the whole <span class="tag">repo</span> scope box.</li>
@@ -1264,7 +1378,128 @@ pip install --break-system-packages \
     </div>
   </div>
 
-  <h3>8.2 — Build whisper.cpp</h3>
+  <h3>8.2 — Building the Pokémon database</h3>
+  <p>
+    The Pokédex needs data for all <strong>1025 Pokémon</strong> — types, stats, descriptions,
+    evolutions and more. Rather than type any of that by hand, it is pulled once from
+    <strong>PokéAPI</strong> (<span class="tag">pokeapi.co</span>), a free public REST API that
+    serves every piece of Pokémon data as JSON. A small script walks every Pokémon from 1 to 1025,
+    asks PokéAPI for its details, and saves the whole thing to a single file the app loads at
+    startup.
+  </p>
+  <p>
+    For each Pokémon the script makes three requests — the main entry, its species entry (for the
+    genus, description and evolution link) and its evolution chain — and keeps the fields the
+    Pokédex actually shows: <span class="tag">id</span>, types, abilities, the first few moves,
+    base stats, genus (the "Seed Pokémon" style label), height, weight, the flavour-text
+    description, the evolution chain, and the region. The region is not fetched — it is worked out
+    from the National Dex number (1–151 Kanto, 152–251 Johto, and so on):
+  </p>
+
+  <div class="cb">
+    <div class="cl">PYTHON — build_db.py (the core loop, simplified)</div>
+<pre>import requests, json, os
+
+DB_PATH = os.path.expanduser('~/pokedex/pokemon_db.json')
+
+def region_of(i):
+    if i &lt;= 151: return 'Kanto'
+    if i &lt;= 251: return 'Johto'
+    if i &lt;= 386: return 'Hoenn'
+    if i &lt;= 493: return 'Sinnoh'
+    if i &lt;= 649: return 'Unova'
+    if i &lt;= 721: return 'Kalos'
+    if i &lt;= 809: return 'Alola'
+    if i &lt;= 905: return 'Galar'
+    return 'Paldea'
+
+db = {}
+for i in range(1, 1026):
+    data = requests.get(f'https://pokeapi.co/api/v2/pokemon/{i}', timeout=15).json()
+    sp   = requests.get(data['species']['url'], timeout=15).json()
+
+    types  = [t['type']['name'] for t in data['types']]
+    stats  = {s['stat']['name']: s['base_stat'] for s in data['stats']}
+    moves  = [m['move']['name'] for m in data['moves'][:6]]
+    genus  = next((g['genus'] for g in sp['genera']
+                   if g['language']['name'] == 'en'), '')
+    desc   = next((ft['flavor_text'].replace('\n', ' ')
+                   for ft in sp['flavor_text_entries']
+                   if ft['language']['name'] == 'en'), '')
+
+    db[data['name']] = {
+        'id': i, 'types': types, 'stats': stats, 'moves': moves,
+        'genus': genus, 'height': data['height'] / 10.0,   # -&gt; metres
+        'weight': data['weight'] / 10.0,                   # -&gt; kg
+        'description': desc, 'region': region_of(i),
+        # 'evolution': parsed separately from the species' evolution chain
+    }
+    print(f'{i}/1025 {data["name"]}', end='\r')
+
+with open(DB_PATH, 'w') as f:
+    json.dump(db, f)</pre>
+  </div>
+
+  <div class="co">
+    <div class="co-ic">⏳</div>
+    <div class="co-b">
+      <strong>Run it once — it takes a while</strong>
+      <p>That is roughly 3,000 API calls (three per Pokémon), so the full build takes about
+      <strong>30–40 minutes</strong>. You only ever run it once: the result is a single
+      <span class="tag">pokemon_db.json</span> that ships with the app, so the device never needs
+      the internet just to browse the Pokédex. Run it with
+      <span class="tag">python3 build_db.py</span>.</p>
+    </div>
+  </div>
+
+  <h4>The artwork images</h4>
+  <p>
+    The official artwork for each Pokémon comes from the same PokéAPI project — specifically its
+    public <strong>sprites</strong> repository on GitHub, which hosts a transparent PNG of every
+    Pokémon's official artwork. A second small script downloads all 1025 of them (as RGBA, so the
+    transparent background is kept) into a local <span class="tag">ui_images/</span> folder, named
+    by dex number, and skips any it already has so it can be safely re-run:
+  </p>
+  <div class="cb">
+    <div class="cl">PYTHON — download_ui_images.py (simplified)</div>
+<pre>import requests, os
+from PIL import Image
+from io import BytesIO
+
+UI_DIR = os.path.expanduser('~/pokedex/ui_images')
+os.makedirs(UI_DIR, exist_ok=True)
+
+for i in range(1, 1026):
+    path = f'{UI_DIR}/{i}.png'
+    if os.path.exists(path):
+        continue    # already downloaded — skip
+    url = ('https://raw.githubusercontent.com/PokeAPI/sprites/master/'
+           f'sprites/pokemon/other/official-artwork/{i}.png')
+    img = Image.open(BytesIO(requests.get(url, timeout=10).content)).convert('RGBA')
+    img.save(path)
+    print(f'{i}/1025', end='\r')</pre>
+  </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    After these two scripts have run once, the device has everything it needs offline: one JSON file
+    of data and a folder of 1025 artwork PNGs. Both <span class="tag">build_db.py</span> and
+    <span class="tag">download_ui_images.py</span> are in the repo.
+  </p>
+
+  <h3>8.3 — Build whisper.cpp (offline speech-to-text)</h3>
+  <p>
+    <strong>What it is:</strong> whisper.cpp is a fast, lightweight C++ port of OpenAI's Whisper
+    speech-recognition model. It converts recorded audio into text — entirely on the device, with no
+    internet.
+  </p>
+  <p>
+    <strong>Why we use it, and for what:</strong> Professor Oak lets you ask a question out loud. To
+    answer, the device first has to turn your <em>spoken words</em> into <em>text</em> it can send to
+    Claude. That speech-to-text step is whisper.cpp's job. We use it (rather than a cloud
+    speech API) because it runs locally — no round trip, no per-use cost, and the voice assistant
+    keeps working even on a flaky connection. We use the <span class="tag">tiny.en</span> English
+    model because it is the best accuracy-for-speed trade-off on this hardware: small enough to run
+    quickly on the UNO Q, accurate enough for short questions. Build it once:
+  </p>
   <div class="cb">
     <div class="cl">BASH</div>
 <pre>cd ~
@@ -1281,7 +1516,20 @@ bash ./models/download-ggml-model.sh tiny.en
 # model:   ~/whisper.cpp/models/ggml-tiny.en.bin</pre>
   </div>
 
-  <h3>8.3 — Audio configuration</h3>
+  <h3>8.4 — Audio configuration</h3>
+  <div class="co d">
+    <div class="co-ic">🔎</div>
+    <div class="co-b">
+      <strong>Check the hardware works BEFORE blaming the software</strong>
+      <p>Most "the audio doesn't work" problems turn out to be hardware, not code. Before you touch
+      the software, prove the parts work on their own: record a short clip and play it back to
+      confirm the <strong>microphone</strong> captures sound, and run <span class="tag">espeak</span>
+      or play a test tone to confirm the <strong>speaker</strong> makes sound. Check the sample rates
+      too (below). We lost hours debugging "software" faults that were really a loose amplifier ground
+      wire and a wrong sample rate. Confirm mic-in and speaker-out physically work first — then move
+      on to the app.</p>
+    </div>
+  </div>
   <p>
     The USB sound card must be addressed as <span class="tag">plughw:1,0</span>, never raw
     <span class="tag">hw:1,0</span>. The <span class="tag">plug</span> layer performs sample-rate
@@ -1309,138 +1557,80 @@ ls -lh /tmp/test.wav
 espeak "Professor Oak online" 2>/dev/null</pre>
   </div>
 
-  <h3>8.4 — Code structure</h3>
+  <h3>8.5 — How the code is organised</h3>
   <p>
-    The application is organised so each screen is a self-contained handler. Adding a new screen
-    means adding one file and one route entry — no changes to the event loop.
+    The whole application lives in one main file, <span class="tag">pokedex_app.py</span>, plus a
+    small helper that reads the keypad. Rather than dump the whole file here, this section explains
+    the parts that matter — how the screens work, how the camera stays smooth, how speech is turned
+    into text, and how the on-device model runs.
   </p>
 
-  <div class="tree">
-<span class="d">pokedex_final/</span>
-├── <span class="f">main.py</span>                  <span class="c"># entry point · event loop · screen router</span>
-├── <span class="f">config.py</span>                <span class="c"># paths, colours, constants, feature flags</span>
-├── <span class="f">serial_keypad.py</span>         <span class="c"># ESP32-C3 bridge (Phase 2)</span>
-│
-├── <span class="d">screens/</span>                 <span class="c"># one module per screen, uniform interface</span>
-│   ├── <span class="f">home.py</span>              <span class="c">#   main menu</span>
-│   ├── <span class="f">dex_list.py</span>          <span class="c">#   browse all 1025 species</span>
-│   ├── <span class="f">dex_detail.py</span>        <span class="c">#   stats, types, description</span>
-│   ├── <span class="f">scan.py</span>              <span class="c">#   WHO'S THAT POKEMON? camera + ML</span>
-│   ├── <span class="f">oak.py</span>               <span class="c">#   Professor Oak voice assistant</span>
-│   ├── <span class="f">trainer.py</span>           <span class="c">#   profile, XP, badges</span>
-│   └── <span class="f">base.py</span>              <span class="c">#   Screen ABC: handle(ev) / draw(surf)</span>
-│
-├── <span class="d">core/</span>
-│   ├── <span class="f">database.py</span>          <span class="c"># loads + indexes the 1025-species JSON</span>
-│   ├── <span class="f">profile.py</span>           <span class="c"># trainer save/load, XP, badge unlock rules</span>
-│   ├── <span class="f">vision.py</span>            <span class="c"># MobileNetV2 inference wrapper</span>
-│   ├── <span class="f">speech.py</span>            <span class="c"># arecord -> whisper.cpp -> text</span>
-│   └── <span class="f">tts.py</span>               <span class="c"># espeak wrapper for Oak's voice</span>
-│
-├── <span class="d">data/</span>
-│   ├── <span class="f">pokemon.json</span>         <span class="c"># 1025 species records</span>
-│   ├── <span class="f">badges.json</span>          <span class="c"># 72 badges across 9 regions</span>
-│   └── <span class="d">profiles/</span>            <span class="c"># per-trainer save files</span>
-│
-├── <span class="d">models/</span>
-│   ├── <span class="f">pokemon_mobilenetv2.tflite</span>
-│   └── <span class="f">labels.txt</span>
-│
-└── <span class="d">assets/</span>
-    ├── <span class="d">sprites/</span>
-    └── <span class="d">fonts/</span>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>File</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="q">pokedex_app.py</td><td>The whole app: the main loop, every screen (menus, browser, detail, scan, Professor Oak, trainer profile, PhyAI), the camera, the database, XP and badges.</td></tr>
+      <tr><td class="q">key_serial.py</td><td>Runs alongside the app. Owns the ESP32 serial port, turns each keyword into a key event for the app, and forwards the audio on/off signal to the lens LED.</td></tr>
+      <tr><td class="q">pokedex_phyai.tflite + labels.txt</td><td>The on-device model and its class names.</td></tr>
+    </tbody>
+  </table>
   </div>
 
-  <h4>The Screen contract</h4>
-  <p>Every screen implements the same two methods. This is what keeps the event loop trivial.</p>
-
-  <div class="cb">
-    <div class="cl">PYTHON — screens/base.py</div>
-<pre>from abc import ABC, abstractmethod
-
-
-class Screen(ABC):
-    """Every screen implements exactly this interface."""
-
-    @abstractmethod
-    def handle(self, event: str | None) -> str | None:
-        """Process one input event ('A', 'UP', 'SCAN', ...).
-
-        Return the name of the screen to switch to, or None to stay.
-        """
-
-    @abstractmethod
-    def draw(self, surface) -> None:
-        """Render this screen onto the given pygame surface."""
-
-    def on_enter(self) -> None:
-        """Optional hook: called once when this screen becomes active."""
-
-    def on_exit(self) -> None:
-        """Optional hook: called once when leaving this screen."""</pre>
-  </div>
-
-  <h4>Vision inference</h4>
+  <h4>The screen loop</h4>
   <p>
-    The interpreter is loaded once at startup, not per scan — loading a TFLite interpreter takes
-    hundreds of milliseconds and would make every scan feel sluggish.
+    Each screen is a handler function. One main loop reads input events, calls the current screen's
+    handler, and draws. Switching screens is just changing a <span class="tag">state</span> value —
+    the loop itself never changes, which keeps input response instant even while the AI is working.
+  </p>
+
+  <h4>The camera — a smooth live feed with no lag</h4>
+  <p>
+    On the scan screen the camera shows a live preview. The trick to keeping it smooth is
+    <strong>never doing slow work on the main loop</strong>. The camera is read continuously, and the
+    latest frame is simply drawn each time the screen refreshes — so the preview always shows the
+    most recent image and never stutters. The heavy work (uploading a photo, or running the neural
+    network) happens separately, so pressing SCAN never freezes the live view.
+  </p>
+  <div class="co">
+    <div class="co-ic">📷</div>
+    <div class="co-b">
+      <strong>Autofocus vs fixed-focus camera</strong>
+      <p>We used an <strong>auto-focus</strong> USB camera (the OV5693), which keeps the Pokémon sharp
+      as you move it closer or further away — nicer for recognition. A cheaper
+      <strong>fixed-focus</strong> camera works too; you just hold the subject at roughly the right
+      distance for it to be in focus. Either is fine — the software does not care which you use, as
+      long as it is a standard USB (UVC) camera.</p>
+    </div>
+  </div>
+
+  <h4>The speech pipeline — how a spoken question becomes an answer</h4>
+  <p>
+    Professor Oak works as a chain, and it helps to see the whole chain before the code:
+  </p>
+  <ol>
+    <li><strong>Record</strong> — capture a few seconds of audio from the USB microphone (at 16 kHz mono, the format whisper needs).</li>
+    <li><strong>Speech-to-text</strong> — whisper.cpp turns that recording into text on the device.</li>
+    <li><strong>Think</strong> — the text is sent to Claude, along with your trainer profile and real progress, which replies with Oak's answer.</li>
+    <li><strong>Speak</strong> — espeak reads the answer out loud through the amplifier and speaker, and the lens LED blinks teal while it talks.</li>
+  </ol>
+  <p>
+    Below is a simplified version of the record + transcribe steps (the real code in
+    <span class="tag">pokedex_app.py</span> adds error handling and the Claude call):
   </p>
 
   <div class="cb">
-    <div class="cl">PYTHON — core/vision.py</div>
-<pre>"""On-device Pokemon recognition using MobileNetV2 via LiteRT."""
+    <div class="cl">PYTHON — speech-to-text (simplified)</div>
+<pre>"""Offline speech-to-text: record -> whisper.cpp -> plain text."""
 
-import numpy as np
-from PIL import Image
-from ai_edge_litert.interpreter import Interpreter
-
-INPUT_SIZE = (224, 224)
-
-
-class PokemonVision:
-    """Loads the model once and reuses the interpreter for every scan."""
-
-    def __init__(self, model_path, labels_path):
-        self.interp = Interpreter(model_path=model_path)
-        self.interp.allocate_tensors()
-        self.inp = self.interp.get_input_details()[0]
-        self.out = self.interp.get_output_details()[0]
-
-        with open(labels_path) as fh:
-            self.labels = [line.strip() for line in fh if line.strip()]
-
-    def predict(self, frame_rgb, top_k=3):
-        """Return [(label, confidence), ...] sorted best-first."""
-        img = Image.fromarray(frame_rgb).resize(INPUT_SIZE)
-        arr = np.asarray(img, dtype=np.float32)[None] / 255.0
-
-        self.interp.set_tensor(self.inp['index'], arr)
-        self.interp.invoke()
-        scores = self.interp.get_tensor(self.out['index'])[0]
-
-        idx = np.argsort(scores)[-top_k:][::-1]
-        return [(self.labels[i], float(scores[i])) for i in idx]</pre>
-  </div>
-
-  <h4>Speech pipeline</h4>
-  <div class="cb">
-    <div class="cl">PYTHON — core/speech.py</div>
-<pre>"""Offline speech-to-text: arecord -> whisper.cpp -> plain text."""
-
-import re
-import subprocess
+import re, subprocess
 from pathlib import Path
 
 WHISPER = Path.home() / "whisper.cpp/build/bin/whisper-cli"
 MODEL   = Path.home() / "whisper.cpp/models/ggml-tiny.en.bin"
 WAV     = Path("/tmp/oak_input.wav")
 
-# whisper-cli prints lines like: [00:00:00.000 --> 00:00:03.100]   text here
-LINE_RE = re.compile(r"\[[\d:.]+\s*--&gt;\s*[\d:.]+\]\s*(.*)")
-
-
 def record(seconds=5):
-    """Capture mono 16 kHz audio. plughw is required, not hw."""
+    # plughw (not raw hw) so the audio is resampled to 16 kHz mono
     subprocess.run(
         ["arecord", "-D", "plughw:1,0", "-d", str(seconds),
          "-f", "S16_LE", "-r", "16000", "-c", "1", str(WAV)],
@@ -1448,27 +1638,51 @@ def record(seconds=5):
     )
     return WAV
 
-
-def transcribe(wav_path=WAV):
-    """Run whisper.cpp and return the joined transcript."""
-    result = subprocess.run(
-        [str(WHISPER), "-m", str(MODEL), "-f", str(wav_path), "-nt"],
+def transcribe(wav=WAV):
+    out = subprocess.run(
+        [str(WHISPER), "-m", str(MODEL), "-f", str(wav), "-nt"],
         check=True, capture_output=True, text=True,
-    )
+    ).stdout
+    # keep only the spoken text from whisper's output lines
+    return " ".join(line.strip() for line in out.splitlines() if line.strip())</pre>
+  </div>
 
-    lines = []
-    for raw in result.stdout.splitlines():
-        match = LINE_RE.match(raw.strip())
-        text = match.group(1) if match else raw.strip()
-        if text:
-            lines.append(text)
+  <h4>Vision inference — the on-device model</h4>
+  <p>
+    The on-device recogniser (PhyAI mode) runs the MobileNetV2 model through LiteRT. The model is
+    loaded <strong>once</strong> at startup, not per scan — loading a TFLite interpreter takes a
+    noticeable fraction of a second, so doing it on every frame would make the live classification
+    stutter. Each camera frame is resized to <strong>160×160</strong> (the size the model was trained
+    on), fed through the model, and the highest-scoring class becomes the answer:
+  </p>
 
-    return " ".join(lines).strip()
+  <div class="cb">
+    <div class="cl">PYTHON — on-device vision (simplified)</div>
+<pre>"""On-device Pokemon recognition — MobileNetV2 via LiteRT."""
 
+import numpy as np
+from PIL import Image
+from ai_edge_litert.interpreter import Interpreter
 
-def listen(seconds=5):
-    record(seconds)
-    return transcribe()</pre>
+INPUT_SIZE = (160, 160)   # must match how the model was trained
+
+class PokemonVision:
+    def __init__(self, model_path, labels_path):
+        self.interp = Interpreter(model_path=model_path)
+        self.interp.allocate_tensors()
+        self.inp = self.interp.get_input_details()[0]
+        self.out = self.interp.get_output_details()[0]
+        with open(labels_path) as fh:
+            self.labels = [l.strip() for l in fh if l.strip()]
+
+    def predict(self, frame_rgb):
+        img = Image.fromarray(frame_rgb).resize(INPUT_SIZE)
+        arr = np.asarray(img, dtype=np.uint8)[None]   # int8 model -> uint8 input
+        self.interp.set_tensor(self.inp['index'], arr)
+        self.interp.invoke()
+        scores = self.interp.get_tensor(self.out['index'])[0]
+        best = int(np.argmax(scores))
+        return self.labels[best], float(scores[best])</pre>
   </div>
 
   <div class="co">
@@ -1483,7 +1697,7 @@ def listen(seconds=5):
     </div>
   </div>
 
-  <h3>8.5 — First run</h3>
+  <h3>8.6 — First run</h3>
   <div class="cb">
     <div class="cl">BASH</div>
 <pre>cd ~/Q-dex
@@ -1503,11 +1717,89 @@ python3 pokedex_app.py</pre>
       <li>D-pad navigates the menu; A confirms; B goes back</li>
       <li>Dex list scrolls smoothly through all 1025 entries</li>
       <li>SCAN opens the camera view and shows a live preview</li>
-      <li>A scan returns a top-3 prediction within ~2 s</li>
+      <li>A scan identifies the Pokémon and opens its Pokédex entry</li>
       <li>OAK records, transcribes and speaks a reply</li>
       <li>Trainer XP increases and persists after restart</li>
     </ul>
   </div>
+
+  <h3>8.7 — Common commands (copy-paste cheat sheet)</h3>
+  <p>
+    These are the commands used constantly while building and running Q-dex. Most are run over SSH
+    from a laptop. Replace the IP with your board's own address.
+  </p>
+
+  <h4>Running the Pokédex</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>cd ~/Q-dex
+
+# 1) Start the keypad reader FIRST (it owns the serial port and
+#    forwards button presses + the lens-LED signal to the app).
+python3 key_serial.py &amp;
+
+# 2) Start the Pokedex app itself.
+python3 pokedex_app.py</pre>
+  </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    The <span class="tag">&amp;</span> runs the keypad reader in the background so the same terminal
+    can then launch the app. Start the keypad first — if the app starts first, nothing owns the
+    serial port and the buttons do nothing.
+  </p>
+
+  <h4>Stopping everything</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># Force-stop the app and the keypad reader (frees the screen and serial port)
+pkill -9 -f pokedex_app.py
+pkill -9 -f key_serial.py</pre>
+  </div>
+
+  <h4>Copying files from the laptop to the board</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE LAPTOP</div>
+<pre># Copy one file into the project folder on the board (scp = secure copy)
+scp pokedex_app.py arduino@192.168.1.56:~/Q-dex/
+
+# Copy an entire folder
+scp -r some_folder arduino@192.168.1.56:~/Q-dex/</pre>
+  </div>
+
+  <h4>Verify a file arrived intact (before running it)</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># Line count — should match what you sent
+wc -l pokedex_app.py
+
+# Check the Python file has no syntax errors WITHOUT running it
+python3 -c "import ast; ast.parse(open('pokedex_app.py').read()); print('OK')"</pre>
+  </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    File transfers occasionally corrupt. This two-second check (line count + parse) catches a broken
+    copy before it wastes your time as a confusing "bug" at runtime.
+  </p>
+
+  <h4>Running with a screen when SSHed in</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># If a program needs the physical display but you launched it over SSH,
+# tell it which display to draw on:
+DISPLAY=:0 python3 pokedex_app.py
+
+# List / rotate the display
+DISPLAY=:0 xrandr
+DISPLAY=:0 xrandr --output HDMI-1 --rotate left</pre>
+  </div>
+
+  <h4>Handy checks</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>hostname -I          # find the board's IP address
+arecord -l           # list audio input devices (the USB sound card)
+ls /dev/video*       # is the camera detected?
+ls /dev/ttyACM*      # is the ESP32 detected?</pre>
+  </div>
+
 </section>
 
 <!-- ════ PHYSICAL AI ════ -->
@@ -1515,7 +1807,7 @@ python3 pokedex_app.py</pre>
   <div class="sh"><div class="snum">09</div><h2>The Physical AI — On-Device Intelligence</h2></div>
 
   <p>
-    Q-dexter is not a thin client that phones a cloud API for every decision. Two AI workloads run
+    Q-dex is not a thin client that phones a cloud API for every decision. Two AI workloads run
     <em>directly on the Arduino UNO Q</em>: a computer-vision classifier that identifies Pokémon
     from the camera, and a speech pipeline that lets Professor Oak listen and talk back. Everything a
     person can <em>see</em> and <em>hear</em> the device do — recognising a Pokémon, transcribing
@@ -1703,34 +1995,42 @@ python3 pokedex_app.py</pre>
   <div class="sh"><div class="snum">10</div><h2>Phase 4 — Print &amp; Assembly</h2></div>
 
   <p>
-    The enclosure is designed in Fusion 360 (document <strong>pokedexV3.1</strong>). Export each
+    The enclosure is designed in Fusion 360 (document <strong>pokedexV3.3</strong>). Export each
     body individually: right-click body → <em>Save as Mesh</em> → STL, binary, high refinement.
   </p>
 
   <h3>9.1 — Print settings</h3>
+  <p>
+    The whole enclosure was printed in <strong>PLA</strong>, except the <strong>dome lens</strong>
+    which is <strong>clear PETG</strong> so the WS2812 LED shines through it. Everything used a
+    <strong>0.20&nbsp;mm layer height</strong> — no need for finer layers. The complete set of parts
+    takes <strong>25+ hours</strong> of printing in total, so plan for a couple of print days.
+  </p>
   <div class="tbl-scroll">
   <table class="tbl">
-    <thead><tr><th>Parameter</th><th>Shells &amp; Lid</th><th>Button Caps</th><th>Dome Lens</th><th>Inserts</th></tr></thead>
+    <thead><tr><th>Setting</th><th>Most parts</th><th>Dome lens</th></tr></thead>
     <tbody>
-      <tr><td>Material</td><td class="q">PLA</td><td class="q">PLA</td><td class="q">PETG clear</td><td class="q">PLA</td></tr>
-      <tr><td>Layer height</td><td class="q">0.20 mm</td><td class="q">0.12 mm</td><td class="q">0.12 mm</td><td class="q">0.16 mm</td></tr>
-      <tr><td>Wall count</td><td class="q">3</td><td class="q">4</td><td class="q">4</td><td class="q">3</td></tr>
-      <tr><td>Infill</td><td class="q">20%</td><td class="q">0%</td><td class="q">100%</td><td class="q">15%</td></tr>
-      <tr><td>Supports</td><td class="q">Hinge only</td><td class="q">None</td><td class="q">None</td><td class="q">None</td></tr>
-      <tr><td>Horizontal expansion</td><td class="q">−0.10 mm</td><td class="q">−0.05 mm</td><td class="q">0 mm</td><td class="q">−0.05 mm</td></tr>
-      <tr><td>Approx. time</td><td class="q">~9 h total</td><td class="q">~40 min</td><td class="q">~25 min</td><td class="q">~1 h</td></tr>
+      <tr><td>Material</td><td class="q">PLA</td><td class="q">PETG (clear)</td></tr>
+      <tr><td>Layer height</td><td class="q">0.20 mm</td><td class="q">0.20 mm</td></tr>
+      <tr><td>Why</td><td class="n">Strong, cheap, easy to print — fine for the shell, caps, D-pad, bezel, mounts and inserts.</td><td class="n">Clear so the lens LED glows through it.</td></tr>
     </tbody>
   </table>
   </div>
+  <p class="fine" style="font-size:.85rem;color:var(--mut)">
+    Total print time across all parts is about 25 hours or more. Print a single button cap and its
+    matching hole first as a quick test of fit before committing to the long shell prints.
+  </p>
 
-  <div class="co t">
-    <div class="co-ic">📏</div>
+  <div class="co d">
+    <div class="co-ic">🧵</div>
     <div class="co-b">
-      <strong>Why negative horizontal expansion</strong>
-      <p>Extruded filament spreads slightly beyond its commanded path, so a modelled 6.0 mm button
-      hole prints at roughly 5.8 mm and the cap will not seat. A −0.10 mm horizontal expansion
-      compensates. Print one button cap and its matching hole as a test coupon before committing
-      to the nine-hour shell print.</p>
+      <strong>Fitting everything inside is the hard part</strong>
+      <p>The tightest challenge is not printing — it is packing everything into the shell. There are a
+      lot of wires, and the HDMI and USB cables take up real space. We deliberately did
+      <strong>not cut</strong> the HDMI or USB cables: keep them as short as you can buy or route them,
+      but leave them intact. Cutting and re-joining these high-speed cables risks signal problems —
+      shielding gaps, voltage drop and crosstalk — that are miserable to debug. Route them neatly and
+      keep the runs short instead.</p>
     </div>
   </div>
 
@@ -1748,7 +2048,7 @@ python3 pokedex_app.py</pre>
       <tr><td>Lid rotation</td><td class="q">180°</td><td class="n">Full fold-flat closure.</td></tr>
       <tr><td>Mounting bosses</td><td class="q">6, shortened</td><td class="n">Shortened specifically to clear the recessed faceplate. Do not restore earlier heights.</td></tr>
       <tr><td>Minimum clearance</td><td class="q">0.3 mm</td><td class="n">Between LidFacePlate inner face and every cap top, closed.</td></tr>
-      <tr><td>Hinge pin bore</td><td class="q">Ø3.2 mm</td><td class="n">Continuous through all knuckles; takes an M3 bolt with light clearance.</td></tr>
+      <tr><td>Hinge</td><td class="q">Printed-in</td><td class="n">The hinge knuckles are part of the print — there is no separate metal pin.</td></tr>
     </tbody>
   </table>
   </div>
@@ -1768,13 +2068,13 @@ python3 pokedex_app.py</pre>
     <li><div class="sn">5</div><div class="sb"><strong>Install buttons and the ESP32-C3</strong>
       <p>Press tactile switches through their holes from outside. Hot-glue the ESP32-C3 to a flat interior area of the right shell with its USB-C port facing the cable exit. Solder per §7.3, then press each cap on — light thumb pressure only.</p></div></li>
     <li><div class="sn">6</div><div class="sb"><strong>Mount camera, mic and speaker</strong>
-      <p>Press-fit the camera into the front lens cutout. Mount the mic near the OAK button side so the user naturally speaks toward it. Position the speaker facing an outlet slot, not into solid wall.</p></div></li>
-    <li><div class="sn">7</div><div class="sb"><strong>Fit the shoulder LED and dome lens</strong>
-      <p>Push the LED through from inside, then snap the clear Dome_Lens over it from outside. It should click without glue. If it is loose, a single drop of CA on the flange is enough.</p></div></li>
+      <p>Press-fit the camera into the front lens cutout. Mount the mic on the front near the top so the user naturally speaks toward it. Position the speaker facing an outlet slot, not into solid wall.</p></div></li>
+    <li><div class="sn">7</div><div class="sb"><strong>Fit the WS2812 lens LED and dome lens</strong>
+      <p>Push the WS2812 LED through from inside so it sits under the lens, then snap the clear PETG dome lens over it from outside. It should click without glue. If it is loose, a single drop of superglue on the flange is enough.</p></div></li>
     <li><div class="sn">8</div><div class="sb"><strong>Press in the 18 dummy inserts</strong>
       <p>Work top row downward. The retention flanges hold them — no adhesive. Going bottom-up tends to misalign the last row.</p></div></li>
-    <li><div class="sn">9</div><div class="sb"><strong>Install the hinge pin and test closure</strong>
-      <p>Push the M3×20 mm pin through all knuckles from the outside. Open and close ten times. Confirm the LidFacePlate never contacts a cap — hold it up to a light and look for the 0.3 mm gap.</p></div></li>
+    <li><div class="sn">9</div><div class="sb"><strong>Test the hinge closure</strong>
+      <p>The hinge is printed as part of the geometry — there is no pin to insert. Open and close the lid several times. Confirm the LidFacePlate never contacts a button cap — hold it up to a light and look for the small clearance gap.</p></div></li>
     <li><div class="sn">10</div><div class="sb"><strong>Close up and power on</strong>
       <p>Fit six M3×8 mm screws at the shell bosses. Snap the BackPlate onto its perimeter clips last — it is designed to come off again for servicing, so do not glue it.</p></div></li>
   </ol>
@@ -1784,10 +2084,10 @@ python3 pokedex_app.py</pre>
     <ul>
       <li>Lid opens and closes smoothly through the full 180°</li>
       <li>Visible clearance between faceplate and every button cap when closed</li>
-      <li>All 10 buttons actuate through their caps with a clean click</li>
+      <li>All 9 buttons actuate through their caps with a clean click</li>
       <li>No cable pinch at the hinge when opening</li>
       <li>Camera lens is centred in its cutout and unobstructed</li>
-      <li>Dome lens is seated and the status LED is visible through it</li>
+      <li>Dome lens is seated and the WS2812 LED is visible through it</li>
       <li>BackPlate snaps on and off without tools</li>
     </ul>
   </div>
@@ -1799,7 +2099,7 @@ python3 pokedex_app.py</pre>
 
   <p>
     Run this suite after assembly. Record your own numbers in the right-hand column — a build
-    that passes all of these is a working Q-dexter.
+    that passes all of these is a working Q-dex.
   </p>
 
   <div class="tbl-scroll">
@@ -1810,7 +2110,7 @@ python3 pokedex_app.py</pre>
       <tr><td>T2</td><td>Keypad coverage</td><td class="n">Press each button 10×</td><td class="n">100 correct events, zero misses, zero doubles</td><td class="ok">☐</td></tr>
       <tr><td>T3</td><td>Input latency</td><td class="n">Press-to-visual-response</td><td class="n">Under 100 ms, subjectively instant</td><td class="ok">☐</td></tr>
       <tr><td>T4</td><td>Camera enumeration</td><td class="n">ls /dev/video0</td><td class="n">Present after cold boot, every boot</td><td class="ok">☐</td></tr>
-      <tr><td>T5</td><td>Vision inference</td><td class="n">Scan a known card 20×</td><td class="n">Correct species in top-3 consistently</td><td class="ok">☐</td></tr>
+      <tr><td>T5</td><td>Vision inference</td><td class="n">Scan a known card 20×</td><td class="n">Correct species identified consistently</td><td class="ok">☐</td></tr>
       <tr><td>T6</td><td>Inference time</td><td class="n">Time predict() end-to-end</td><td class="n">Under 2 s from press to result</td><td class="ok">☐</td></tr>
       <tr><td>T7</td><td>UI responsiveness under load</td><td class="n">Press D-pad during a scan</td><td class="n">Menu still responds; loop never blocks</td><td class="ok">☐</td></tr>
       <tr><td>T8</td><td>Audio capture rate</td><td class="n">arecord then check file size</td><td class="n">~160 KB for 5 s (confirms 16 kHz)</td><td class="ok">☐</td></tr>
@@ -1855,7 +2155,7 @@ python3 pokedex_app.py</pre>
       <tr><td>USB devices vanish mid-session</td><td class="n">xHCI reset from current overdraw</td><td class="n">Move camera and sound card onto the powered hub.</td></tr>
       <tr><td>ESP32-C3 will not boot</td><td class="n">Button wired to GPIO 8 or 9</td><td class="n">Strapping pins. Rewire to a pin from the table in §05.</td></tr>
       <tr><td>No <span class="tag">/dev/ttyACM0</span></td><td class="n">Device enumerated elsewhere or no permission</td><td class="n">Check <span class="tag">ls /dev/tty*</span>; add user to <span class="tag">dialout</span> and re-login.</td></tr>
-      <tr><td>One press sends several letters</td><td class="n">Contact bounce</td><td class="n">Raise <span class="tag">DEBOUNCE_MS</span>; add the 100 nF cap across the switch.</td></tr>
+      <tr><td>One press sends the keyword several times</td><td class="n">Contact bounce</td><td class="n">Increase the debounce delay in the firmware; optionally add a small cap across the switch.</td></tr>
       <tr><td>Buttons dead but LED is on</td><td class="n">GND rail not continuous</td><td class="n">Check continuity from each switch common to ESP32 GND.</td></tr>
       <tr><td>Transcript is always empty</td><td class="n">Parse failure hidden by broad except</td><td class="n">Verify <span class="tag">import re</span>; catch specific exceptions and log them.</td></tr>
       <tr><td>Whisper output is gibberish</td><td class="n">Wrong sample rate</td><td class="n">Use <span class="tag">plughw:1,0</span>, never <span class="tag">hw:1,0</span>. Confirm ~160 KB per 5 s.</td></tr>
@@ -1902,8 +2202,8 @@ python3 pokedex_app.py</pre>
       <div class="ckp"><div class="hd">KEYPAD</div><ul>
         <li>Firmware flashed, no strapping pins used</li>
         <li>GND rail continuous across all switches</li>
-        <li>All 10 buttons send correct distinct bytes</li>
-        <li>No double-fires; status LED solid</li>
+        <li>All 9 buttons send correct distinct bytes</li>
+        <li>No double button fires; lens LED blinks correctly when speaking</li>
       </ul></div>
     </div>
 
@@ -1942,7 +2242,7 @@ python3 pokedex_app.py</pre>
   <ul class="pl">
     <li><strong>Expand the vision model</strong> — retrain MobileNetV2 on more species. The label file and inference wrapper need no code changes, only a new <span class="tag">.tflite</span> and <span class="tag">labels.txt</span>.</li>
     <li><strong>Battery power</strong> — a 5 V 3 A power bank in place of the mains adapter makes it genuinely portable.</li>
-    <li><strong>Trade over serial</strong> — two Q-dexters connected by USB could exchange caught Pokémon using the same byte-protocol pattern as the keypad.</li>
+    <li><strong>Trade over serial</strong> — two Q-dexs connected by USB could exchange caught Pokémon using the same byte-protocol pattern as the keypad.</li>
     <li><strong>Haptics</strong> — a small vibration motor on a spare ESP32-C3 GPIO gives physical feedback on a successful catch.</li>
     <li><strong>More screens</strong> — implement the <span class="tag">Screen</span> ABC and add one route entry. Nothing else changes.</li>
   </ul>
@@ -1996,9 +2296,9 @@ python3 pokedex_app.py</pre>
   <table class="tbl">
     <thead><tr><th>File</th><th>Role</th></tr></thead>
     <tbody>
-      <tr><td class="q">build_db.py</td><td>Builds the 1025-Pokémon JSON database (stats, types, evolutions, moves)</td></tr>
+      <tr><td class="q">build_db.py</td><td>Builds the 1025-Pokémon JSON database from PokéAPI (stats, types, evolutions, moves, descriptions)</td></tr>
       <tr><td class="q">build_locations.py</td><td>Adds wild-encounter location data to the database</td></tr>
-      <tr><td class="q">download_ui_images.py</td><td>Downloads the Pokémon sprite images used in the UI</td></tr>
+      <tr><td class="q">download_ui_images.py</td><td>Downloads all 1025 official-artwork PNGs from the PokéAPI sprites repo into ui_images/</td></tr>
       <tr><td class="q">install_launcher.sh</td><td>Installs the desktop icon and autostart entry</td></tr>
       <tr><td class="q">pokedex.sh</td><td>Launcher &mdash; starts the keypad reader and the app together</td></tr>
       <tr><td class="q">setup.sh</td><td>One-time environment setup (dependencies and folders)</td></tr>
@@ -2031,7 +2331,7 @@ python3 pokedex_app.py</pre>
     Built by Jayant · Nagpur, India · 2026
   </h3>
   <p style="margin-top:.9rem">
-    Q-dexter is a solo submission to the <strong>Arduino Physical AI Challenge India 2026</strong>,
+    Q-dex is a solo submission to the <strong>Arduino Physical AI Challenge India 2026</strong>,
     Gaming · Robotics &amp; Interactive AI track.
   </p>
   <p>
@@ -2044,7 +2344,7 @@ python3 pokedex_app.py</pre>
 </main>
 
 <footer>
-  <span class="flogo">Q-DEXTER BUILD GUIDE</span>
+  <span class="flogo">Q-DEX BUILD GUIDE</span>
   <p style="margin-top:.5rem">Fan-made educational project. Not affiliated with or endorsed by Nintendo, Creatures Inc., or Game Freak. Pokémon and Pokédex are trademarks of their respective owners.</p>
   <p style="margin-top:.5rem">© 2026 Jayant</p>
 </footer>

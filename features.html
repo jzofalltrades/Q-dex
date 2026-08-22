@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Q-dex — Features</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --red:#CC0000; --red-d:#8B0000; --red-g:rgba(204,0,0,.15);
+  --gold:#FFD233; --blue:#3B9EFF; --green:#3DDC84; --purple:#A78BFA;
+  --bg:#0B0B0D; --s1:#141417; --s2:#1C1C21; --s3:#26262C;
+  --bd:#2E2E36; --tx:#E9E9EE; --mut:#8C8C9E; --dim:#5A5A6A;
+  --mono:'JetBrains Mono',monospace; --body:'Inter',sans-serif; --px:'Press Start 2P',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);font-size:15.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:200;background:rgba(11,11,13,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;gap:1.2rem;padding:0 1.5rem}
+.nl{font-family:var(--px);font-size:.58rem;color:var(--red);text-decoration:none;flex-shrink:0;letter-spacing:.04em}
+.nav-links{display:flex;list-style:none;overflow-x:auto;scrollbar-width:none;gap:.1rem}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:.76rem;padding:.35rem .7rem;border-radius:4px;white-space:nowrap;transition:.18s}
+.nav-links a:hover{color:var(--tx);background:var(--s2)}
+.nav-links a.act{color:var(--gold)}
+.hero{position:relative;overflow:hidden;padding:4.5rem 1.5rem 3.5rem;text-align:center;background:radial-gradient(ellipse 75% 55% at 50% 0%,rgba(204,0,0,.2),transparent 70%),var(--bg);border-bottom:1px solid var(--bd)}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,.02) 31px,rgba(255,255,255,.02) 32px);pointer-events:none}
+.eyebrow{display:inline-block;background:var(--red);color:#fff;font-family:var(--px);font-size:.42rem;letter-spacing:.14em;padding:.4rem 1rem;border-radius:3px;margin-bottom:1.4rem}
+.hero h1{font-family:var(--px);font-size:clamp(.95rem,3.8vw,1.85rem);line-height:1.65;color:#fff;margin-bottom:1.1rem;text-shadow:0 0 45px var(--red-g);position:relative}
+.hero h1 span{color:var(--red)}
+.hsub{color:var(--mut);font-size:1.02rem;max-width:660px;margin:0 auto 1.8rem;position:relative}
+.hbadges{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;position:relative}
+.badge{background:var(--s1);border:1px solid var(--bd);border-radius:999px;padding:.28rem .85rem;font-size:.75rem;color:var(--mut)}
+.badge.r{border-color:var(--red);color:#ff6b6b}
+.badge.b{border-color:var(--blue);color:var(--blue)}
+.badge.g{border-color:#1f9d5a;color:var(--green)}
+.badge.y{border-color:var(--gold);color:var(--gold)}
+.badge.p{border-color:#7c5cd6;color:var(--purple)}
+.wrap{max-width:920px;margin:0 auto;padding:0 1.5rem}
+.sec{padding:3.2rem 0;border-bottom:1px solid var(--bd)}
+.sh{display:flex;align-items:center;gap:.9rem;margin-bottom:1.4rem}
+.snum{font-family:var(--px);font-size:.7rem;color:var(--red);background:var(--red-g);border:1px solid var(--red);border-radius:6px;padding:.5rem .6rem;flex-shrink:0}
+.sh h2{font-size:1.5rem;font-weight:800;letter-spacing:-.01em}
+.sec p{margin-bottom:1rem;color:#d4d4dc}
+.sec h3{font-size:1.15rem;font-weight:700;margin:1.6rem 0 .7rem;color:#fff}
+.sec h4{font-size:1rem;font-weight:700;margin:1.3rem 0 .5rem;color:var(--gold)}
+.tag{font-family:var(--mono);font-size:.85em;background:var(--s2);border:1px solid var(--bd);border-radius:4px;padding:.08em .4em;color:var(--green)}
+.lead{font-size:1.05rem;color:var(--mut)}
+/* feature cards */
+.fgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1rem;margin:1.4rem 0}
+.fcard{background:var(--s1);border:1px solid var(--bd);border-radius:12px;padding:1.2rem}
+.fcard .ic{font-size:1.5rem;margin-bottom:.6rem}
+.fcard h3{font-size:1.02rem;font-weight:700;color:#fff;margin:0 0 .4rem}
+.fcard p{font-size:.9rem;color:var(--mut);margin:0}
+.fcard .pill{display:inline-block;font-size:.68rem;font-family:var(--mono);padding:.12rem .5rem;border-radius:999px;margin-top:.7rem}
+.pill.on{background:rgba(61,220,132,.12);border:1px solid #1f9d5a;color:var(--green)}
+.pill.off{background:rgba(59,158,255,.1);border:1px solid var(--blue);color:var(--blue)}
+.pill.demo{background:rgba(255,210,51,.1);border:1px solid var(--gold);color:var(--gold)}
+/* tables */
+.tbl-scroll{overflow-x:auto;margin:1.1rem 0;border:1px solid var(--bd);border-radius:10px}
+table.tbl{width:100%;border-collapse:collapse;font-size:.9rem;min-width:420px}
+table.tbl th{background:var(--s2);color:var(--gold);font-weight:700;text-align:left;padding:.7rem .85rem;font-size:.8rem;text-transform:uppercase;letter-spacing:.03em;border-bottom:1px solid var(--bd)}
+table.tbl td{padding:.65rem .85rem;border-bottom:1px solid var(--bd);color:#d4d4dc}
+table.tbl tr:last-child td{border-bottom:none}
+table.tbl td.q,table.tbl td.n{font-family:var(--mono);color:var(--green);white-space:nowrap}
+table.tbl td.n{color:var(--gold)}
+/* callouts */
+.co{display:flex;gap:.9rem;background:var(--s1);border:1px solid var(--bd);border-left:3px solid var(--blue);border-radius:8px;padding:1rem 1.1rem;margin:1.2rem 0}
+.co.d{border-left-color:var(--gold)}
+.co.g{border-left-color:var(--green)}
+.co-ic{font-size:1.2rem;flex-shrink:0}
+.co-b strong{display:block;margin-bottom:.3rem;color:#fff;font-size:.95rem}
+.co-b p{margin:0;font-size:.9rem;color:var(--mut)}
+/* step chain */
+.chain{display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;margin:1.2rem 0}
+.chain .node{background:var(--s2);border:1px solid var(--bd);border-radius:8px;padding:.55rem .8rem;font-size:.82rem}
+.chain .node b{color:var(--gold);font-family:var(--mono);font-size:.78rem;display:block}
+.chain .ar{color:var(--red);font-weight:800}
+.fine{font-size:.85rem;color:var(--mut)}
+footer{text-align:center;padding:2.5rem 1.5rem;color:var(--dim);font-size:.85rem}
+footer a{color:var(--red);text-decoration:none}
+a.back{color:var(--blue);text-decoration:none;font-size:.85rem;font-family:var(--mono)}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nl">◄ Q-DEX</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Build Guide</a></li>
+    <li><a href="features.html" class="act">Features</a></li>
+    <li><a href="physical-ai.html">Physical AI</a></li>
+    <li><a href="viewer.html">3D Model</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">EVERY FEATURE</div>
+  <h1>What <span>Q-dex</span> Can Do</h1>
+  <p class="hsub">A real handheld Pokédex: two ways to identify Pokémon, a talking Professor Oak,
+  trainer profiles with XP and 64 gym badges across 9 regions, a full 1025-entry dex browser, and more.</p>
+  <div class="hbadges">
+    <span class="badge r">Reverse Image Search</span>
+    <span class="badge b">On-device AI</span>
+    <span class="badge g">Voice Assistant</span>
+    <span class="badge y">XP &amp; Badges</span>
+    <span class="badge p">1025 Pokémon</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- 01 RECOGNITION -->
+<section class="sec">
+  <div class="sh"><div class="snum">01</div><h2>Two ways to identify a Pokémon</h2></div>
+  <p class="lead">The heart of the device: point it at a Pokémon and it tells you what it is. There are
+  two independent recognition engines, and you choose which to use from the main menu.</p>
+
+  <h3>Reverse Image Version <span class="pill on" style="font-size:.7rem;vertical-align:middle">ONLINE · counts XP</span></h3>
+  <p>The main mode. It takes a photo with the camera, uploads it to a public GitHub URL, and runs a
+  reverse-image lookup through Google Lens (via SerpAPI). Whatever it matches becomes your catch — and
+  because it uses Google's index, it can recognise <strong>any of the 1025 Pokémon</strong>. A
+  successful catch is registered to your trainer profile, awards XP, and counts toward badges.</p>
+  <div class="chain">
+    <span class="node"><b>SCAN</b>capture photo</span><span class="ar">→</span>
+    <span class="node"><b>UPLOAD</b>to GitHub raw URL</span><span class="ar">→</span>
+    <span class="node"><b>GOOGLE LENS</b>via SerpAPI</span><span class="ar">→</span>
+    <span class="node"><b>MATCH</b>name → dex entry</span><span class="ar">→</span>
+    <span class="node"><b>REGISTER</b>+XP · badges</span>
+  </div>
+
+  <h3>PhyAI Challenge <span class="pill demo" style="font-size:.7rem;vertical-align:middle">OFFLINE · demo</span></h3>
+  <p>The on-device mode, and the one that proves the "Physical AI" idea: a MobileNetV2 neural network
+  we trained ourselves runs <strong>entirely on the UNO Q</strong>, with no internet at all. It
+  currently recognises four Pokémon — <span class="tag">Bulbasaur</span>,
+  <span class="tag">Charizard</span>, <span class="tag">Pikachu</span> and
+  <span class="tag">Squirtle</span> — live from the camera at ~160×160 resolution. It is a
+  demonstration mode, so it shows the prediction on screen but does <strong>not</strong> award XP or
+  count toward badges.</p>
+  <div class="co g">
+    <div class="co-ic">🧠</div>
+    <div class="co-b"><strong>Why keep both?</strong>
+    <p>The cloud path gives breadth (all 1025 Pokémon); the on-device path gives independence — no
+    connection, no latency, no per-use cost — and demonstrates real intelligence computed on the
+    device itself. Full details of the model and training are on the
+    <a href="physical-ai.html" style="color:var(--blue)">Physical AI</a> page.</p></div>
+  </div>
+</section>
+
+<!-- 02 PROFESSOR OAK -->
+<section class="sec">
+  <div class="sh"><div class="snum">02</div><h2>Professor Oak — the voice assistant</h2></div>
+  <p class="lead">Press to talk, ask a question out loud, and Professor Oak answers back in his own
+  voice. The whole speech chain is built from separate parts, and two of the three stages run locally.</p>
+
+  <div class="chain">
+    <span class="node"><b>1 · RECORD</b>USB mic → wav</span><span class="ar">→</span>
+    <span class="node"><b>2 · WHISPER</b>speech → text (local)</span><span class="ar">→</span>
+    <span class="node"><b>3 · CLAUDE</b>generates the answer</span><span class="ar">→</span>
+    <span class="node"><b>4 · ESPEAK</b>text → speech</span>
+  </div>
+
+  <div class="fgrid">
+    <div class="fcard"><div class="ic">🎙️</div><h3>Whisper (speech-to-text)</h3>
+      <p>whisper.cpp with the tiny.en model turns your spoken question into text, right on the device.</p>
+      <span class="pill on">LOCAL · free · offline</span></div>
+    <div class="fcard"><div class="ic">💬</div><h3>Claude (the brain)</h3>
+      <p>The text goes to Claude, which replies in Professor Oak's character — and it is aware of your
+      trainer progress, so it can talk about your catches and badges.</p>
+      <span class="pill off">API · aware of your progress</span></div>
+    <div class="fcard"><div class="ic">🔊</div><h3>espeak (text-to-speech)</h3>
+      <p>Oak's answer is spoken aloud through the amplifier and speaker.</p>
+      <span class="pill on">LOCAL · free · offline</span></div>
+    <div class="fcard"><div class="ic">💡</div><h3>The lens LED</h3>
+      <p>The WS2812 lens LED blinks teal in time with Oak's voice, so the Pokédex looks alive while it
+      talks.</p>
+      <span class="pill demo">visual feedback</span></div>
+  </div>
+
+  <div class="co d">
+    <div class="co-ic">🔇</div>
+    <div class="co-b"><strong>Mute anytime</strong>
+    <p>The Mute button stops the audio instantly, mid-sentence if you want — handy when Oak gets
+    chatty. The same button doubles as mute across the app.</p></div>
+  </div>
+</section>
+
+<!-- 03 TRAINER -->
+<section class="sec">
+  <div class="sh"><div class="snum">03</div><h2>Trainer mode — profiles, XP &amp; levels</h2></div>
+  <p class="lead">Q-dex is multi-trainer. Every person gets their own profile with their own catches,
+  XP, level, favourites and badges — just like starting your own save file.</p>
+
+  <div class="fgrid">
+    <div class="fcard"><div class="ic">👤</div><h3>Multiple trainers</h3>
+      <p>Create separate trainer profiles, each with a name and a team (Red, Blue or Yellow). Everyone's
+      progress is kept apart.</p></div>
+    <div class="fcard"><div class="ic">⭐</div><h3>XP for every catch</h3>
+      <p><span class="tag">+100 XP</span> for each catch, plus a <span class="tag">+400 XP</span> bonus
+      the first time you ever catch a new species.</p></div>
+    <div class="fcard"><div class="ic">📈</div><h3>Levels to 50</h3>
+      <p>Level N costs <span class="tag">500 × N</span> XP, so each level takes a little more than the
+      last. The level cap is 50.</p></div>
+    <div class="fcard"><div class="ic">📓</div><h3>Catch log &amp; favourites</h3>
+      <p>A chronological log of everything you have caught, plus a favourites list you build yourself.</p></div>
+  </div>
+
+  <p>The Trainer screen has three tabs: <strong>Info</strong> (name, team, level and XP bar),
+  <strong>Regions</strong> (your catch progress in each of the 9 regions) and <strong>Badges</strong>
+  (the full badge case).</p>
+</section>
+
+<!-- 04 BADGES -->
+<section class="sec">
+  <div class="sh"><div class="snum">04</div><h2>Badges — how to unlock them</h2></div>
+  <p class="lead">There are <strong>64 gym badges</strong> spread across the 9 regions. Earning them is
+  a two-step process, and it is the main long-term goal of the device.</p>
+
+  <h3>Step 1 — Unlock the region</h3>
+  <p>A region's badges stay locked until you have caught <strong>60% of that region's Pokémon</strong>
+  (rounded up). Until you hit that number, none of that region's badges can be earned. Here is exactly
+  how many catches each region needs:</p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Region</th><th>Dex range</th><th>Total</th><th>Catches to unlock (60%)</th></tr></thead>
+    <tbody>
+      <tr><td>Kanto</td><td class="q">1–151</td><td class="q">151</td><td class="n">91</td></tr>
+      <tr><td>Johto</td><td class="q">152–251</td><td class="q">100</td><td class="n">60</td></tr>
+      <tr><td>Hoenn</td><td class="q">252–386</td><td class="q">135</td><td class="n">81</td></tr>
+      <tr><td>Sinnoh</td><td class="q">387–493</td><td class="q">107</td><td class="n">65</td></tr>
+      <tr><td>Unova</td><td class="q">494–649</td><td class="q">156</td><td class="n">94</td></tr>
+      <tr><td>Kalos</td><td class="q">650–721</td><td class="q">72</td><td class="n">44</td></tr>
+      <tr><td>Alola</td><td class="q">722–809</td><td class="q">88</td><td class="n">53</td></tr>
+      <tr><td>Galar</td><td class="q">810–905</td><td class="q">96</td><td class="n">58</td></tr>
+      <tr><td>Paldea</td><td class="q">906–1025</td><td class="q">120</td><td class="n">72</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Step 2 — Earn each badge</h3>
+  <p>Once a region is unlocked, each of its badges is earned individually, by one of three kinds of
+  requirement:</p>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Badge type</th><th>How you earn it</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td class="n">Count</td><td>Catch a set number of that region's Pokémon</td><td>Cascade Badge — catch 25 Kanto Pokémon</td></tr>
+      <tr><td class="n">Species</td><td>Catch one specific Pokémon</td><td>Volcano Badge — catch Charizard</td></tr>
+      <tr><td class="n">Complete</td><td>Complete the entire regional dex</td><td>Earth Badge — all 151 Kanto Pokémon</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p>So the badge case fills up as you catch: unlock the region at 60%, then knock off each gym leader's
+  badge by meeting its specific requirement, all the way up to completing the full regional dex for the
+  final badge.</p>
+
+  <div class="co g">
+    <div class="co-ic">🎨</div>
+    <div class="co-b"><strong>Original badge art — no copyrighted images</strong>
+    <p>Every badge is drawn procedurally from simple shapes (octagon, droplet, bolt, flower, flame and
+    so on) generated in code, in each gym's colour. Nothing is copied from the games — the badges are
+    our own artwork, shown as grey silhouettes until earned and lit up in colour once you unlock them.</p></div>
+  </div>
+</section>
+
+<!-- 05 DEX BROWSER -->
+<section class="sec">
+  <div class="sh"><div class="snum">05</div><h2>The Pokédex itself — browsing &amp; entries</h2></div>
+  <p class="lead">Beyond catching, Q-dex is a full reference for all 1025 Pokémon, with a detailed entry
+  for every one.</p>
+
+  <div class="fgrid">
+    <div class="fcard"><div class="ic">📋</div><h3>Pokédex List</h3>
+      <p>Scroll the complete National Dex — all 1025 entries — with official artwork for each.</p></div>
+    <div class="fcard"><div class="ic">🔎</div><h3>Search by Name</h3>
+      <p>An on-screen keyboard lets you jump straight to any Pokémon by typing its name.</p></div>
+    <div class="fcard"><div class="ic">✅</div><h3>Caught Pokémon</h3>
+      <p>Filter to just the Pokémon you have personally caught on this profile.</p></div>
+    <div class="fcard"><div class="ic">💛</div><h3>Favourites</h3>
+      <p>Mark any Pokémon as a favourite and keep a quick-access list of them.</p></div>
+  </div>
+
+  <h4>Every entry has five tabs</h4>
+  <p>Open any Pokémon and page through: <strong>Stats</strong> (base stats with bars),
+  <strong>Location</strong> (where it is found), <strong>Evolution</strong> (its evolution chain),
+  <strong>Moves</strong> (its moves) and <strong>Cry</strong>. All of this comes from the offline
+  database built from PokéAPI, so it works without a connection.</p>
+</section>
+
+<!-- 06 EXTRAS -->
+<section class="sec">
+  <div class="sh"><div class="snum">06</div><h2>The details that make it feel real</h2></div>
+  <div class="fgrid">
+    <div class="fcard"><div class="ic">🔴</div><h3>Pokéball throw animation</h3>
+      <p>Catching plays an animated Pokéball throw, so registering a Pokémon feels like the real thing.</p></div>
+    <div class="fcard"><div class="ic">❓</div><h3>"Who's that Pokémon?"</h3>
+      <p>The scan screen is styled as the classic silhouette reveal while it works out what you have
+      shown it.</p></div>
+    <div class="fcard"><div class="ic">☁️</div><h3>Capture history on GitHub</h3>
+      <p>Every scan photo is hosted on GitHub (that is how Google Lens reads it); the repo keeps a
+      rolling history of your recent captures, auto-pruned so it never grows without limit.</p></div>
+    <div class="fcard"><div class="ic">📖</div><h3>How to Play</h3>
+      <p>A built-in help section explains the controls and how to use each mode, right on the device.</p></div>
+    <div class="fcard"><div class="ic">🗂️</div><h3>Data management</h3>
+      <p>A Data menu lets a trainer reset their own catches, or wipe everything — with a confirmation
+      step so nothing is erased by accident.</p></div>
+    <div class="fcard"><div class="ic">🎮</div><h3>More Games</h3>
+      <p>A dedicated menu reserved for extra mini-games. Marked "coming soon" — the slot is built and
+      ready for the games to be added.</p>
+      <span class="pill demo">coming soon</span></div>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <p>Q-dex — a real handheld Pokédex · <a href="index.html">Build Guide</a> ·
+  <a href="physical-ai.html">Physical AI</a> · <a href="viewer.html">3D Model</a></p>
+  <p style="margin-top:.6rem">Built by Jayant for the Arduino Physical AI Challenge India 2026</p>
+</footer>
+
+</body>
+</html>
