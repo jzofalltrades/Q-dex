@@ -735,6 +735,94 @@ footer a{color:var(--red);text-decoration:none}
   </div>
 </section>
 
+
+<!-- ════ PHASE 0 — FIRST BOOT ════ -->
+<section class="sec" id="phase0">
+  <div class="sh"><div class="snum">00</div><h2>Phase 0 — First Boot &amp; Setup</h2></div>
+
+  <p>
+    The Arduino UNO Q ships with <strong>Ubuntu already installed</strong> — it is a full Linux
+    single-board computer, not a bare microcontroller. So there is no OS to flash; you just need to
+    boot it, connect it to your network, and get terminal access. Do this once, at the start, and
+    every later phase talks to the board over SSH.
+  </p>
+
+  <h3 style="font-size:.95rem">Step 1 — First boot like any SBC</h3>
+  <p>
+    For the very first setup, treat the UNO Q like a desktop: connect a monitor (HDMI), a USB
+    keyboard and mouse, and power (5&nbsp;V 3&nbsp;A USB-C). It boots straight into the Ubuntu
+    desktop.
+  </p>
+  <div class="co i">
+    <div class="co-ic">💡</div>
+    <div class="co-b">
+      <strong>You only need the monitor/keyboard once</strong>
+      <p>After the network is set up, everything is done remotely over SSH from your laptop — the
+      board can run "headless" (no monitor, keyboard or mouse attached). The screen and keypad you
+      wire up in later phases are the <em>Pokédex's</em> display and buttons, not for driving Linux.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 2 — Connect to Wi-Fi</h3>
+  <p>
+    Use the Ubuntu desktop's Wi-Fi menu (top-right) to join your network, or from a terminal:
+  </p>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># List nearby networks
+nmcli device wifi list
+
+# Join yours (use your network name and password)
+nmcli device wifi connect "YOUR_WIFI_NAME" password "YOUR_WIFI_PASSWORD"</pre>
+  </div>
+  <div class="co d">
+    <div class="co-ic">📶</div>
+    <div class="co-b">
+      <strong>Prefer the 2.4&nbsp;GHz band</strong>
+      <p>A handheld device moves around, and 2.4&nbsp;GHz reaches further than 5&nbsp;GHz. If your
+      router shows both, join the 2.4&nbsp;GHz one for a more stable connection.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 3 — Find the board's IP address</h3>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>hostname -I</pre>
+  </div>
+  <p>
+    The first address it prints (for example <span class="tag">192.168.1.56</span>) is the board's
+    address on your network. Write it down — you use it to connect from your laptop.
+  </p>
+
+  <h3 style="font-size:.95rem">Step 4 — Connect from your laptop over SSH</h3>
+  <p>
+    From here on you can unplug the monitor, keyboard and mouse and work entirely from your laptop.
+    On Windows, <strong>MobaXterm</strong> is a free, friendly SSH client (macOS and Linux can use
+    the built-in <span class="tag">ssh</span> command). Start a new SSH session to the board's IP,
+    logging in as the <span class="tag">arduino</span> user:
+  </p>
+  <div class="cb">
+    <div class="cl">BASH — ON YOUR LAPTOP</div>
+<pre>ssh arduino@192.168.1.56    # use YOUR board's IP</pre>
+  </div>
+  <p>
+    The default user is <span class="tag">arduino</span>. You will be asked for its password on first
+    connect. MobaXterm also gives you drag-and-drop file transfer and X11 forwarding, which is handy
+    when the physical display is not connected yet.
+  </p>
+
+  <div class="ckp">
+    <div class="hd">▶ CHECKPOINT 0</div>
+    <ul>
+      <li>UNO Q boots to the Ubuntu desktop</li>
+      <li>Board is connected to Wi-Fi (preferably 2.4&nbsp;GHz)</li>
+      <li><span class="tag">hostname -I</span> shows the board's IP</li>
+      <li>You can SSH in from your laptop and land at the <span class="tag">arduino@</span> prompt</li>
+    </ul>
+  </div>
+</section>
+
+
 <!-- ════ PHASE 1 ════ -->
 <section class="sec" id="s1">
   <div class="sh"><div class="snum">06</div><h2>Phase 1 — Display Bring-Up</h2></div>
@@ -1398,13 +1486,14 @@ def listen(seconds=5):
   <h3>8.5 — First run</h3>
   <div class="cb">
     <div class="cl">BASH</div>
-<pre>cd ~/pokedex_final
+<pre>cd ~/Q-dex
 
-export SDL_VIDEODRIVER=fbcon
-export SDL_FBDEV=/dev/fb0
-export TMPDIR=$HOME/tmp
+# The keypad reader must run first — it holds the serial port and
+# forwards button presses (and the lens-LED signal) to the app.
+python3 key_serial.py &amp;
 
-python3 main.py</pre>
+# Then launch the Pokedex itself.
+python3 pokedex_app.py</pre>
   </div>
 
   <div class="ckp">
