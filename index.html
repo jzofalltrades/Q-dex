@@ -1047,6 +1047,109 @@ while True:
     UNO Q side at all.
   </p>
 
+
+  <h3>8.0 — Accounts, API keys &amp; getting the code</h3>
+  <p>
+    Before installing anything, set up three free accounts and get the project code. Q-dexter uses
+    three external services — each needs a key, and each key goes in its own text file on the board.
+    <strong>These key files are never committed to GitHub</strong> (they are excluded by
+    <span class="tag">.gitignore</span>); anyone replicating the build uses their own keys.
+  </p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Service</th><th>Used for</th><th>Saved on the board as</th></tr></thead>
+    <tbody>
+      <tr><td class="q">SerpAPI</td><td>Reverse Image Version — sends the camera photo to Google Lens to identify any of the 1025 Pokémon</td><td class="q">serp_key.txt</td></tr>
+      <tr><td class="q">Anthropic (Claude)</td><td>Professor Oak — turns your spoken question into a spoken answer</td><td class="q">claude_key.txt</td></tr>
+      <tr><td class="q">GitHub token</td><td>Hosts each camera capture at a public URL so Google Lens can read it</td><td class="q">gh_token.txt</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 1 — Get the code onto the board</h3>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>git clone https://github.com/jzofalltrades/Q-dex.git
+cd Q-dex</pre>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 2 — SerpAPI key (reverse image search)</h3>
+  <ol>
+    <li>Go to <strong>serpapi.com</strong> and create a free account (the free tier gives 100 searches a month — plenty for testing).</li>
+    <li>After signing up, open your <strong>Dashboard → API Key</strong>.</li>
+    <li>Copy the key and save it on the board:</li>
+  </ol>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>echo "PASTE_YOUR_SERPAPI_KEY_HERE" &gt; ~/Q-dex/serp_key.txt</pre>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 3 — Claude API key (Professor Oak)</h3>
+  <ol>
+    <li>Go to <strong>console.anthropic.com</strong> and create an account.</li>
+    <li>Add a small amount of credit under <strong>Billing</strong> — a few dollars lasts a long time, since each question costs a fraction of a cent.</li>
+    <li>Open <strong>API Keys → Create Key</strong>, copy it (it starts with <span class="tag">sk-ant-</span>), and save it:</li>
+  </ol>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>echo "PASTE_YOUR_CLAUDE_KEY_HERE" &gt; ~/Q-dex/claude_key.txt</pre>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 4 — GitHub token (image hosting)</h3>
+  <p>
+    The camera capture has to be readable by Google Lens at a public web address. Q-dexter uploads
+    each photo to a GitHub repository and uses the public raw URL, so the board needs a token to
+    upload.
+  </p>
+  <ol>
+    <li>On GitHub: <strong>Settings → Developer settings → Personal access tokens → Tokens (classic)</strong>.</li>
+    <li>Click <strong>Generate new token (classic)</strong> and tick the whole <span class="tag">repo</span> scope box.</li>
+    <li>Copy the token (it starts with <span class="tag">ghp_</span>) and save it:</li>
+  </ol>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>echo "PASTE_YOUR_GITHUB_TOKEN_HERE" &gt; ~/Q-dex/gh_token.txt</pre>
+  </div>
+  <div class="co d">
+    <div class="co-ic">⚠️</div>
+    <div class="co-b">
+      <strong>Use a "classic" token, not a "fine-grained" one</strong>
+      <p>Fine-grained tokens fail <em>silently</em> here — uploads just return "not found" with no
+      useful error, which cost hours to diagnose. Classic token, <span class="tag">repo</span> scope.
+      That is the combination that works.</p>
+    </div>
+  </div>
+
+  <h3 style="font-size:.95rem">Step 5 — Point image hosting at your own repo</h3>
+  <p>
+    Create a <strong>public</strong> GitHub repository to hold your captures (it can be the same
+    Q-dex repo, or a separate one). Then open <span class="tag">pokedex_app.py</span> and set these
+    three values near the top to your GitHub username and that repo:
+  </p>
+  <div class="cb">
+    <div class="cl">PYTHON — pokedex_app.py (near the top)</div>
+<pre>GH_USER  = 'your-github-username'
+GH_REPO  = 'your-capture-repo'     # must be a PUBLIC repo
+GH_DIR   = 'captures'              # folder inside it for the photos</pre>
+  </div>
+  <p>
+    The repo must be public — Google Lens can only read a public raw URL. The app auto-prunes the
+    capture folder to the most recent 20 images, so it never grows without bound.
+  </p>
+
+  <div class="co i">
+    <div class="co-ic">✅</div>
+    <div class="co-b">
+      <strong>Checkpoint</strong>
+      <p>You should now have three key files on the board —
+      <span class="tag">serp_key.txt</span>, <span class="tag">claude_key.txt</span> and
+      <span class="tag">gh_token.txt</span>, each holding one key — plus the three
+      <span class="tag">GH_*</span> values in <span class="tag">pokedex_app.py</span> pointing at your
+      own public repo. Now install the dependencies below.</p>
+    </div>
+  </div>
+
   <h3>8.1 — Dependencies</h3>
   <div class="cb">
     <div class="cl">BASH — ON THE UNO Q</div>
