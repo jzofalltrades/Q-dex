@@ -164,6 +164,7 @@ footer a{color:var(--red);text-decoration:none}
     <li><a href="#s4">4 · Assembly</a></li>
     <li><a href="#test">Validation</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="#repo">Repo Map</a></li>
     <li><a href="physical-ai.html" style="color:var(--blue);font-weight:700">◆ Physical AI</a></li>
     <li><a href="viewer.html" style="color:var(--gold);font-weight:700">◆ 3D Model</a></li>
   </ul>
@@ -1755,6 +1756,82 @@ python3 main.py</pre>
   </ul>
 </section>
 
+<!-- ════ 14 · REPOSITORY MAP ════ -->
+<section class="sec" id="repo">
+  <div class="sh"><div class="snum">14</div><h2>Repository Map</h2></div>
+  <p>Everything in the <a href="https://github.com/jzofalltrades/Q-dex" target="_blank" rel="noopener">Q-dex repository</a>, grouped by purpose &mdash; so anyone can find their way around the project at a glance.</p>
+
+  <h3>Folders</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Folder</th><th>Contents</th></tr></thead>
+    <tbody>
+      <tr><td class="q">badges/</td><td>All 72 gym-badge images, organised into the 9 regions</td></tr>
+      <tr><td class="q">dataset/</td><td>Training images for the on-device AI &mdash; four classes (Bulbasaur, Charizard, Pikachu, Squirtle)</td></tr>
+      <tr><td class="q">models/</td><td>The 3D model of the enclosure (.glb), shown in the interactive viewer</td></tr>
+      <tr><td class="q">cad/</td><td>Fusion 360 / STL files for every 3D-printed part</td></tr>
+      <tr><td class="q">captures/</td><td>Camera captures uploaded at runtime for reverse-image recognition (auto-pruned)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Core application</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td class="q">pokedex_app.py</td><td>The main Pokédex application &mdash; menus, camera scan, detail screens, trainer / XP / badge system, Professor Oak, PhyAI mode</td></tr>
+      <tr><td class="q">key_serial.py</td><td>Reads the ESP32 controller over USB serial; forwards button presses and the lens-LED signal</td></tr>
+      <tr><td class="q">keypad_serial.ino</td><td>ESP32-C3 firmware &mdash; scans the buttons and drives the WS2812 lens LED</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>On-device AI</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td class="q">pokedex_phyai.tflite</td><td>The trained, quantized model (MobileNetV2, int8, 2.59&nbsp;MB) &mdash; runs entirely on the UNO&nbsp;Q, no internet</td></tr>
+      <tr><td class="q">labels.txt</td><td>Class order for the model &mdash; maps a prediction index back to a Pokémon name</td></tr>
+      <tr><td class="q">pokedex_phyai_train.ipynb</td><td>The full Colab training notebook &mdash; runnable end-to-end to reproduce the model</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Scripts &amp; setup</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td class="q">build_db.py</td><td>Builds the 1025-Pokémon JSON database (stats, types, evolutions, moves)</td></tr>
+      <tr><td class="q">build_locations.py</td><td>Adds wild-encounter location data to the database</td></tr>
+      <tr><td class="q">download_ui_images.py</td><td>Downloads the Pokémon sprite images used in the UI</td></tr>
+      <tr><td class="q">install_launcher.sh</td><td>Installs the desktop icon and autostart entry</td></tr>
+      <tr><td class="q">pokedex.sh</td><td>Launcher &mdash; starts the keypad reader and the app together</td></tr>
+      <tr><td class="q">setup.sh</td><td>One-time environment setup (dependencies and folders)</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Website &amp; docs</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>File</th><th>Role</th></tr></thead>
+    <tbody>
+      <tr><td class="q">index.html</td><td>This build guide (the site homepage)</td></tr>
+      <tr><td class="q">physical-ai.html</td><td>Deep-dive documentation on the on-device AI model</td></tr>
+      <tr><td class="q">viewer.html</td><td>Interactive 3D viewer for the enclosure</td></tr>
+      <tr><td class="q">GAME_MANUAL.md</td><td>In-game manual &mdash; how to play every feature</td></tr>
+      <tr><td class="q">SETUP_GUIDE.md</td><td>Step-by-step setup instructions</td></tr>
+      <tr><td class="q">README.md</td><td>Repository overview and links</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<hr class="dv"/>
+
 <hr class="dv"/>
 
 <section class="sec" style="padding-top:1.5rem">
@@ -1782,61 +1859,6 @@ python3 main.py</pre>
 </footer>
 
 
-<!-- ════ REPOSITORY STRUCTURE ════ -->
-<section id="repo" style="padding:3rem 0;border-top:1px solid var(--bd)">
-  <div class="wrap">
-  <h2 style="font-family:var(--px);font-size:1.05rem;color:#fff;margin-bottom:.6rem;display:flex;align-items:center;gap:.6rem"><span style="width:4px;height:22px;background:var(--blue);border-radius:2px;display:inline-block"></span>What's in This Repository</h2>
-  <p style="color:var(--mut);margin-bottom:1.6rem">Every folder and key file — what it is and what it does.</p>
-
-  <h3 style="font-size:1rem;color:var(--tx);margin:1.6rem 0 .6rem;font-weight:700">Folders</h3>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden">
-    <tr><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">Folder</th><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">What it holds</th></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">badges/</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">All 72 gym-badge images, organised by region (kanto, johto, hoenn, sinnoh, unova, kalos, galar, paldea, alola)</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">dataset/</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Training images for the on-device AI — four classes: bulbasaur, charizard, pikachu, squirtle (~40 images each)</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">models/</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">3D model of the enclosure (.glb) shown in the interactive viewer</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">cad/</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Fusion 360 / STL files for every 3D-printed part of the enclosure</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">captures/</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Camera captures uploaded here at runtime for Google Lens recognition (auto-pruned to last 20)</td></tr>
-  </table>
-
-  <h3 style="font-size:1rem;color:var(--tx);margin:1.6rem 0 .6rem;font-weight:700">Core application</h3>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden">
-    <tr><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">File</th><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">What it does</th></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">pokedex_app.py</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">The main pygame Pokédex app — menus, camera scan, detail screens, trainer/XP/badge system, Professor Oak, PhyAI mode</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">key_serial.py</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Reads the ESP32 controller over USB serial; forwards button presses to the app and the lens-LED signal</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">keypad_serial.ino</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">ESP32-C3 firmware — scans the 10 physical buttons and drives the WS2812 lens LED</td></tr>
-  </table>
-
-  <h3 style="font-size:1rem;color:var(--tx);margin:1.6rem 0 .6rem;font-weight:700">On-device AI</h3>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden">
-    <tr><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">File</th><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">What it does</th></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">pokedex_phyai.tflite</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Trained, quantized neural network (MobileNetV2, int8, 2.59 MB) — runs entirely on the UNO Q with no internet</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">labels.txt</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Class order for the model — maps a prediction index back to a Pokémon name</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">pokedex_phyai_train.ipynb</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Full Colab training notebook — runnable end-to-end to reproduce the model from the dataset</td></tr>
-  </table>
-
-  <h3 style="font-size:1rem;color:var(--tx);margin:1.6rem 0 .6rem;font-weight:700">Scripts &amp; setup</h3>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden">
-    <tr><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">File</th><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">What it does</th></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">build_db.py</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Builds the 1025-Pokémon JSON database (stats, types, evolutions, moves)</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">build_locations.py</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Adds wild-encounter location data to the Pokémon database</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">download_ui_images.py</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Downloads Pokémon sprite images for the UI</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">install_launcher.sh</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Installs the desktop icon and autostart entry on the device</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">pokedex.sh</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Launcher — starts the keypad reader and app together</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">setup.sh</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">One-time environment setup — installs dependencies and creates required folders</td></tr>
-  </table>
-
-  <h3 style="font-size:1rem;color:var(--tx);margin:1.6rem 0 .6rem;font-weight:700">Website &amp; docs</h3>
-  <table style="width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden">
-    <tr><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">File</th><th style="background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em">What it does</th></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">index.html</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">This build guide — the site homepage</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">physical-ai.html</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Deep-dive on the on-device AI — training, architecture, results, deployment</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">viewer.html</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Interactive 3D viewer for the enclosure model</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">GAME_MANUAL.md</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">In-game manual — how to play every feature</td></tr>
-    <tr><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">SETUP_GUIDE.md</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Step-by-step setup instructions for replicating the build</td></tr>
-    <tr style="background:var(--s1)"><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)"><code style="font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)">README.md</code></td><td style="padding:.7rem .9rem;border-top:1px solid var(--bd)">Repository overview with links to the live site and 3D viewer</td></tr>
-  </table>
-  </div>
-</section>
 
 </body>
 </html>
