@@ -1,62 +1,71 @@
-# Q-dexter 🔴
+# Q-dexter — A Real Handheld Pokédex
 
-[![Live Site](https://img.shields.io/badge/🌐_Live_Site-View_Build_Guide-CC0000?style=for-the-badge)](https://jzofalltrades.github.io/Q-dex/)
-[![3D Model](https://img.shields.io/badge/🎮_3D_Model-Rotate_It-FFD233?style=for-the-badge&labelColor=333)](https://jzofalltrades.github.io/Q-dex/viewer.html)
-[![Physical AI](https://img.shields.io/badge/🧠_Physical_AI-On_Device-3B9EFF?style=for-the-badge&labelColor=333)](https://jzofalltrades.github.io/Q-dex/physical-ai.html)
+A fully working handheld Pokédex built on the **Arduino UNO Q**, for the
+**Arduino Physical AI Challenge India 2026**. Point it at a Pokémon, press
+scan, and it identifies the creature, shows its Pokédex entry, speaks its
+name, and logs the catch — with on-device AI, a voice assistant, and a
+3D-printed Gen-1 Kanto shell.
 
-![board](https://img.shields.io/badge/board-Arduino_UNO_Q-00979D?style=flat-square&logo=arduino)
-![controller](https://img.shields.io/badge/controller-ESP32--C3-E7352C?style=flat-square&logo=espressif)
-![model](https://img.shields.io/badge/AI-MobileNetV2_int8-FF6F00?style=flat-square&logo=tensorflow)
-![accuracy](https://img.shields.io/badge/accuracy-95.8%25-3DDC84?style=flat-square)
-![pokemon](https://img.shields.io/badge/Pokédex-1025_entries-A78BFA?style=flat-square)
-![challenge](https://img.shields.io/badge/Arduino_Physical_AI_Challenge-2026-CC0000?style=flat-square)
-
-> A real handheld Pokédex with on-device AI, a voice assistant, and camera-based Pokémon recognition — built on the Arduino UNO Q for the **Arduino Physical AI Challenge India 2026**.
+### 🔗 Live pages
+- **[📖 Full Build Guide](https://jzofalltrades.github.io/Q-dex/)** — the complete, illustrated how-to
+- **[🎮 3D Model Viewer](https://jzofalltrades.github.io/Q-dex/viewer.html)** — rotate the enclosure in your browser
 
 ---
 
-## 🔴 What it does
+## What it does
 
-Point it at a Pokémon, press scan, and Q-dexter identifies the creature, shows its Pokédex entry, speaks its name, and logs the catch.
+- **Reverse Image Version** — camera capture → Google Lens → identifies any of
+  the **1025 Pokémon**, shows stats/evolution/moves/location, speaks the entry,
+  and records the catch.
+- **PhyAI Challenge** — an **on-device** neural network (MobileNetV2, runs with
+  no internet) that recognises four Pokémon (Bulbasaur, Charizard, Pikachu,
+  Squirtle) live from the camera.
+- **Professor Oak voice assistant** — ask questions out loud; on-device
+  speech-to-text (whisper.cpp) → Claude → spoken reply. Knows your trainer
+  profile and real catch progress.
+- **Trainer system** — profiles, XP, levels, and **72 gym badges** across all
+  9 regions, with region unlock gating.
+- **Physical build** — 3D-printed Kanto-red shell, physical keypad, indicator
+  LEDs, a blinking lens LED, and a real speaker.
 
-- **📷 Reverse Image Version** — camera → Google Lens → identifies any of the **1025 Pokémon**, shows stats / evolution / moves / location, speaks the entry, records the catch.
-- **🧠 PhyAI Challenge** — an **on-device** neural network (MobileNetV2, no internet) recognising four Pokémon live from the camera. [Read the deep-dive →](https://jzofalltrades.github.io/Q-dex/physical-ai.html)
-- **🎙️ Professor Oak** — ask questions out loud; offline speech-to-text → Claude → spoken reply. Knows your trainer profile and real catch progress.
-- **🏆 Trainer system** — profiles, XP, levels, and **72 gym badges** across all 9 regions.
-- **🕹️ Physical build** — 3D-printed Kanto-red shell, physical keypad, indicator LEDs, a blinking lens LED, and a real speaker.
+## How it works
 
-## 🧠 The Physical AI
-
-The centrepiece: a **MobileNetV2** classifier, trained by transfer learning on Colab, quantized to a **2.59 MB int8** TFLite model that runs entirely on the UNO Q's CPU — no cloud, no API, no connection. **95.8% quantized validation accuracy.** Full training notebook and dataset are in this repo; the [Physical AI page](https://jzofalltrades.github.io/Q-dex/physical-ai.html) documents dataset, architecture, training, and results.
+The device is an Arduino UNO Q (embedded Linux) running a pygame app, with an
+ESP32-C3 handling the physical keypad and lens LED over USB serial. A camera
+feeds both the online reverse-image path and the offline on-device classifier.
+Audio is spoken through espeak into a PAM8403 amp and speaker.
 
 ```
 Camera ─┬─► Reverse Image Version ─► Google Lens ─► Pokédex entry ─► speak + log
         └─► PhyAI (on-device model) ─► live identification
 
-Mic ─► whisper.cpp ─► Claude ─► Professor Oak ─► spoken reply
+Mic ─► whisper.cpp ─► Claude ─► Professor Oak reply ─► speak
 ```
 
-## 🛠️ Hardware
+Full architecture, schematics, bill of materials, wiring, print settings, and
+step-by-step build phases are in the **[Build Guide](https://jzofalltrades.github.io/Q-dex/)**.
 
-Arduino UNO Q (processor) · ESP32-C3 Super Mini (controller) · USB camera · PAM8403 amp + speaker · WS2812 lens LED · indicator LEDs · 3D-printed enclosure. Full BOM in the [build guide](https://jzofalltrades.github.io/Q-dex/).
+## Repository layout
 
-## 📂 Repository
+| Path | What it is |
+|------|-----------|
+| `pokedex_app.py` | The main pygame Pokédex application |
+| `key_serial.py` | Host-side reader for the ESP32 keypad + LED forwarding |
+| `keypad_serial.ino` | ESP32-C3 firmware (keypad + WS2812 lens LED) |
+| `pokedex_phyai.tflite` | On-device Pokémon classifier (TFLite) |
+| `labels.txt` | Class labels for the on-device model |
+| `badges/` | All 72 gym-badge images, by region |
+| `build_db.py`, `build_locations.py` | Database build scripts |
+| `index.html`, `viewer.html` | The build-guide website and 3D viewer |
+| `models/` | 3D model of the enclosure (`.glb`) |
+| `cad/` | Fusion 360 / STL enclosure files |
 
-See the [**Repository Map**](https://jzofalltrades.github.io/Q-dex/#repo) for every folder and file explained. Highlights:
+## Hardware
 
-| Path | What |
-|------|------|
-| `pokedex_app.py` | The main Pokédex application |
-| `pokedex_phyai.tflite` | The on-device AI model |
-| `pokedex_phyai_train.ipynb` | The full training notebook (reproducible) |
-| `dataset/` | The training images |
-| `cad/` · `models/` | Enclosure CAD and 3D model |
+Arduino UNO Q · ESP32-C3 Super Mini · USB camera · PAM8403 amplifier + speaker ·
+WS2812 LED · indicator LEDs · 3D-printed enclosure. Full BOM in the build guide.
 
-## ⏱️ Build time
+## Built by
 
-**1 month** to build from scratch. With this guide, the code, and copy-paste commands: **under a week** to replicate.
-
-
-## 👤 Built by
-
-**Jayant** · Nagpur, India · solo entry, Arduino Physical AI Challenge India 2026.
+[jzofalltrades](https://github.com/jzofalltrades) — solo entry, Arduino
+Physical AI Challenge India 2026.
