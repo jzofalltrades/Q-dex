@@ -1,0 +1,734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pokédex 3D Viewer — jzofalltrades</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --red: #E3350D;
+    --red-dark: #a82509;
+    --red-glow: rgba(227,53,13,0.25);
+    --black: #0a0a0a;
+    --surface: #111111;
+    --surface2: #1a1a1a;
+    --border: #2a2a2a;
+    --text: #e8e8e8;
+    --muted: #666;
+    --amber: #f5a623;
+  }
+
+  body {
+    background: var(--black);
+    color: var(--text);
+    font-family: 'Courier New', Courier, monospace;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* TOP BAR */
+  header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1.5rem;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    flex-shrink: 0;
+    gap: 1rem;
+  }
+
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--red);
+    white-space: nowrap;
+  }
+
+  .logo-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--red);
+    box-shadow: 0 0 8px var(--red);
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--red); }
+    50% { opacity: 0.6; box-shadow: 0 0 3px var(--red); }
+  }
+
+  /* VERSION TOGGLE */
+  .version-toggle {
+    display: flex;
+    background: var(--black);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  .version-btn {
+    padding: 6px 20px;
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: bold;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.15s;
+    position: relative;
+  }
+
+  .version-btn.active {
+    background: var(--red);
+    color: white;
+    text-shadow: 0 0 10px rgba(255,255,255,0.5);
+  }
+
+  .version-btn:hover:not(.active) {
+    color: var(--text);
+    background: var(--surface2);
+  }
+
+  /* HEADER ACTIONS */
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .icon-btn {
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.15s;
+    text-decoration: none;
+  }
+
+  .icon-btn:hover { color: var(--text); border-color: var(--red); }
+
+  .handle-tag {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+  }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 220px;
+    background: var(--surface);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow-y: auto;
+  }
+
+  .sidebar-section {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sidebar-label {
+    font-size: 9px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 10px;
+  }
+
+  /* MODEL INFO */
+  .model-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .info-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 11px;
+  }
+
+  .info-key { color: var(--muted); }
+  .info-val { color: var(--amber); font-weight: bold; }
+
+  /* CONTROLS */
+  .controls-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .ctrl-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .ctrl-key {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 1px 6px;
+    font-size: 10px;
+    color: var(--text);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  /* DISPLAY OPTIONS */
+  .option-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--muted);
+  }
+
+  .toggle-switch {
+    width: 32px; height: 16px;
+    background: var(--border);
+    border-radius: 8px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.2s;
+    border: none;
+    flex-shrink: 0;
+  }
+
+  .toggle-switch.on { background: var(--red); }
+
+  .toggle-switch::after {
+    content: '';
+    position: absolute;
+    width: 12px; height: 12px;
+    background: white;
+    border-radius: 50%;
+    top: 2px; left: 2px;
+    transition: transform 0.2s;
+  }
+
+  .toggle-switch.on::after { transform: translateX(16px); }
+
+  /* CANVAS AREA */
+  .canvas-wrap {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #canvas {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  /* OVERLAY STATUS */
+  #status-overlay {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background: var(--black);
+    pointer-events: none;
+    transition: opacity 0.4s;
+    gap: 16px;
+  }
+
+  #status-overlay.hidden { opacity: 0; pointer-events: none; }
+
+  .status-icon {
+    width: 48px; height: 48px;
+    border: 2px solid var(--red);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  .status-text {
+    font-size: 12px;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+
+  /* NO MODEL STATE */
+  #no-model {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    pointer-events: none;
+  }
+
+  #no-model.hidden { display: none; }
+
+  .no-model-title {
+    font-size: 13px;
+    color: var(--muted);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  .no-model-sub {
+    font-size: 11px;
+    color: #333;
+    max-width: 280px;
+    text-align: center;
+    line-height: 1.6;
+  }
+
+  .no-model-icon {
+    font-size: 48px;
+    opacity: 0.15;
+  }
+
+  /* BOTTOM BAR */
+  footer {
+    height: 32px;
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    padding: 0 1rem;
+    gap: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  .footer-stat {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  .footer-stat span { color: var(--amber); }
+
+  /* TOAST */
+  #toast {
+    position: absolute;
+    bottom: 48px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--surface2);
+    border: 1px solid var(--red);
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: opacity 0.2s;
+    pointer-events: none;
+    white-space: nowrap;
+    color: var(--text);
+  }
+
+  #toast.show { opacity: 1; }
+
+  /* RESPONSIVE */
+  @media (max-width: 600px) {
+    .sidebar { display: none; }
+    .handle-tag { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-dot"></div>
+    Pokédex 3D
+  </div>
+
+  <div class="version-toggle">
+    <button class="version-btn active" id="btn-v1" onclick="loadVersion('v1')">Q-DEXTER</button>
+  </div>
+
+  <div class="header-actions">
+    <a class="handle-tag" href="index.html" style="text-decoration:none;color:inherit;border:1px solid currentColor;padding:.25rem .6rem;border-radius:4px">← Build Guide</a>
+    <span class="handle-tag">jzofalltrades</span>
+    <a class="icon-btn" href="https://github.com/jzofalltrades/pokedex-3d" target="_blank" title="GitHub">
+      <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+        <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/>
+      </svg>
+    </a>
+    <button class="icon-btn" onclick="resetCamera()" title="Reset view">↺</button>
+  </div>
+</header>
+
+<div class="main">
+
+  <!-- SIDEBAR -->
+  <div class="sidebar">
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Model Info</div>
+      <div class="model-info">
+        <div class="info-row"><span class="info-key">Version</span><span class="info-val" id="info-ver">V1</span></div>
+        <div class="info-row"><span class="info-key">Triangles</span><span class="info-val" id="info-tris">—</span></div>
+        <div class="info-row"><span class="info-key">Vertices</span><span class="info-val" id="info-verts">—</span></div>
+        <div class="info-row"><span class="info-key">Size</span><span class="info-val" id="info-size">—</span></div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Controls</div>
+      <div class="controls-list">
+        <div class="ctrl-row"><span class="ctrl-key">Drag</span> Rotate</div>
+        <div class="ctrl-row"><span class="ctrl-key">Scroll</span> Zoom</div>
+        <div class="ctrl-row"><span class="ctrl-key">Right drag</span> Pan</div>
+        <div class="ctrl-row"><span class="ctrl-key">Double click</span> Focus</div>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">Display</div>
+      <div class="option-row">
+        <span>Wireframe</span>
+        <button class="toggle-switch" id="toggle-wire" onclick="toggleWireframe(this)"></button>
+      </div>
+      <div class="option-row">
+        <span>Auto-rotate</span>
+        <button class="toggle-switch on" id="toggle-rotate" onclick="toggleAutoRotate(this)"></button>
+      </div>
+      <div class="option-row">
+        <span>Grid</span>
+        <button class="toggle-switch on" id="toggle-grid" onclick="toggleGrid(this)"></button>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <div class="sidebar-label">About</div>
+      <div style="font-size:10px; color:var(--muted); line-height:1.7;">
+        Gen-1 form factor Pokédex<br>
+        Arduino UNO Q · ESP32C3<br>
+        Waveshare 2.8" LCD<br>
+        IP5328P power bank<br>
+        170mm enclosure
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CANVAS -->
+  <div class="canvas-wrap">
+    <canvas id="canvas"></canvas>
+
+    <!-- Loading overlay -->
+    <div id="status-overlay">
+      <div class="status-icon"></div>
+      <div class="status-text" id="status-text">Loading model…</div>
+    </div>
+
+    <!-- No model state -->
+    <div id="no-model" class="hidden">
+      <div class="no-model-icon">📦</div>
+      <div class="no-model-title">No model yet</div>
+      <div class="no-model-sub">Place <code>qdexter.glb</code> in the <code>/models/</code> folder and push to GitHub Pages.</div>
+    </div>
+
+    <div id="toast"></div>
+  </div>
+
+</div>
+
+<footer>
+  <div class="footer-stat">FPS <span id="fps-val">—</span></div>
+  <div class="footer-stat">Polys <span id="poly-val">—</span></div>
+  <div class="footer-stat">Camera <span id="cam-val">—</span></div>
+</footer>
+
+<!-- Three.js r128 (CDN allowlist compliant) -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/DRACOLoader.js"></script>
+
+<script>
+// ─── SCENE SETUP ─────────────────────────────────────────────────────────────
+const canvas = document.getElementById('canvas');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.2;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a0a);
+
+const camera = new THREE.PerspectiveCamera(45, 1, 0.01, 1000);
+camera.position.set(0, 0.15, 0.45);
+
+// OrbitControls
+const controls = new THREE.OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.8;
+controls.enablePan = true;
+controls.minDistance = 0.05;
+controls.maxDistance = 5;
+
+// ─── LIGHTING ────────────────────────────────────────────────────────────────
+const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+scene.add(ambient);
+
+const key = new THREE.DirectionalLight(0xffffff, 1.2);
+key.position.set(2, 3, 2);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+scene.add(key);
+
+const fill = new THREE.DirectionalLight(0xE3350D, 0.3);
+fill.position.set(-2, 1, -2);
+scene.add(fill);
+
+const rim = new THREE.DirectionalLight(0xffffff, 0.5);
+rim.position.set(0, -2, -2);
+scene.add(rim);
+
+// ─── GRID ────────────────────────────────────────────────────────────────────
+const grid = new THREE.GridHelper(2, 20, 0x1a1a1a, 0x1a1a1a);
+grid.position.y = -0.15;
+scene.add(grid);
+
+// ─── GLTF LOADER ─────────────────────────────────────────────────────────────
+const dracoLoader = new THREE.DRACOLoader();
+dracoLoader.setDecoderPath('https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/libs/draco/');
+
+const gltfLoader = new THREE.GLTFLoader();
+gltfLoader.setDRACOLoader(dracoLoader);
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let currentModel = null;
+let currentVersion = 'v1';
+let wireframeMode = false;
+let modelLoaded = false;
+let frameCount = 0;
+let lastFpsTime = performance.now();
+
+const MODEL_PATHS = {
+  v1: './models/qdexter.glb'
+};
+
+const MODEL_META = {
+  v1: { label: 'V1 — Gen1 Shell', size: '170mm' },
+  v2: { label: 'V2 — Revised', size: '170mm' }
+};
+
+// ─── LOAD MODEL ──────────────────────────────────────────────────────────────
+function loadVersion(ver) {
+  currentVersion = ver;
+  document.getElementById('btn-v1').classList.add('active');
+  document.getElementById('info-ver').textContent = ver.toUpperCase();
+  loadModel(MODEL_PATHS[ver], ver);
+}
+
+function loadModel(path, ver) {
+  showOverlay('Loading ' + ver.toUpperCase() + '…');
+  document.getElementById('no-model').classList.add('hidden');
+
+  if (currentModel) {
+    scene.remove(currentModel);
+    currentModel = null;
+    modelLoaded = false;
+  }
+
+  gltfLoader.load(
+    path,
+    (gltf) => {
+      const model = gltf.scene;
+
+      // Auto-center + scale
+      const box = new THREE.Box3().setFromObject(model);
+      const center = box.getCenter(new THREE.Vector3());
+      const size = box.getSize(new THREE.Vector3());
+      const maxDim = Math.max(size.x, size.y, size.z);
+      const scale = 0.3 / maxDim;
+
+      model.scale.setScalar(scale);
+      model.position.sub(center.multiplyScalar(scale));
+      model.position.y += size.y * scale * 0.5;
+
+      // Shadows + materials
+      let tris = 0, verts = 0;
+      model.traverse((node) => {
+        if (node.isMesh) {
+          node.castShadow = true;
+          node.receiveShadow = true;
+          if (node.geometry) {
+            const geo = node.geometry;
+            if (geo.index) tris += geo.index.count / 3;
+            else tris += geo.attributes.position.count / 3;
+            verts += geo.attributes.position.count;
+          }
+        }
+      });
+
+      scene.add(model);
+      currentModel = model;
+      modelLoaded = true;
+
+      // Update info
+      document.getElementById('info-tris').textContent = tris > 1000 ? (tris/1000).toFixed(1)+'k' : tris;
+      document.getElementById('info-verts').textContent = verts > 1000 ? (verts/1000).toFixed(1)+'k' : verts;
+      document.getElementById('info-size').textContent = MODEL_META[ver].size;
+      document.getElementById('poly-val').textContent = tris > 1000 ? (tris/1000).toFixed(1)+'k' : Math.round(tris);
+
+      // Wireframe state
+      if (wireframeMode) applyWireframe(true);
+
+      hideOverlay();
+      showToast(ver.toUpperCase() + ' loaded');
+    },
+    undefined,
+    (err) => {
+      console.warn('Model load failed:', err);
+      hideOverlay();
+      document.getElementById('no-model').classList.remove('hidden');
+    }
+  );
+}
+
+// ─── OVERLAY ─────────────────────────────────────────────────────────────────
+function showOverlay(msg) {
+  const el = document.getElementById('status-overlay');
+  document.getElementById('status-text').textContent = msg;
+  el.classList.remove('hidden');
+}
+
+function hideOverlay() {
+  document.getElementById('status-overlay').classList.add('hidden');
+}
+
+// ─── TOAST ───────────────────────────────────────────────────────────────────
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 2000);
+}
+
+// ─── CONTROLS ────────────────────────────────────────────────────────────────
+function resetCamera() {
+  camera.position.set(0, 0.15, 0.45);
+  controls.target.set(0, 0, 0);
+  controls.update();
+  showToast('Camera reset');
+}
+
+function toggleWireframe(btn) {
+  btn.classList.toggle('on');
+  wireframeMode = btn.classList.contains('on');
+  applyWireframe(wireframeMode);
+}
+
+function applyWireframe(on) {
+  if (!currentModel) return;
+  currentModel.traverse((node) => {
+    if (node.isMesh && node.material) {
+      const mats = Array.isArray(node.material) ? node.material : [node.material];
+      mats.forEach(m => { m.wireframe = on; });
+    }
+  });
+}
+
+function toggleAutoRotate(btn) {
+  btn.classList.toggle('on');
+  controls.autoRotate = btn.classList.contains('on');
+}
+
+function toggleGrid(btn) {
+  btn.classList.toggle('on');
+  grid.visible = btn.classList.contains('on');
+}
+
+// Double-click to stop rotate
+canvas.addEventListener('dblclick', () => {
+  controls.autoRotate = false;
+  document.getElementById('toggle-rotate').classList.remove('on');
+  showToast('Auto-rotate off');
+});
+
+// ─── RESIZE ──────────────────────────────────────────────────────────────────
+function resize() {
+  const w = canvas.clientWidth, h = canvas.clientHeight;
+  renderer.setSize(w, h, false);
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+}
+
+window.addEventListener('resize', resize);
+resize();
+
+// ─── RENDER LOOP ─────────────────────────────────────────────────────────────
+function animate() {
+  requestAnimationFrame(animate);
+  controls.update();
+  renderer.render(scene, camera);
+
+  // FPS
+  frameCount++;
+  const now = performance.now();
+  if (now - lastFpsTime > 1000) {
+    document.getElementById('fps-val').textContent = frameCount;
+    frameCount = 0;
+    lastFpsTime = now;
+  }
+
+  // Camera position in footer
+  const p = camera.position;
+  document.getElementById('cam-val').textContent =
+    p.x.toFixed(2) + ' ' + p.y.toFixed(2) + ' ' + p.z.toFixed(2);
+}
+
+animate();
+
+// ─── INITIAL LOAD ────────────────────────────────────────────────────────────
+loadVersion('v1');
+</script>
+</body>
+</html>

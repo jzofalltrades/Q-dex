@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Q-dexter — Build Guide | Arduino Physical AI Challenge India 2026</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+
+:root{
+  --red:#CC0000; --red-d:#8B0000; --red-g:rgba(204,0,0,.15);
+  --gold:#FFD233; --blue:#3B9EFF; --green:#3DDC84; --purple:#A78BFA;
+  --bg:#0B0B0D; --s1:#141417; --s2:#1C1C21; --s3:#26262C;
+  --bd:#2E2E36; --tx:#E9E9EE; --mut:#8C8C9E; --dim:#5A5A6A;
+  --mono:'JetBrains Mono',monospace; --body:'Inter',sans-serif; --px:'Press Start 2P',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);font-size:15.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:200;background:rgba(11,11,13,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;gap:1.2rem;padding:0 1.5rem}
+.nl{font-family:var(--px);font-size:.58rem;color:var(--red);text-decoration:none;flex-shrink:0;letter-spacing:.04em}
+.nav-links{display:flex;list-style:none;overflow-x:auto;scrollbar-width:none;gap:.1rem}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:.76rem;padding:.35rem .7rem;border-radius:4px;white-space:nowrap;transition:.18s}
+.nav-links a:hover{color:var(--tx);background:var(--s2)}
+
+/* HERO */
+.hero{position:relative;overflow:hidden;padding:4.5rem 1.5rem 3.5rem;text-align:center;background:radial-gradient(ellipse 75% 55% at 50% 0%,rgba(204,0,0,.2),transparent 70%),var(--bg);border-bottom:1px solid var(--bd)}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,.02) 31px,rgba(255,255,255,.02) 32px);pointer-events:none}
+.eyebrow{display:inline-block;background:var(--red);color:#fff;font-family:var(--px);font-size:.42rem;letter-spacing:.14em;padding:.4rem 1rem;border-radius:3px;margin-bottom:1.4rem}
+.hero h1{font-family:var(--px);font-size:clamp(.95rem,3.8vw,1.85rem);line-height:1.65;color:#fff;margin-bottom:1.1rem;text-shadow:0 0 45px var(--red-g);position:relative}
+.hero h1 span{color:var(--red)}
+.hsub{color:var(--mut);font-size:1.02rem;max-width:640px;margin:0 auto 1.8rem;position:relative}
+.hbadges{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;position:relative}
+.badge{background:var(--s1);border:1px solid var(--bd);border-radius:999px;padding:.28rem .85rem;font-size:.75rem;color:var(--mut)}
+.badge.r{border-color:var(--red);color:#ff6b6b}
+.badge.b{border-color:var(--blue);color:var(--blue)}
+.badge.g{border-color:#1f9d5a;color:var(--green)}
+.badge.y{border-color:var(--gold);color:var(--gold)}
+.badge.p{border-color:#7c5cd6;color:var(--purple)}
+
+/* STAT STRIP */
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--bd);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.stat{background:var(--bg);padding:1.4rem .8rem;text-align:center}
+.stat .n{font-family:var(--px);font-size:.95rem;color:var(--gold);display:block;margin-bottom:.5rem}
+.stat .l{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+
+.wrap{max-width:900px;margin:0 auto;padding:0 1.5rem}
+
+/* TOC */
+.toc{background:var(--s1);border:1px solid var(--bd);border-left:4px solid var(--red);border-radius:8px;padding:1.6rem 1.9rem;margin:2.5rem 0}
+.toc h2{font-family:var(--px);font-size:.58rem;color:var(--red);letter-spacing:.1em;margin-bottom:1.1rem}
+.toc ol{counter-reset:t;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:.35rem 1.2rem}
+@media(max-width:620px){.toc ol{grid-template-columns:1fr}}
+.toc li{counter-increment:t}
+.toc a{color:var(--tx);text-decoration:none;font-size:.86rem;display:flex;gap:.55rem;align-items:baseline}
+.toc a::before{content:"0" counter(t);font-family:var(--px);font-size:.42rem;color:var(--red);flex-shrink:0}
+.toc a:hover{color:var(--gold)}
+
+/* SECTIONS */
+.sec{padding:3.5rem 0 1.5rem;scroll-margin-top:70px}
+.sh{display:flex;align-items:center;gap:.9rem;margin-bottom:1.6rem;padding-bottom:.9rem;border-bottom:1px solid var(--bd)}
+.snum{font-family:var(--px);font-size:.52rem;color:var(--red);background:var(--red-g);border:1px solid var(--red);border-radius:6px;padding:.4rem .55rem;flex-shrink:0}
+.sh h2{font-family:var(--px);font-size:clamp(.52rem,1.9vw,.75rem);color:#fff;line-height:1.65}
+h3{font-size:1.02rem;font-weight:700;color:#fff;margin:1.6rem 0 .6rem}
+h4{font-size:.88rem;font-weight:700;color:var(--gold);margin:1.2rem 0 .45rem;letter-spacing:.02em}
+p{margin-bottom:.9rem}
+ul.pl{padding-left:1.3rem;margin-bottom:1rem}
+ul.pl li{margin-bottom:.35rem;font-size:.9rem}
+
+/* TABLES */
+.tbl{width:100%;border-collapse:collapse;margin:1.2rem 0;font-size:.84rem}
+.tbl th{background:var(--s2);color:var(--mut);font-weight:600;text-align:left;padding:.6rem .85rem;border-bottom:1px solid var(--bd);font-size:.7rem;letter-spacing:.07em;text-transform:uppercase}
+.tbl td{padding:.58rem .85rem;border-bottom:1px solid var(--bd);vertical-align:top}
+.tbl tr:hover td{background:var(--s1)}
+.tbl .q{color:var(--gold);font-family:var(--mono);font-weight:600;white-space:nowrap}
+.tbl .n{color:var(--mut);font-size:.79rem}
+.tbl .ok{color:var(--green);font-weight:600}
+.tbl tfoot td{background:var(--s2);font-weight:700;color:#fff;border-bottom:none}
+.tbl-scroll{overflow-x:auto;margin:1.2rem 0}
+.tbl-scroll .tbl{margin:0;min-width:560px}
+
+/* CODE */
+.cb{background:#08080A;border:1px solid var(--bd);border-left:3px solid var(--red);border-radius:6px;padding:1rem 1.2rem;margin:1rem 0;overflow-x:auto}
+.cb pre{font-family:var(--mono);font-size:.79rem;line-height:1.75;color:#C6D0F5;white-space:pre}
+.cl{font-family:var(--px);font-size:.4rem;color:var(--dim);letter-spacing:.1em;margin-bottom:.55rem}
+.tag{display:inline-block;background:var(--s3);border:1px solid var(--bd);border-radius:4px;padding:.1rem .42rem;font-family:var(--mono);font-size:.78rem;color:#C6D0F5}
+
+/* DIAGRAM */
+.dg{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:1.3rem;margin:1.3rem 0;overflow-x:auto}
+.dg svg{display:block;margin:0 auto;max-width:100%;height:auto}
+.dg-cap{text-align:center;font-size:.76rem;color:var(--dim);margin-top:.8rem;font-style:italic}
+.legend{display:flex;flex-wrap:wrap;gap:.45rem 1rem;margin-top:.9rem;justify-content:center}
+.li{display:flex;align-items:center;gap:.35rem;font-size:.76rem;color:var(--mut)}
+.ld{width:11px;height:11px;border-radius:2px;flex-shrink:0}
+
+/* CALLOUT */
+.co{display:flex;gap:.9rem;background:var(--s1);border:1px solid var(--bd);border-left:4px solid var(--gold);border-radius:6px;padding:.95rem 1.15rem;margin:1.1rem 0;font-size:.86rem}
+.co.d{border-left-color:var(--red)}
+.co.t{border-left-color:var(--green)}
+.co.i{border-left-color:var(--blue)}
+.co-ic{font-size:1.1rem;flex-shrink:0;line-height:1.5}
+.co-b strong{color:#fff;display:block;margin-bottom:.15rem}
+.co-b p{margin-bottom:0}
+
+/* CHECKPOINT */
+.ckp{background:linear-gradient(90deg,rgba(61,220,132,.08),transparent);border:1px solid #1f7a48;border-left:4px solid var(--green);border-radius:6px;padding:1rem 1.2rem;margin:1.4rem 0}
+.ckp .hd{font-family:var(--px);font-size:.44rem;color:var(--green);letter-spacing:.1em;margin-bottom:.7rem}
+.ckp ul{list-style:none}
+.ckp li{font-size:.84rem;padding:.22rem 0 .22rem 1.5rem;position:relative}
+.ckp li::before{content:'☐';position:absolute;left:0;color:var(--green);font-size:.95rem}
+
+/* STEPS */
+.steps{list-style:none}
+.steps li{display:flex;gap:1.1rem;padding:1.1rem 0;border-bottom:1px dashed var(--bd)}
+.steps li:last-child{border-bottom:none}
+.sn{font-family:var(--px);font-size:.46rem;color:#fff;background:var(--red);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:.15rem}
+.sb strong{display:block;font-size:.93rem;font-weight:700;color:#fff;margin-bottom:.25rem}
+.sb p{margin-bottom:0;font-size:.87rem;color:var(--mut)}
+
+/* CARDS */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(185px,1fr));gap:.9rem;margin:1.3rem 0}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:1.1rem;transition:.2s}
+.card:hover{border-color:var(--red);transform:translateY(-2px)}
+.card .ic{font-size:1.5rem;margin-bottom:.5rem}
+.card h3{font-size:.86rem;margin:0 0 .25rem;color:#fff}
+.card p{font-size:.78rem;color:var(--mut);margin:0}
+
+/* TREE */
+.tree{background:#08080A;border:1px solid var(--bd);border-radius:6px;padding:1.1rem 1.3rem;margin:1rem 0;overflow-x:auto;font-family:var(--mono);font-size:.78rem;line-height:1.85;color:var(--mut)}
+.tree .d{color:var(--blue);font-weight:600}
+.tree .f{color:#C6D0F5}
+.tree .c{color:var(--dim)}
+
+/* TWOCOL */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem}
+@media(max-width:640px){.two{grid-template-columns:1fr}}
+
+hr.dv{border:none;border-top:1px solid var(--bd);margin:2rem 0}
+
+footer{border-top:1px solid var(--bd);padding:2.2rem 1.5rem;text-align:center;color:var(--dim);font-size:.78rem;margin-top:3.5rem}
+footer a{color:var(--red);text-decoration:none}
+.flogo{font-family:var(--px);font-size:.52rem;color:var(--red);display:block;margin-bottom:.7rem}
+
+@media print{nav{display:none}body{background:#fff;color:#000}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="nl" href="#top">Q-DEXTER</a>
+  <ul class="nav-links">
+    <li><a href="#overview">Overview</a></li>
+    <li><a href="#innovation">Innovation</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#bom">BOM</a></li>
+    <li><a href="#schem">Schematics</a></li>
+    <li><a href="#s1">1 · Display</a></li>
+    <li><a href="#s2">2 · Keypad</a></li>
+    <li><a href="#s3">3 · Software</a></li>
+    <li><a href="#phyai">Physical AI</a></li>
+    <li><a href="#s4">4 · Assembly</a></li>
+    <li><a href="#test">Validation</a></li>
+    <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="viewer.html" style="color:var(--gold);font-weight:700">◆ 3D Model</a></li>
+  </ul>
+</nav>
+
+<section class="hero" id="top">
+  <div class="eyebrow">Arduino Physical AI Challenge India 2026 · Gaming, Robotics &amp; Interactive AI</div>
+  <h1>Build Your Own<br/><span>Real Pokédex</span><br/>— Q-dexter</h1>
+  <p class="hsub">
+    This guide walks you through your childhood dream — catching a Pokémon, registering it in your
+    very own Pokédex, and living the life of a real trainer. No emulator. No phone app.
+    A real device, in your hands.
+  </p>
+  <div class="hbadges">
+    <span class="badge r">Arduino UNO Q</span>
+    <span class="badge b">On-Device ML</span>
+    <span class="badge y">Offline Voice AI</span>
+    <span class="badge g">3D Printed</span>
+    <span class="badge p">1025 Pokémon</span>
+    <span class="badge">Solo Build</span>
+  </div>
+</section>
+
+<div class="stats">
+  <div class="stat"><span class="n">1025</span><span class="l">Pokémon DB</span></div>
+  <div class="stat"><span class="n">2</span><span class="l">Processors</span></div>
+  <div class="stat"><span class="n">72</span><span class="l">Badges · 9 Regions</span></div>
+  <div class="stat"><span class="n">10</span><span class="l">Physical Buttons</span></div>
+  <div class="stat"><span class="n">1</span><span class="l">Month to Build</span></div>
+</div>
+
+<main class="wrap">
+
+<div class="toc">
+  <h2>Contents</h2>
+  <ol>
+    <li><a href="#overview">What Q-dexter Is</a></li>
+    <li><a href="#innovation">Why We Built It This Way</a></li>
+    <li><a href="#arch">System Architecture</a></li>
+    <li><a href="#bom">Bill of Materials</a></li>
+    <li><a href="#schem">Circuit Schematics</a></li>
+    <li><a href="#s1">Phase 1 — Display Bring-Up</a></li>
+    <li><a href="#s2">Phase 2 — Keypad &amp; Serial Link</a></li>
+    <li><a href="#s3">Phase 3 — Software Stack</a></li>
+    <li><a href="#phyai">The Physical AI — On-Device Intelligence</a></li>
+    <li><a href="#s4">Phase 4 — Print &amp; Assembly</a></li>
+    <li><a href="#test">Validation &amp; Test Results</a></li>
+    <li><a href="#trouble">Troubleshooting Reference</a></li>
+    <li><a href="#repro">Replication Checklist</a></li>
+  </ol>
+</div>
+
+<!-- ════ OVERVIEW ════ -->
+<section class="sec" id="overview">
+  <div class="sh"><div class="snum">01</div><h2>What Q-dexter Is</h2></div>
+
+  <p>
+    Q-dexter is a real, handheld Pokédex — not a simulation, not a phone app. Point it at a Pokémon
+    card or figure, press <strong>SCAN</strong>, and an on-device neural network identifies it,
+    registers it to your trainer profile, awards XP, and unlocks badges. Press <strong>OAK</strong>
+    and ask a question out loud; Professor Oak answers back in his own voice.
+  </p>
+
+  <p>
+    It runs a full 1025-Pokémon database, multi-trainer profiles, and an XP &amp; badge system
+    spanning 9 regions — all inside a 3D-printed Gen-1 Kanto enclosure that opens and closes
+    on a real hinge.
+  </p>
+
+  <div class="grid">
+    <div class="card"><div class="ic">🖥️</div><h3>Display Layer</h3><p>Waveshare 2.8" HDMI IPS driven directly off the UNO Q's HDMI-out. Zero driver work.</p></div>
+    <div class="card"><div class="ic">🕹️</div><h3>Input Layer</h3><p>ESP32-C3 satellite MCU polls 10 buttons and streams events over USB serial.</p></div>
+    <div class="card"><div class="ic">🧠</div><h3>Intelligence Layer</h3><p>MobileNetV2 vision + whisper.cpp speech, both running locally on the UNO Q.</p></div>
+    <div class="card"><div class="ic">🖨️</div><h3>Physical Layer</h3><p>Fusion 360 enclosure: hinged lid, flush button caps, dome lens, press-fit inserts.</p></div>
+  </div>
+
+  <div class="co i">
+    <div class="co-ic">🎯</div>
+    <div class="co-b">
+      <strong>Who this guide is for</strong>
+      <p>Anyone with a 3D printer and basic soldering skills. Every command is copy-pasteable.
+      Every phase ends with a verification checkpoint so you know it works before moving on —
+      no debugging four problems at once.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ INNOVATION ════ -->
+<section class="sec" id="innovation">
+  <div class="sh"><div class="snum">02</div><h2>Why We Built It This Way</h2></div>
+
+  <p>
+    Three design decisions define this project. Each solves a real constraint rather than
+    following the obvious path.
+  </p>
+
+  <h4>Decision 1 — Split the workload across two processors</h4>
+  <p>
+    The Arduino UNO Q is a Linux board. Linux is not real-time: polling GPIO from Python means
+    missed button presses whenever the scheduler is busy running inference. So the UNO Q does
+    <em>zero</em> GPIO. An ESP32-C3 Super Mini polls all 10 buttons at a steady 50 Hz and streams
+    single-byte events over USB serial. The UNO Q reads those bytes in a daemon thread and drops
+    them into a queue.
+  </p>
+  <p>
+    <strong>Result:</strong> button response stays crisp even while the neural network is running.
+    This is the single most important architectural choice in the build.
+  </p>
+
+  <h4>Decision 2 — Run the AI on-device, not in the cloud</h4>
+  <p>
+    Both the vision model (MobileNetV2 via <span class="tag">ai_edge_litert</span>) and the speech
+    model (whisper.cpp, tiny.en) run locally on the UNO Q. No round trip, no API latency, no
+    connectivity requirement for the core scan loop. A real Pokédex works in a cave.
+  </p>
+
+  <h4>Decision 3 — Make the enclosure a functional part, not a shell</h4>
+  <p>
+    The lid geometry is dimensioned against the button caps: caps sit at z=−3.7 mm, exactly 0.3 mm
+    proud of the recessed panel field at z=−4.0 mm. When the lid rotates 180° closed, the
+    LidFacePlate clears every cap by that 0.3 mm. Six mounting bosses were shortened specifically
+    to make this clearance work. The enclosure closes like the real thing because the CAD was
+    solved as an interference problem, not styled as a box.
+  </p>
+
+  <div class="co">
+    <div class="co-ic">💡</div>
+    <div class="co-b">
+      <strong>Real-world takeaway</strong>
+      <p>The two-processor pattern here generalises: any Linux SBC project needing responsive
+      physical input benefits from offloading GPIO to a cheap MCU over serial. The ESP32-C3
+      Super Mini costs under ₹250 and eliminates an entire class of latency bugs.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ ARCHITECTURE ════ -->
+<section class="sec" id="arch">
+  <div class="sh"><div class="snum">03</div><h2>System Architecture</h2></div>
+
+  <p>Full system block diagram showing every subsystem, interface, and data direction.</p>
+
+  <div class="dg">
+    <svg viewBox="0 0 820 480" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#8C8C9E"/>
+        </marker>
+        <marker id="arg" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#FFD233"/>
+        </marker>
+      </defs>
+
+      <!-- PHYSICAL INPUT ZONE -->
+      <rect x="15" y="40" width="185" height="230" rx="8" fill="none" stroke="#2E2E36" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="107" y="32" text-anchor="middle" font-size="9" fill="#5A5A6A" letter-spacing="1">PHYSICAL INPUT</text>
+
+      <rect x="30" y="55" width="155" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="107" y="76" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">10× Tactile Buttons</text>
+      <text x="107" y="92" text-anchor="middle" font-size="8" fill="#8C8C9E">D-pad ×4 · Action ×6</text>
+
+      <rect x="30" y="120" width="155" height="58" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="107" y="141" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">ESP32-C3 Super Mini</text>
+      <text x="107" y="156" text-anchor="middle" font-size="8" fill="#8C8C9E">50 Hz poll · debounce</text>
+      <text x="107" y="170" text-anchor="middle" font-size="8" fill="#5A5A6A">1-byte event encode</text>
+
+      <rect x="30" y="192" width="155" height="46" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="107" y="211" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">Shoulder LED</text>
+      <text x="107" y="226" text-anchor="middle" font-size="8" fill="#8C8C9E">Status · under dome lens</text>
+
+      <line x1="107" y1="107" x2="107" y2="118" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
+      <line x1="107" y1="190" x2="107" y2="180" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
+
+      <!-- SERIAL LINK -->
+      <line x1="185" y1="149" x2="290" y2="149" stroke="#FFD233" stroke-width="2.5" marker-end="url(#arg)"/>
+      <text x="237" y="141" text-anchor="middle" font-size="8" fill="#FFD233" font-weight="600">USB Serial</text>
+      <text x="237" y="163" text-anchor="middle" font-size="7.5" fill="#5A5A6A">115200 baud</text>
+
+      <!-- BRAIN ZONE -->
+      <rect x="290" y="40" width="235" height="400" rx="8" fill="none" stroke="#CC0000" stroke-width="1.5"/>
+      <text x="407" y="32" text-anchor="middle" font-size="9" fill="#CC0000" letter-spacing="1" font-weight="700">ARDUINO UNO Q · UBUNTU 24</text>
+
+      <rect x="305" y="55" width="205" height="48" rx="6" fill="#1C1C21" stroke="#CC0000" stroke-width="1.5"/>
+      <text x="407" y="74" text-anchor="middle" font-size="10" fill="#fff" font-weight="700">Serial Reader Thread</text>
+      <text x="407" y="90" text-anchor="middle" font-size="8" fill="#8C8C9E">daemon · non-blocking queue</text>
+
+      <rect x="305" y="118" width="205" height="58" rx="6" fill="#1C1C21" stroke="#CC0000" stroke-width="2"/>
+      <text x="407" y="139" text-anchor="middle" font-size="11" fill="#CC0000" font-weight="700">pygame Event Loop</text>
+      <text x="407" y="155" text-anchor="middle" font-size="8" fill="#8C8C9E">Screen router · state machine</text>
+      <text x="407" y="169" text-anchor="middle" font-size="8" fill="#5A5A6A">renders to /dev/fb0</text>
+
+      <rect x="305" y="191" width="98" height="62" rx="6" fill="#1C1C21" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="354" y="210" text-anchor="middle" font-size="9" fill="#3B9EFF" font-weight="700">Vision</text>
+      <text x="354" y="225" text-anchor="middle" font-size="7.5" fill="#8C8C9E">MobileNetV2</text>
+      <text x="354" y="238" text-anchor="middle" font-size="7.5" fill="#8C8C9E">ai_edge_litert</text>
+      <text x="354" y="249" text-anchor="middle" font-size="7" fill="#5A5A6A">.tflite · local</text>
+
+      <rect x="412" y="191" width="98" height="62" rx="6" fill="#1C1C21" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="461" y="210" text-anchor="middle" font-size="9" fill="#A78BFA" font-weight="700">Speech</text>
+      <text x="461" y="225" text-anchor="middle" font-size="7.5" fill="#8C8C9E">whisper.cpp</text>
+      <text x="461" y="238" text-anchor="middle" font-size="7.5" fill="#8C8C9E">tiny.en</text>
+      <text x="461" y="249" text-anchor="middle" font-size="7" fill="#5A5A6A">STT · local</text>
+
+      <rect x="305" y="268" width="205" height="52" rx="6" fill="#1C1C21" stroke="#FFD233" stroke-width="1.5"/>
+      <text x="407" y="287" text-anchor="middle" font-size="10" fill="#FFD233" font-weight="700">Pokédex Data Layer</text>
+      <text x="407" y="303" text-anchor="middle" font-size="8" fill="#8C8C9E">1025 species · trainer profiles · XP</text>
+
+      <rect x="305" y="335" width="205" height="48" rx="6" fill="#1C1C21" stroke="#8C8C9E" stroke-width="1.5"/>
+      <text x="407" y="354" text-anchor="middle" font-size="10" fill="#8C8C9E" font-weight="700">Persistence</text>
+      <text x="407" y="370" text-anchor="middle" font-size="8" fill="#5A5A6A">JSON profiles · capture images</text>
+
+      <rect x="305" y="398" width="205" height="30" rx="6" fill="#1C1C21" stroke="#5A5A6A" stroke-width="1"/>
+      <text x="407" y="417" text-anchor="middle" font-size="8.5" fill="#5A5A6A">espeak TTS → USB sound card</text>
+
+      <!-- internal arrows -->
+      <line x1="407" y1="103" x2="407" y2="116" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="354" y1="176" x2="354" y2="189" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="461" y1="176" x2="461" y2="189" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="407" y1="253" x2="407" y2="266" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="407" y1="320" x2="407" y2="333" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+      <line x1="407" y1="383" x2="407" y2="396" stroke="#8C8C9E" stroke-width="1.5" marker-end="url(#ar)"/>
+
+      <!-- PERIPHERAL ZONE -->
+      <rect x="600" y="40" width="200" height="400" rx="8" fill="none" stroke="#2E2E36" stroke-width="1" stroke-dasharray="4,4"/>
+      <text x="700" y="32" text-anchor="middle" font-size="9" fill="#5A5A6A" letter-spacing="1">PERIPHERALS</text>
+
+      <rect x="615" y="58" width="170" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="700" y="78" text-anchor="middle" font-size="10" fill="#3B9EFF" font-weight="700">Waveshare 2.8" IPS</text>
+      <text x="700" y="94" text-anchor="middle" font-size="8" fill="#8C8C9E">HDMI · 640×480</text>
+
+      <rect x="615" y="128" width="170" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="700" y="148" text-anchor="middle" font-size="10" fill="#3B9EFF" font-weight="700">USB Camera</text>
+      <text x="700" y="164" text-anchor="middle" font-size="8" fill="#8C8C9E">UVC · /dev/video0</text>
+
+      <rect x="615" y="198" width="170" height="62" rx="6" fill="#141417" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="700" y="218" text-anchor="middle" font-size="10" fill="#A78BFA" font-weight="700">USB Sound Card</text>
+      <text x="700" y="234" text-anchor="middle" font-size="8" fill="#8C8C9E">plughw:1,0 · 16 kHz</text>
+      <text x="700" y="248" text-anchor="middle" font-size="7.5" fill="#5A5A6A">mic in + speaker out</text>
+
+      <rect x="615" y="278" width="170" height="52" rx="6" fill="#141417" stroke="#8C8C9E" stroke-width="1.5"/>
+      <text x="700" y="298" text-anchor="middle" font-size="10" fill="#8C8C9E" font-weight="700">Powered USB Hub</text>
+      <text x="700" y="314" text-anchor="middle" font-size="8" fill="#5A5A6A">isolates peripheral current</text>
+
+      <rect x="615" y="348" width="170" height="48" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="700" y="367" text-anchor="middle" font-size="10" fill="#3DDC84" font-weight="700">5 V 3 A Supply</text>
+      <text x="700" y="383" text-anchor="middle" font-size="8" fill="#5A5A6A">USB-C → UNO Q</text>
+
+      <!-- peripheral links -->
+      <line x1="525" y1="84" x2="613" y2="84" stroke="#3B9EFF" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="569" y="77" text-anchor="middle" font-size="7" fill="#3B9EFF">HDMI</text>
+      <line x1="613" y1="154" x2="525" y2="154" stroke="#3B9EFF" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="569" y="147" text-anchor="middle" font-size="7" fill="#3B9EFF">USB</text>
+      <line x1="613" y1="229" x2="525" y2="229" stroke="#A78BFA" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="569" y="222" text-anchor="middle" font-size="7" fill="#A78BFA">USB</text>
+      <line x1="613" y1="304" x2="525" y2="304" stroke="#8C8C9E" stroke-width="1.5" stroke-dasharray="3,3"/>
+      <line x1="613" y1="372" x2="525" y2="372" stroke="#3DDC84" stroke-width="2" marker-end="url(#ar)"/>
+      <text x="569" y="365" text-anchor="middle" font-size="7" fill="#3DDC84">5V</text>
+    </svg>
+    <div class="dg-cap">Fig. 1 — Q-dexter full system architecture. Green = input/power, yellow = serial, blue = vision/display, purple = audio.</div>
+  </div>
+
+  <h3>Runtime data flow — the SCAN action</h3>
+  <p>This is the critical path. Every millisecond here is user-visible.</p>
+
+  <div class="dg">
+    <svg viewBox="0 0 800 130" xmlns="http://www.w3.org/2000/svg">
+      <defs><marker id="a2" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#CC0000"/></marker></defs>
+      <g font-size="8.5" fill="#8C8C9E" text-anchor="middle">
+        <rect x="5" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+        <text x="60" y="57" font-size="9.5" fill="#3DDC84" font-weight="700">SCAN pressed</text>
+        <text x="60" y="72">ESP32 → byte 'C'</text>
+
+        <rect x="145" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+        <text x="200" y="57" font-size="9.5" fill="#FFD233" font-weight="700">Queue → loop</text>
+        <text x="200" y="72">state = SCANNING</text>
+
+        <rect x="285" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="340" y="57" font-size="9.5" fill="#3B9EFF" font-weight="700">Capture frame</text>
+        <text x="340" y="72">/dev/video0</text>
+
+        <rect x="425" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+        <text x="480" y="57" font-size="9.5" fill="#3B9EFF" font-weight="700">MobileNetV2</text>
+        <text x="480" y="72">224×224 → top-3</text>
+
+        <rect x="565" y="35" width="110" height="52" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+        <text x="620" y="57" font-size="9.5" fill="#FFD233" font-weight="700">DB lookup</text>
+        <text x="620" y="72">species record</text>
+
+        <rect x="695" y="35" width="100" height="52" rx="6" fill="#141417" stroke="#CC0000" stroke-width="1.5"/>
+        <text x="745" y="57" font-size="9.5" fill="#CC0000" font-weight="700">Register</text>
+        <text x="745" y="72">+XP · badge</text>
+      </g>
+      <g stroke="#CC0000" stroke-width="1.8" marker-end="url(#a2)">
+        <line x1="117" y1="61" x2="141" y2="61"/>
+        <line x1="257" y1="61" x2="281" y2="61"/>
+        <line x1="397" y1="61" x2="421" y2="61"/>
+        <line x1="537" y1="61" x2="561" y2="61"/>
+        <line x1="677" y1="61" x2="691" y2="61"/>
+      </g>
+      <text x="400" y="112" text-anchor="middle" font-size="8" fill="#5A5A6A">Inference runs in a worker thread — the UI keeps rendering a scan animation throughout</text>
+    </svg>
+    <div class="dg-cap">Fig. 2 — SCAN pipeline. Vision inference is threaded so the event loop never blocks.</div>
+  </div>
+</section>
+
+<!-- ════ BOM ════ -->
+<section class="sec" id="bom">
+  <div class="sh"><div class="snum">04</div><h2>Bill of Materials</h2></div>
+
+  <p>
+    Every component needed for one complete Q-dexter. Prices are indicative INR retail
+    (Robu.in / Robokits / Amazon India, mid-2026) and will vary — treat them as budgeting
+    guidance, not quotes.
+  </p>
+
+  <h4>A · Core Electronics</h4>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Component</th><th>Spec / Part</th><th>Qty</th><th>~₹ Each</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>A1</td><td>Arduino UNO Q</td><td>Linux SBC, HDMI-out, USB-A ×2</td><td class="q">1</td><td class="q">—</td><td class="n">Main compute. Runs Ubuntu 24.</td></tr>
+      <tr><td>A2</td><td>Waveshare 2.8" HDMI LCD (H)</td><td>640×480 IPS, HDMI + micro-USB</td><td class="q">1</td><td class="q">2,800</td><td class="n">Plug-and-play over HDMI, no driver.</td></tr>
+      <tr><td>A3</td><td>ESP32-C3 Super Mini</td><td>RISC-V, USB-C, 11 usable GPIO</td><td class="q">1</td><td class="q">250</td><td class="n">Keypad controller only.</td></tr>
+      <tr><td>A4</td><td>USB Camera Module</td><td>UVC-compatible, ≥2 MP</td><td class="q">1</td><td class="q">900</td><td class="n">Must be UVC — no proprietary drivers.</td></tr>
+      <tr><td>A5</td><td>USB PnP Sound Card</td><td>C-Media CM108 or equivalent</td><td class="q">1</td><td class="q">300</td><td class="n">Required — onboard audio is insufficient.</td></tr>
+      <tr><td>A6</td><td>Mini USB Microphone</td><td>Omnidirectional, ALSA-compatible</td><td class="q">1</td><td class="q">250</td><td class="n">Plugs into A5.</td></tr>
+      <tr><td>A7</td><td>Mini Speaker 8Ω 2W</td><td>28–40 mm driver</td><td class="q">1</td><td class="q">150</td><td class="n">Professor Oak TTS output.</td></tr>
+      <tr><td>A8</td><td>Powered USB Hub</td><td>4-port, external 5 V supply</td><td class="q">1</td><td class="q">700</td><td class="n">Critical — see power note below.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>B · Passives, Buttons &amp; Wiring</h4>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Component</th><th>Spec</th><th>Qty</th><th>~₹ Total</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>B1</td><td>Tactile Push Button</td><td>6×6×5 mm, 4-pin THT</td><td class="q">10</td><td class="q">60</td><td class="n">4 D-pad + 6 action.</td></tr>
+      <tr><td>B2</td><td>LED 5 mm</td><td>Green, diffused</td><td class="q">1</td><td class="q">5</td><td class="n">Shoulder status indicator.</td></tr>
+      <tr><td>B3</td><td>Resistor 330 Ω</td><td>¼ W, 5%</td><td class="q">1</td><td class="q">2</td><td class="n">LED current limit @ 3.3 V.</td></tr>
+      <tr><td>B4</td><td>Resistor 10 kΩ</td><td>¼ W, 5%</td><td class="q">10</td><td class="q">20</td><td class="n">Optional external pull-ups (see §05).</td></tr>
+      <tr><td>B5</td><td>Capacitor 100 nF</td><td>Ceramic, 50 V</td><td class="q">10</td><td class="q">25</td><td class="n">Hardware debounce across each button.</td></tr>
+      <tr><td>B6</td><td>Silicone Hookup Wire</td><td>26 AWG, 3 colours</td><td class="q">3 m</td><td class="q">180</td><td class="n">Flexible — critical inside a hinged shell.</td></tr>
+      <tr><td>B7</td><td>Mini HDMI → HDMI Cable</td><td>30 cm, flexible</td><td class="q">1</td><td class="q">350</td><td class="n">Short length matters for routing.</td></tr>
+      <tr><td>B8</td><td>USB-A → USB-C Cable</td><td>20 cm</td><td class="q">1</td><td class="q">150</td><td class="n">ESP32-C3 → UNO Q serial link.</td></tr>
+      <tr><td>B9</td><td>USB-C Power Adapter</td><td>5 V 3 A minimum</td><td class="q">1</td><td class="q">500</td><td class="n">Do not undersize.</td></tr>
+      <tr><td>B10</td><td>Heat-shrink Tubing</td><td>Assorted 2–5 mm</td><td class="q">1 set</td><td class="q">100</td><td class="n">All solder joints.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h4>C · Mechanical &amp; 3D Printed</h4>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Part</th><th>Material</th><th>Qty</th><th>Print Notes</th></tr></thead>
+    <tbody>
+      <tr><td>C1</td><td>Left Shell</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">0.2 mm layer, 20% infill, supports at hinge.</td></tr>
+      <tr><td>C2</td><td>Right Shell</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Same as C1. Houses ESP32 + buttons.</td></tr>
+      <tr><td>C3</td><td>Lid</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Print hinge-side down.</td></tr>
+      <tr><td>C4</td><td>LidFacePlate</td><td class="q">PLA — Red</td><td class="q">1</td><td class="n">Recessed field z = −9…−7 mm. Do not scale.</td></tr>
+      <tr><td>C5</td><td>BackPlate (outer cover)</td><td class="q">PLA — Dark Grey</td><td class="q">1</td><td class="n">Snap-fit rear cover with perimeter clips.</td></tr>
+      <tr><td>C6</td><td>Button Caps</td><td class="q">PLA — White/Yellow</td><td class="q">6</td><td class="n">0.12 mm layer, 0% infill, 4 walls. Top at z = −3.7 mm.</td></tr>
+      <tr><td>C7</td><td>D-Pad Cap</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Engraved triangles face up. No supports.</td></tr>
+      <tr><td>C8</td><td>Dome Lens</td><td class="q">PETG — Clear</td><td class="q">1</td><td class="n">0.12 mm, 100% infill for optical clarity.</td></tr>
+      <tr><td>C9</td><td>Display Bezel</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Frames the 2.8" panel.</td></tr>
+      <tr><td>C10</td><td>UNO Q Mount</td><td class="q">PLA — Black</td><td class="q">1</td><td class="n">Standalone body; board seats rotated 90°.</td></tr>
+      <tr><td>C11</td><td>Right-Panel Dummy Inserts</td><td class="q">PLA — Assorted</td><td class="q">18</td><td class="n">Retention flanges — press fit, no glue.</td></tr>
+      <tr><td>C12</td><td>Hinge Pin</td><td class="q">M3 × 20 mm bolt</td><td class="q">1</td><td class="n">Through all knuckles.</td></tr>
+      <tr><td>C13</td><td>Screws M2.5 × 6 mm</td><td class="q">Steel</td><td class="q">4</td><td class="n">UNO Q to mount.</td></tr>
+      <tr><td>C14</td><td>Screws M3 × 8 mm</td><td class="q">Steel</td><td class="q">6</td><td class="n">Shell closure at bosses.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="co d">
+    <div class="co-ic">⚡</div>
+    <div class="co-b">
+      <strong>Power budget — read this before buying</strong>
+      <p>The camera, sound card and mic together can draw over 1 A in bursts. Running them
+      from the UNO Q's own USB ports on a single 3 A supply causes xHCI host-controller
+      resets — the symptom is USB devices silently vanishing mid-session. Item <strong>A8
+      (powered USB hub)</strong> is not optional. Put the camera and sound card on the hub;
+      keep only the ESP32-C3 on a direct UNO Q port.</p>
+    </div>
+  </div>
+
+  <h4>Budget summary</h4>
+  <table class="tbl">
+    <thead><tr><th>Group</th><th>Approx. Cost</th></tr></thead>
+    <tbody>
+      <tr><td>A · Core electronics (excl. UNO Q)</td><td class="q">₹ 5,350</td></tr>
+      <tr><td>B · Passives &amp; wiring</td><td class="q">₹ 1,392</td></tr>
+      <tr><td>C · Filament (~350 g PLA + 30 g PETG)</td><td class="q">₹ 700</td></tr>
+      <tr><td>C · Fasteners</td><td class="q">₹ 100</td></tr>
+    </tbody>
+    <tfoot><tr><td>Total (excluding Arduino UNO Q)</td><td>≈ ₹ 7,542</td></tr></tfoot>
+  </table>
+</section>
+
+<!-- ════ SCHEMATICS ════ -->
+<section class="sec" id="schem">
+  <div class="sh"><div class="snum">05</div><h2>Circuit Schematics</h2></div>
+
+  <p>
+    There are only two circuits in this build: the keypad matrix-free direct-GPIO wiring on the
+    ESP32-C3, and the USB/HDMI interconnect on the UNO Q. Both are given here at pin level.
+  </p>
+
+  <h3>5.1 — ESP32-C3 keypad schematic</h3>
+
+  <p>
+    Each button connects its GPIO pin to <strong>GND</strong>. The firmware enables the ESP32's
+    internal pull-up, so an unpressed button reads <span class="tag">HIGH</span> and a pressed
+    button reads <span class="tag">LOW</span> (active-low). A 100 nF capacitor across each button
+    suppresses contact bounce in hardware; the firmware adds a software debounce window on top.
+  </p>
+
+  <div class="dg">
+    <svg viewBox="0 0 780 400" xmlns="http://www.w3.org/2000/svg">
+      <!-- ESP32 body -->
+      <rect x="270" y="60" width="230" height="285" rx="10" fill="#141417" stroke="#3DDC84" stroke-width="2"/>
+      <text x="385" y="90" text-anchor="middle" font-size="13" fill="#3DDC84" font-weight="700">ESP32-C3 SUPER MINI</text>
+      <text x="385" y="107" text-anchor="middle" font-size="9" fill="#5A5A6A">internal pull-ups enabled</text>
+
+      <!-- USB port -->
+      <rect x="360" y="40" width="50" height="20" rx="3" fill="#26262C" stroke="#FFD233" stroke-width="1.5"/>
+      <text x="385" y="54" text-anchor="middle" font-size="8" fill="#FFD233">USB-C</text>
+      <text x="385" y="30" text-anchor="middle" font-size="8" fill="#8C8C9E">→ Arduino UNO Q</text>
+
+      <!-- LEFT PINS (D-pad) -->
+      <g font-size="9" fill="#C6D0F5" font-family="monospace">
+        <text x="285" y="140">GPIO 0</text>
+        <text x="285" y="168">GPIO 1</text>
+        <text x="285" y="196">GPIO 3</text>
+        <text x="285" y="224">GPIO 4</text>
+        <text x="285" y="252">GPIO 5</text>
+      </g>
+      <g stroke="#FFD233" stroke-width="1.5">
+        <line x1="270" y1="136" x2="215" y2="136"/>
+        <line x1="270" y1="164" x2="215" y2="164"/>
+        <line x1="270" y1="192" x2="215" y2="192"/>
+        <line x1="270" y1="220" x2="215" y2="220"/>
+        <line x1="270" y1="248" x2="215" y2="248"/>
+      </g>
+
+      <!-- buttons left -->
+      <g>
+        <rect x="150" y="126" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
+        <text x="182" y="140" text-anchor="middle" font-size="8" fill="#FFD233">SW1 · UP</text>
+        <rect x="150" y="154" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
+        <text x="182" y="168" text-anchor="middle" font-size="8" fill="#FFD233">SW2 · DOWN</text>
+        <rect x="150" y="182" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
+        <text x="182" y="196" text-anchor="middle" font-size="8" fill="#FFD233">SW3 · LEFT</text>
+        <rect x="150" y="210" width="65" height="20" rx="3" fill="#1C1C21" stroke="#FFD233" stroke-width="1.2"/>
+        <text x="182" y="224" text-anchor="middle" font-size="8" fill="#FFD233">SW4 · RIGHT</text>
+        <rect x="150" y="238" width="65" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="182" y="252" text-anchor="middle" font-size="8" fill="#CC0000">SW5 · A</text>
+      </g>
+
+      <!-- RIGHT PINS -->
+      <g font-size="9" fill="#C6D0F5" font-family="monospace" text-anchor="end">
+        <text x="485" y="140">GPIO 6</text>
+        <text x="485" y="168">GPIO 7</text>
+        <text x="485" y="196">GPIO 10</text>
+        <text x="485" y="224">GPIO 20</text>
+        <text x="485" y="252">GPIO 21</text>
+        <text x="485" y="292">GPIO 2</text>
+      </g>
+      <g stroke="#CC0000" stroke-width="1.5">
+        <line x1="500" y1="136" x2="555" y2="136"/>
+        <line x1="500" y1="164" x2="555" y2="164"/>
+        <line x1="500" y1="192" x2="555" y2="192"/>
+        <line x1="500" y1="220" x2="555" y2="220"/>
+        <line x1="500" y1="248" x2="555" y2="248"/>
+      </g>
+      <line x1="500" y1="288" x2="555" y2="288" stroke="#3DDC84" stroke-width="1.5"/>
+
+      <g>
+        <rect x="555" y="126" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="591" y="140" text-anchor="middle" font-size="8" fill="#CC0000">SW6 · B</text>
+        <rect x="555" y="154" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="591" y="168" text-anchor="middle" font-size="8" fill="#CC0000">SW7 · START</text>
+        <rect x="555" y="182" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="591" y="196" text-anchor="middle" font-size="8" fill="#CC0000">SW8 · SELECT</text>
+        <rect x="555" y="210" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="591" y="224" text-anchor="middle" font-size="8" fill="#CC0000">SW9 · SCAN</text>
+        <rect x="555" y="238" width="72" height="20" rx="3" fill="#1C1C21" stroke="#CC0000" stroke-width="1.2"/>
+        <text x="591" y="252" text-anchor="middle" font-size="8" fill="#CC0000">SW10 · OAK</text>
+      </g>
+
+      <!-- LED branch -->
+      <rect x="555" y="278" width="34" height="20" rx="3" fill="#1C1C21" stroke="#3DDC84" stroke-width="1.2"/>
+      <text x="572" y="292" text-anchor="middle" font-size="7.5" fill="#3DDC84">330Ω</text>
+      <line x1="589" y1="288" x2="612" y2="288" stroke="#3DDC84" stroke-width="1.5"/>
+      <circle cx="622" cy="288" r="10" fill="#1C1C21" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="622" y="291" text-anchor="middle" font-size="8" fill="#3DDC84">LED</text>
+      <line x1="632" y1="288" x2="670" y2="288" stroke="#8C8C9E" stroke-width="1.5"/>
+      <line x1="670" y1="288" x2="670" y2="330" stroke="#8C8C9E" stroke-width="1.5"/>
+
+      <!-- GND rail -->
+      <line x1="120" y1="330" x2="700" y2="330" stroke="#8C8C9E" stroke-width="2.5"/>
+      <text x="710" y="334" font-size="9" fill="#8C8C9E" font-weight="700">GND</text>
+      <g stroke="#8C8C9E" stroke-width="1.3">
+        <line x1="150" y1="136" x2="120" y2="136"/><line x1="120" y1="136" x2="120" y2="330"/>
+        <line x1="150" y1="164" x2="132" y2="164"/><line x1="132" y1="164" x2="132" y2="330"/>
+        <line x1="150" y1="192" x2="140" y2="192"/><line x1="140" y1="192" x2="140" y2="330"/>
+        <line x1="627" y1="136" x2="660" y2="136"/><line x1="660" y1="136" x2="660" y2="330"/>
+        <line x1="627" y1="164" x2="650" y2="164"/><line x1="650" y1="164" x2="650" y2="330"/>
+      </g>
+      <text x="385" y="325" text-anchor="middle" font-size="8" fill="#5A5A6A">all switch commons → GND rail  ·  100 nF across each switch (not drawn)</text>
+
+      <!-- GND pin from ESP -->
+      <line x1="385" y1="345" x2="385" y2="330" stroke="#8C8C9E" stroke-width="2"/>
+      <text x="400" y="360" font-size="8.5" fill="#8C8C9E" font-family="monospace">GND</text>
+
+      <!-- avoid pins note -->
+      <rect x="150" y="360" width="480" height="28" rx="4" fill="#1C1C21" stroke="#CC0000" stroke-width="1" stroke-dasharray="3,3"/>
+      <text x="390" y="378" text-anchor="middle" font-size="8.5" fill="#CC0000">⚠ GPIO 8 and GPIO 9 are strapping pins — never wire buttons to them, the board will fail to boot</text>
+    </svg>
+    <div class="dg-cap">Fig. 3 — ESP32-C3 keypad schematic. All switches active-low to GND with internal pull-ups.</div>
+  </div>
+
+  <h4>Pin assignment table</h4>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Ref</th><th>Function</th><th>ESP32-C3 GPIO</th><th>Mode</th><th>Serial Byte</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td>SW1</td><td>D-pad UP</td><td class="q">GPIO 0</td><td>INPUT_PULLUP</td><td class="q">U</td><td class="n">Active low</td></tr>
+      <tr><td>SW2</td><td>D-pad DOWN</td><td class="q">GPIO 1</td><td>INPUT_PULLUP</td><td class="q">D</td><td class="n">Active low</td></tr>
+      <tr><td>SW3</td><td>D-pad LEFT</td><td class="q">GPIO 3</td><td>INPUT_PULLUP</td><td class="q">L</td><td class="n">Active low</td></tr>
+      <tr><td>SW4</td><td>D-pad RIGHT</td><td class="q">GPIO 4</td><td>INPUT_PULLUP</td><td class="q">R</td><td class="n">Active low</td></tr>
+      <tr><td>SW5</td><td>A · Confirm</td><td class="q">GPIO 5</td><td>INPUT_PULLUP</td><td class="q">A</td><td class="n">Active low</td></tr>
+      <tr><td>SW6</td><td>B · Back</td><td class="q">GPIO 6</td><td>INPUT_PULLUP</td><td class="q">B</td><td class="n">Active low</td></tr>
+      <tr><td>SW7</td><td>START · Menu</td><td class="q">GPIO 7</td><td>INPUT_PULLUP</td><td class="q">S</td><td class="n">Active low</td></tr>
+      <tr><td>SW8</td><td>SELECT · Profile</td><td class="q">GPIO 10</td><td>INPUT_PULLUP</td><td class="q">s</td><td class="n">Active low</td></tr>
+      <tr><td>SW9</td><td>SCAN · Camera AI</td><td class="q">GPIO 20</td><td>INPUT_PULLUP</td><td class="q">C</td><td class="n">Active low</td></tr>
+      <tr><td>SW10</td><td>OAK · Voice</td><td class="q">GPIO 21</td><td>INPUT_PULLUP</td><td class="q">O</td><td class="n">Toggle: press to start, press to stop</td></tr>
+      <tr><td>D1</td><td>Shoulder status LED</td><td class="q">GPIO 2</td><td>OUTPUT</td><td class="q">—</td><td class="n">Via 330 Ω. GPIO 2 is safe as an <em>output</em>.</td></tr>
+      <tr><td>—</td><td><strong>Reserved</strong></td><td class="q">GPIO 8, 9</td><td>—</td><td class="q">—</td><td class="n">Strapping pins. Leave unconnected.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>5.2 — UNO Q interconnect</h3>
+  <p>No soldering here — this is the cable map. Getting it wrong is the most common bring-up failure.</p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>From</th><th>Interface</th><th>To</th><th>Enumerates As</th><th>Power Source</th></tr></thead>
+    <tbody>
+      <tr><td>UNO Q HDMI-out</td><td class="q">Mini HDMI</td><td>Waveshare 2.8" LCD</td><td class="q">/dev/fb0</td><td class="n">Display micro-USB → hub</td></tr>
+      <tr><td>Powered hub</td><td class="q">USB 2.0</td><td>USB Camera</td><td class="q">/dev/video0</td><td class="n">Hub external supply</td></tr>
+      <tr><td>Powered hub</td><td class="q">USB 2.0</td><td>USB Sound Card</td><td class="q">plughw:1,0</td><td class="n">Hub external supply</td></tr>
+      <tr><td>UNO Q USB-A</td><td class="q">USB 2.0</td><td>ESP32-C3 Super Mini</td><td class="q">/dev/ttyACM0</td><td class="n">UNO Q (low draw, safe)</td></tr>
+      <tr><td>UNO Q USB-A</td><td class="q">USB 2.0</td><td>Powered hub uplink</td><td class="q">—</td><td class="n">Data only</td></tr>
+      <tr><td>5 V 3 A adapter</td><td class="q">USB-C</td><td>UNO Q power in</td><td class="q">—</td><td class="n">Mains</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="legend">
+    <div class="li"><div class="ld" style="background:#FFD233"></div>Serial / signal</div>
+    <div class="li"><div class="ld" style="background:#3B9EFF"></div>Video / vision</div>
+    <div class="li"><div class="ld" style="background:#A78BFA"></div>Audio</div>
+    <div class="li"><div class="ld" style="background:#3DDC84"></div>Power / GND</div>
+    <div class="li"><div class="ld" style="background:#CC0000"></div>Action buttons</div>
+  </div>
+</section>
+
+<!-- ════ PHASE 1 ════ -->
+<section class="sec" id="s1">
+  <div class="sh"><div class="snum">06</div><h2>Phase 1 — Display Bring-Up</h2></div>
+
+  <p>
+    Goal: get a pygame window rendering on the Waveshare panel. Nothing else is connected yet —
+    resist the temptation to plug everything in at once.
+  </p>
+
+  <ol class="steps">
+    <li><div class="sn">1</div><div class="sb"><strong>Connect HDMI</strong>
+      <p>Mini HDMI end into the UNO Q's HDMI-out, full HDMI end into the Waveshare input. Use the 30 cm cable — longer cables will not route cleanly inside the shell later.</p></div></li>
+    <li><div class="sn">2</div><div class="sb"><strong>Power the display separately</strong>
+      <p>The Waveshare panel takes power over its own micro-USB port. Run it from the powered hub, not from the UNO Q, so display current never competes with the camera.</p></div></li>
+    <li><div class="sn">3</div><div class="sb"><strong>Power the UNO Q</strong>
+      <p>5 V 3 A USB-C adapter. Wait for full boot, then SSH in over your network.</p></div></li>
+  </ol>
+
+  <h4>Verify the framebuffer</h4>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre># Framebuffer device should exist
+ls -l /dev/fb0
+
+# Confirm the resolution the panel negotiated
+cat /sys/class/graphics/fb0/virtual_size
+# expect: 640,480
+
+# Confirm the kernel sees an HDMI connection
+cat /sys/class/drm/*/status | head
+# expect at least one: connected</pre>
+  </div>
+
+  <h4>Render a test frame</h4>
+  <div class="cb">
+    <div class="cl">PYTHON — screen_test.py</div>
+<pre>import os
+os.environ["SDL_VIDEODRIVER"] = "fbcon"
+os.environ["SDL_FBDEV"]       = "/dev/fb0"
+
+import pygame
+
+pygame.init()
+screen = pygame.display.set_mode((640, 480))
+screen.fill((204, 0, 0))                      # Pokedex red
+
+font = pygame.font.SysFont(None, 42)
+label = font.render("Q-DEXTER ONLINE", True, (255, 255, 255))
+rect  = label.get_rect(center=(320, 240))
+screen.blit(label, rect)
+
+pygame.display.flip()
+pygame.time.wait(4000)
+pygame.quit()</pre>
+  </div>
+
+  <p>
+    Run it with <span class="tag">python3 screen_test.py</span>. The environment variables must be
+    set <em>before</em> <span class="tag">import pygame</span> — SDL reads them at import time, so
+    setting them afterwards silently does nothing.
+  </p>
+
+  <div class="ckp">
+    <div class="hd">▶ CHECKPOINT 1</div>
+    <ul>
+      <li><span class="tag">/dev/fb0</span> exists</li>
+      <li>Reported resolution is 640×480</li>
+      <li>Red screen with white text appears on the Waveshare panel</li>
+      <li>Text is centred and not clipped at any edge</li>
+    </ul>
+  </div>
+
+  <div class="co d">
+    <div class="co-ic">🔧</div>
+    <div class="co-b">
+      <strong>If the display stays black</strong>
+      <p>Check the display's own micro-USB power first — the HDMI cable carries no meaningful
+      power to the panel. A panel with signal but no power looks identical to a dead HDMI link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ PHASE 2 ════ -->
+<section class="sec" id="s2">
+  <div class="sh"><div class="snum">07</div><h2>Phase 2 — Keypad &amp; Serial Link</h2></div>
+
+  <p>
+    Now build the input layer. The ESP32-C3 is flashed once and then never touched again — all
+    application logic lives on the UNO Q.
+  </p>
+
+  <h3>7.1 — Firmware</h3>
+  <p>
+    Flash with Arduino IDE (board: <em>ESP32C3 Dev Module</em>) or PlatformIO. The firmware does
+    three jobs: poll, debounce, encode.
+  </p>
+
+  <div class="cb">
+    <div class="cl">C++ — qdexter_keypad.ino</div>
+<pre>/*
+ * Q-dexter Keypad Controller — ESP32-C3 Super Mini
+ * Polls 10 buttons at 50 Hz, sends 1 ASCII byte per press over USB Serial.
+ *
+ * Wiring: each button connects its GPIO to GND.
+ *         Internal pull-ups are enabled, so buttons are ACTIVE LOW.
+ * Note:   GPIO 8 and 9 are strapping pins and are deliberately unused.
+ */
+
+#define NUM_BTN     10
+#define DEBOUNCE_MS 40
+#define LED_PIN      2      // safe as an output
+
+// GPIO for each button, in the same order as CODES[]
+const uint8_t PINS[NUM_BTN] = {
+   0,   1,   3,   4,   5,   6,   7,  10,  20,  21
+};
+
+// Byte sent to the UNO Q when the matching button is pressed
+const char CODES[NUM_BTN] = {
+  'U', 'D', 'L', 'R', 'A', 'B', 'S', 's', 'C', 'O'
+};
+
+bool     lastStable[NUM_BTN];    // last accepted level
+uint32_t lastChange[NUM_BTN];    // millis of last accepted change
+
+void setup() {
+  Serial.begin(115200);
+
+  for (uint8_t i = 0; i &lt; NUM_BTN; i++) {
+    pinMode(PINS[i], INPUT_PULLUP);
+    lastStable[i] = HIGH;        // released
+    lastChange[i] = 0;
+  }
+
+  pinMode(LED_PIN, OUTPUT);
+  digitalWrite(LED_PIN, HIGH);   // solid = keypad ready
+}
+
+void loop() {
+  uint32_t now = millis();
+
+  for (uint8_t i = 0; i &lt; NUM_BTN; i++) {
+    bool level = digitalRead(PINS[i]);
+
+    // ignore any change inside the debounce window
+    if (now - lastChange[i] &lt; DEBOUNCE_MS) continue;
+
+    if (level != lastStable[i]) {
+      lastStable[i] = level;
+      lastChange[i] = now;
+
+      // falling edge (HIGH -> LOW) == press
+      if (level == LOW) {
+        Serial.write(CODES[i]);
+        Serial.flush();
+      }
+    }
+  }
+
+  delay(20);   // 50 Hz poll
+}</pre>
+  </div>
+
+  <h4>Why active-low</h4>
+  <p>
+    The ESP32-C3's internal pull-ups are far more reliable than its pull-downs, and wiring every
+    switch common to a single GND rail means one shared wire instead of ten routed to 3V3. Inside
+    a hinged enclosure with limited wire space, that difference matters.
+  </p>
+
+  <h3>7.2 — Host-side serial reader</h3>
+  <p>
+    On the UNO Q, a daemon thread owns the serial port and pushes decoded events into a queue.
+    The pygame loop drains that queue each frame. The read never blocks rendering.
+  </p>
+
+  <div class="cb">
+    <div class="cl">PYTHON — serial_keypad.py</div>
+<pre>"""Keypad bridge: ESP32-C3 USB serial -> thread-safe event queue."""
+
+import queue
+import threading
+import serial
+
+BAUD = 115200
+
+CODE_MAP = {
+    b'U': 'UP',    b'D': 'DOWN',  b'L': 'LEFT',   b'R': 'RIGHT',
+    b'A': 'A',     b'B': 'B',     b'S': 'START',  b's': 'SELECT',
+    b'C': 'SCAN',  b'O': 'OAK',
+}
+
+
+class Keypad:
+    """Owns the serial port; exposes a non-blocking poll()."""
+
+    def __init__(self, port='/dev/ttyACM0', baud=BAUD):
+        self.port = port
+        self.baud = baud
+        self.events = queue.Queue()
+        self._stop = threading.Event()
+        self._thread = None
+
+    def start(self):
+        self._thread = threading.Thread(target=self._run, daemon=True)
+        self._thread.start()
+        return self
+
+    def _run(self):
+        while not self._stop.is_set():
+            try:
+                with serial.Serial(self.port, self.baud, timeout=0.1) as ser:
+                    ser.reset_input_buffer()
+                    while not self._stop.is_set():
+                        byte = ser.read(1)
+                        if byte in CODE_MAP:
+                            self.events.put(CODE_MAP[byte])
+            except serial.SerialException:
+                # cable pulled or device re-enumerated: retry, don't crash
+                self._stop.wait(1.0)
+
+    def poll(self):
+        """Return the next event, or None. Never blocks."""
+        try:
+            return self.events.get_nowait()
+        except queue.Empty:
+            return None
+
+    def stop(self):
+        self._stop.set()</pre>
+  </div>
+
+  <p>
+    The reconnect loop matters: if the ESP32-C3 re-enumerates (common after a USB power blip),
+    a naive reader raises and takes the whole app down. This one waits a second and reopens.
+  </p>
+
+  <h4>Consuming events in the main loop</h4>
+  <div class="cb">
+    <div class="cl">PYTHON — usage in main.py</div>
+<pre>from serial_keypad import Keypad
+
+keypad = Keypad('/dev/ttyACM0').start()
+
+while running:
+    # 1. physical keypad
+    while (ev := keypad.poll()) is not None:
+        current_screen.handle(ev)
+
+    # 2. keyboard fallback for development over SSH
+    for e in pygame.event.get():
+        if e.type == pygame.KEYDOWN:
+            current_screen.handle(KEYBOARD_MAP.get(e.key))
+
+    current_screen.draw(surface)
+    pygame.display.flip()
+    clock.tick(60)</pre>
+  </div>
+
+  <h3>7.3 — Wiring the buttons</h3>
+  <ol class="steps">
+    <li><div class="sn">1</div><div class="sb"><strong>Build the GND rail first</strong>
+      <p>Cut one length of black 26 AWG wire. Strip a 2 mm window every 15 mm and solder each button's common leg to those windows. One wire, ten taps — far tidier than ten separate returns.</p></div></li>
+    <li><div class="sn">2</div><div class="sb"><strong>Run signal wires</strong>
+      <p>One wire from each button's other leg to its assigned GPIO per the pin table. Keep every run under 15 cm.</p></div></li>
+    <li><div class="sn">3</div><div class="sb"><strong>Add debounce caps</strong>
+      <p>Solder a 100 nF ceramic directly across each button's two legs. This is optional if the firmware debounce is sufficient, but it noticeably improves feel on cheap switches.</p></div></li>
+    <li><div class="sn">4</div><div class="sb"><strong>Solder the status LED</strong>
+      <p>GPIO 2 → 330 Ω → LED anode; LED cathode → GND rail. Mind the polarity: the longer leg is the anode.</p></div></li>
+  </ol>
+
+  <h4>Test the link before assembly</h4>
+  <div class="cb">
+    <div class="cl">BASH — raw serial monitor</div>
+<pre># Confirm the ESP32 enumerated
+ls /dev/ttyACM* /dev/ttyUSB* 2>/dev/null
+
+# Grant serial access (once; log out and back in after)
+sudo usermod -a -G dialout $USER
+
+# Watch raw bytes — press each button and watch a letter appear
+python3 -c "
+import serial
+s = serial.Serial('/dev/ttyACM0', 115200, timeout=1)
+print('press buttons... ctrl-c to exit')
+while True:
+    b = s.read(1)
+    if b: print(b.decode(errors='replace'), end='', flush=True)
+"</pre>
+  </div>
+
+  <div class="ckp">
+    <div class="hd">▶ CHECKPOINT 2</div>
+    <ul>
+      <li>ESP32-C3 enumerates as <span class="tag">/dev/ttyACM0</span></li>
+      <li>Status LED is solid on after boot</li>
+      <li>All 10 buttons print their correct distinct letter</li>
+      <li>No repeated letters from a single press (debounce working)</li>
+      <li>No stray characters when nothing is pressed</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════ PHASE 3 ════ -->
+<section class="sec" id="s3">
+  <div class="sh"><div class="snum">08</div><h2>Phase 3 — Software Stack</h2></div>
+
+  <p>
+    Everything runs in Python 3 on the UNO Q's Ubuntu 24. There is no Arduino sketch on the
+    UNO Q side at all.
+  </p>
+
+  <h3>8.1 — Dependencies</h3>
+  <div class="cb">
+    <div class="cl">BASH — ON THE UNO Q</div>
+<pre>sudo apt update &amp;&amp; sudo apt install -y \
+     python3-pip git build-essential cmake \
+     alsa-utils espeak
+
+# Keep pip's build cache off the small root partition
+mkdir -p ~/tmp
+export TMPDIR=$HOME/tmp
+
+pip install --break-system-packages \
+    pygame pillow numpy requests pyserial ai-edge-litert</pre>
+  </div>
+
+  <div class="co d">
+    <div class="co-ic">💾</div>
+    <div class="co-b">
+      <strong>Disk discipline on the UNO Q</strong>
+      <p>The root partition is small. Always export <span class="tag">TMPDIR=$HOME/tmp</span>
+      before pip installs — the default <span class="tag">/tmp</span> build cache will fill the
+      disk and fail mid-install. Never install full PyTorch here; use
+      <span class="tag">ai-edge-litert</span> for inference instead.</p>
+    </div>
+  </div>
+
+  <h3>8.2 — Build whisper.cpp</h3>
+  <div class="cb">
+    <div class="cl">BASH</div>
+<pre>cd ~
+git clone https://github.com/ggerganov/whisper.cpp
+cd whisper.cpp
+
+cmake -B build
+cmake --build build -j4
+
+# tiny English model — best accuracy/speed tradeoff on this hardware
+bash ./models/download-ggml-model.sh tiny.en
+
+# binary:  ~/whisper.cpp/build/bin/whisper-cli
+# model:   ~/whisper.cpp/models/ggml-tiny.en.bin</pre>
+  </div>
+
+  <h3>8.3 — Audio configuration</h3>
+  <p>
+    The USB sound card must be addressed as <span class="tag">plughw:1,0</span>, never raw
+    <span class="tag">hw:1,0</span>. The <span class="tag">plug</span> layer performs sample-rate
+    conversion; addressing the raw device returns 44 100 Hz, and whisper.cpp requires 16 000 Hz.
+    This single detail causes more silent failures than anything else in the build.
+  </p>
+
+  <div class="cb">
+    <div class="cl">BASH — verify audio</div>
+<pre># Which card index is the USB sound card?
+arecord -l
+
+# Record 5 s at 16 kHz mono — the format whisper.cpp needs
+arecord -D plughw:1,0 -d 5 -f S16_LE -r 16000 -c 1 /tmp/test.wav
+
+# File should be ~160 KB. If it is ~440 KB, the rate is wrong.
+ls -lh /tmp/test.wav
+
+# Transcribe
+~/whisper.cpp/build/bin/whisper-cli \
+  -m ~/whisper.cpp/models/ggml-tiny.en.bin \
+  -f /tmp/test.wav
+
+# Test speech output
+espeak "Professor Oak online" 2>/dev/null</pre>
+  </div>
+
+  <h3>8.4 — Code structure</h3>
+  <p>
+    The application is organised so each screen is a self-contained handler. Adding a new screen
+    means adding one file and one route entry — no changes to the event loop.
+  </p>
+
+  <div class="tree">
+<span class="d">pokedex_final/</span>
+├── <span class="f">main.py</span>                  <span class="c"># entry point · event loop · screen router</span>
+├── <span class="f">config.py</span>                <span class="c"># paths, colours, constants, feature flags</span>
+├── <span class="f">serial_keypad.py</span>         <span class="c"># ESP32-C3 bridge (Phase 2)</span>
+│
+├── <span class="d">screens/</span>                 <span class="c"># one module per screen, uniform interface</span>
+│   ├── <span class="f">home.py</span>              <span class="c">#   main menu</span>
+│   ├── <span class="f">dex_list.py</span>          <span class="c">#   browse all 1025 species</span>
+│   ├── <span class="f">dex_detail.py</span>        <span class="c">#   stats, types, description</span>
+│   ├── <span class="f">scan.py</span>              <span class="c">#   WHO'S THAT POKEMON? camera + ML</span>
+│   ├── <span class="f">oak.py</span>               <span class="c">#   Professor Oak voice assistant</span>
+│   ├── <span class="f">trainer.py</span>           <span class="c">#   profile, XP, badges</span>
+│   └── <span class="f">base.py</span>              <span class="c">#   Screen ABC: handle(ev) / draw(surf)</span>
+│
+├── <span class="d">core/</span>
+│   ├── <span class="f">database.py</span>          <span class="c"># loads + indexes the 1025-species JSON</span>
+│   ├── <span class="f">profile.py</span>           <span class="c"># trainer save/load, XP, badge unlock rules</span>
+│   ├── <span class="f">vision.py</span>            <span class="c"># MobileNetV2 inference wrapper</span>
+│   ├── <span class="f">speech.py</span>            <span class="c"># arecord -> whisper.cpp -> text</span>
+│   └── <span class="f">tts.py</span>               <span class="c"># espeak wrapper for Oak's voice</span>
+│
+├── <span class="d">data/</span>
+│   ├── <span class="f">pokemon.json</span>         <span class="c"># 1025 species records</span>
+│   ├── <span class="f">badges.json</span>          <span class="c"># 72 badges across 9 regions</span>
+│   └── <span class="d">profiles/</span>            <span class="c"># per-trainer save files</span>
+│
+├── <span class="d">models/</span>
+│   ├── <span class="f">pokemon_mobilenetv2.tflite</span>
+│   └── <span class="f">labels.txt</span>
+│
+└── <span class="d">assets/</span>
+    ├── <span class="d">sprites/</span>
+    └── <span class="d">fonts/</span>
+  </div>
+
+  <h4>The Screen contract</h4>
+  <p>Every screen implements the same two methods. This is what keeps the event loop trivial.</p>
+
+  <div class="cb">
+    <div class="cl">PYTHON — screens/base.py</div>
+<pre>from abc import ABC, abstractmethod
+
+
+class Screen(ABC):
+    """Every screen implements exactly this interface."""
+
+    @abstractmethod
+    def handle(self, event: str | None) -> str | None:
+        """Process one input event ('A', 'UP', 'SCAN', ...).
+
+        Return the name of the screen to switch to, or None to stay.
+        """
+
+    @abstractmethod
+    def draw(self, surface) -> None:
+        """Render this screen onto the given pygame surface."""
+
+    def on_enter(self) -> None:
+        """Optional hook: called once when this screen becomes active."""
+
+    def on_exit(self) -> None:
+        """Optional hook: called once when leaving this screen."""</pre>
+  </div>
+
+  <h4>Vision inference</h4>
+  <p>
+    The interpreter is loaded once at startup, not per scan — loading a TFLite interpreter takes
+    hundreds of milliseconds and would make every scan feel sluggish.
+  </p>
+
+  <div class="cb">
+    <div class="cl">PYTHON — core/vision.py</div>
+<pre>"""On-device Pokemon recognition using MobileNetV2 via LiteRT."""
+
+import numpy as np
+from PIL import Image
+from ai_edge_litert.interpreter import Interpreter
+
+INPUT_SIZE = (224, 224)
+
+
+class PokemonVision:
+    """Loads the model once and reuses the interpreter for every scan."""
+
+    def __init__(self, model_path, labels_path):
+        self.interp = Interpreter(model_path=model_path)
+        self.interp.allocate_tensors()
+        self.inp = self.interp.get_input_details()[0]
+        self.out = self.interp.get_output_details()[0]
+
+        with open(labels_path) as fh:
+            self.labels = [line.strip() for line in fh if line.strip()]
+
+    def predict(self, frame_rgb, top_k=3):
+        """Return [(label, confidence), ...] sorted best-first."""
+        img = Image.fromarray(frame_rgb).resize(INPUT_SIZE)
+        arr = np.asarray(img, dtype=np.float32)[None] / 255.0
+
+        self.interp.set_tensor(self.inp['index'], arr)
+        self.interp.invoke()
+        scores = self.interp.get_tensor(self.out['index'])[0]
+
+        idx = np.argsort(scores)[-top_k:][::-1]
+        return [(self.labels[i], float(scores[i])) for i in idx]</pre>
+  </div>
+
+  <h4>Speech pipeline</h4>
+  <div class="cb">
+    <div class="cl">PYTHON — core/speech.py</div>
+<pre>"""Offline speech-to-text: arecord -> whisper.cpp -> plain text."""
+
+import re
+import subprocess
+from pathlib import Path
+
+WHISPER = Path.home() / "whisper.cpp/build/bin/whisper-cli"
+MODEL   = Path.home() / "whisper.cpp/models/ggml-tiny.en.bin"
+WAV     = Path("/tmp/oak_input.wav")
+
+# whisper-cli prints lines like: [00:00:00.000 --> 00:00:03.100]   text here
+LINE_RE = re.compile(r"\[[\d:.]+\s*--&gt;\s*[\d:.]+\]\s*(.*)")
+
+
+def record(seconds=5):
+    """Capture mono 16 kHz audio. plughw is required, not hw."""
+    subprocess.run(
+        ["arecord", "-D", "plughw:1,0", "-d", str(seconds),
+         "-f", "S16_LE", "-r", "16000", "-c", "1", str(WAV)],
+        check=True, capture_output=True,
+    )
+    return WAV
+
+
+def transcribe(wav_path=WAV):
+    """Run whisper.cpp and return the joined transcript."""
+    result = subprocess.run(
+        [str(WHISPER), "-m", str(MODEL), "-f", str(wav_path), "-nt"],
+        check=True, capture_output=True, text=True,
+    )
+
+    lines = []
+    for raw in result.stdout.splitlines():
+        match = LINE_RE.match(raw.strip())
+        text = match.group(1) if match else raw.strip()
+        if text:
+            lines.append(text)
+
+    return " ".join(lines).strip()
+
+
+def listen(seconds=5):
+    record(seconds)
+    return transcribe()</pre>
+  </div>
+
+  <div class="co">
+    <div class="co-ic">🐛</div>
+    <div class="co-b">
+      <strong>A bug worth knowing about</strong>
+      <p>An earlier version of this module returned an empty string for every utterance. The cause
+      was a missing <span class="tag">import re</span> swallowed by a broad
+      <span class="tag">except Exception</span> around the call site — the parse failed silently
+      and returned <span class="tag">""</span>. Catch specific exceptions, and never let a parse
+      helper return an empty string on failure where a raise would be clearer.</p>
+    </div>
+  </div>
+
+  <h3>8.5 — First run</h3>
+  <div class="cb">
+    <div class="cl">BASH</div>
+<pre>cd ~/pokedex_final
+
+export SDL_VIDEODRIVER=fbcon
+export SDL_FBDEV=/dev/fb0
+export TMPDIR=$HOME/tmp
+
+python3 main.py</pre>
+  </div>
+
+  <div class="ckp">
+    <div class="hd">▶ CHECKPOINT 3</div>
+    <ul>
+      <li>Home screen renders on the Waveshare panel</li>
+      <li>D-pad navigates the menu; A confirms; B goes back</li>
+      <li>Dex list scrolls smoothly through all 1025 entries</li>
+      <li>SCAN opens the camera view and shows a live preview</li>
+      <li>A scan returns a top-3 prediction within ~2 s</li>
+      <li>OAK records, transcribes and speaks a reply</li>
+      <li>Trainer XP increases and persists after restart</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════ PHYSICAL AI ════ -->
+<section class="sec" id="phyai">
+  <div class="sh"><div class="snum">09</div><h2>The Physical AI — On-Device Intelligence</h2></div>
+
+  <p>
+    Q-dexter is not a thin client that phones a cloud API for every decision. Two AI workloads run
+    <em>directly on the Arduino UNO Q</em>: a computer-vision classifier that identifies Pokémon
+    from the camera, and a speech pipeline that lets Professor Oak listen and talk back. Everything a
+    person can <em>see</em> and <em>hear</em> the device do — recognising a Pokémon, transcribing
+    speech, speaking a reply — runs locally on the board. That is what makes this Physical AI and not
+    just an app: the intelligence is embodied in hardware and acts on the physical world in real time.
+  </p>
+
+  <div class="grid">
+    <div class="card"><div class="ic">👁️</div><h3>Vision</h3><p>MobileNetV2 · TensorFlow Lite · 4-class on-device classifier</p></div>
+    <div class="card"><div class="ic">🎤</div><h3>Speech-to-Text</h3><p>whisper.cpp · tiny.en · CPU-only, offline</p></div>
+    <div class="card"><div class="ic">🔊</div><h3>Text-to-Speech</h3><p>eSpeak · Professor Oak's voice, spoken on the board</p></div>
+    <div class="card"><div class="ic">🧠</div><h3>Inference</h3><p>100% on-device for the core perception loop</p></div>
+  </div>
+
+  <hr class="dv"/>
+
+  <!-- 9.1 VISION -->
+  <h3>9.1 · On-Board Image Recognition — "Who's That Pokémon?"</h3>
+  <p>
+    When a card or figure is held in front of the USB camera and the scan button is pressed, the
+    frame is captured, pre-processed, and passed through a custom-trained classifier <em>on the
+    device itself</em> — no image ever leaves the Pokédex. The predicted Pokémon and its confidence
+    drive the "Who's That Pokémon?" reveal and the Pokéball-throw animation.
+  </p>
+
+  <div class="two">
+    <div>
+      <h4>Model &amp; Runtime</h4>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <tr><td class="q">Task</td><td>Single-label image classification</td></tr>
+          <tr><td class="q">Base model</td><td>MobileNetV2 (transfer learning)</td></tr>
+          <tr><td class="q">Runtime</td><td><span class="tag">ai_edge_litert</span> (TFLite)</td></tr>
+          <tr><td class="q">Model file</td><td><span class="tag">pokedex_phyai.tflite</span></td></tr>
+          <tr><td class="q">Labels</td><td><span class="tag">labels.txt</span></td></tr>
+          <tr><td class="q">Output</td><td>Class + confidence score</td></tr>
+          <tr><td class="q">Runs on</td><td class="ok">Arduino UNO Q — fully offline</td></tr>
+        </table>
+      </div>
+    </div>
+    <div>
+      <h4>Classes Recognised</h4>
+      <div class="grid" style="grid-template-columns:1fr 1fr">
+        <div class="card"><h3 style="color:var(--green)">Bulbasaur</h3></div>
+        <div class="card"><h3 style="color:var(--red)">Charizard</h3></div>
+        <div class="card"><h3 style="color:var(--gold)">Pikachu</h3></div>
+        <div class="card"><h3 style="color:var(--blue)">Squirtle</h3></div>
+      </div>
+      <div class="co i">
+        <div class="co-ic">💡</div>
+        <div class="co-b">
+          <strong>Why MobileNetV2?</strong>
+          <p>It is built for resource-constrained edge hardware — a small CNN using
+          depthwise-separable convolutions that keeps compute low enough to run in real time on the
+          board while still giving strong accuracy from transfer learning.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>How the model was trained</h4>
+  <div class="tbl-scroll">
+    <table class="tbl">
+      <thead><tr><th>Stage</th><th>What we did</th></tr></thead>
+      <tbody>
+        <tr><td class="q">Dataset</td><td>Curated an image set for the four Kanto mascots — Bulbasaur, Charizard, Pikachu and Squirtle — covering cards, figures and artwork, split into train / validation.</td></tr>
+        <tr><td class="q">Pre-process</td><td>Resized to the MobileNetV2 input size, normalised pixel values, and augmented (flips, rotation, zoom, brightness) so the model generalises across lighting and camera angles on the real device.</td></tr>
+        <tr><td class="q">Transfer learning</td><td>Started from ImageNet-pretrained MobileNetV2, froze the convolutional base, and trained a new classification head for the 4 classes — no massive dataset needed to reach usable accuracy.</td></tr>
+        <tr><td class="q">Export</td><td>Converted the trained Keras model to TensorFlow Lite (<span class="tag">pokedex_phyai.tflite</span>) so it is small and fast enough for on-device inference.</td></tr>
+        <tr><td class="q">Deploy</td><td>Shipped the <span class="tag">.tflite</span> model + <span class="tag">labels.txt</span> to the board; the pygame app loads it via <span class="tag">ai_edge_litert</span> and runs inference locally on each scan.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="dg">
+    <svg viewBox="0 0 820 90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arb" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#3B9EFF"/>
+        </marker>
+      </defs>
+      <rect x="10"  y="28" width="120" height="40" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="70"  y="52" text-anchor="middle" font-size="10" fill="#E9E9EE">Camera frame</text>
+      <rect x="165" y="28" width="140" height="40" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="235" y="52" text-anchor="middle" font-size="10" fill="#E9E9EE">Resize + normalise</text>
+      <rect x="340" y="28" width="150" height="40" rx="6" fill="#141417" stroke="#CC0000" stroke-width="1.5"/>
+      <text x="415" y="47" text-anchor="middle" font-size="10" fill="#ff6b6b" font-weight="700">MobileNetV2</text>
+      <text x="415" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">TFLite · on-board</text>
+      <rect x="525" y="28" width="140" height="40" rx="6" fill="#141417" stroke="#3B9EFF" stroke-width="1.5"/>
+      <text x="595" y="47" text-anchor="middle" font-size="10" fill="#E9E9EE">Class +</text>
+      <text x="595" y="60" text-anchor="middle" font-size="10" fill="#E9E9EE">confidence</text>
+      <rect x="700" y="28" width="110" height="40" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+      <text x="755" y="47" text-anchor="middle" font-size="9" fill="#FFD233">Reveal +</text>
+      <text x="755" y="60" text-anchor="middle" font-size="9" fill="#FFD233">animation</text>
+      <line x1="130" y1="48" x2="163" y2="48" stroke="#3B9EFF" stroke-width="2" marker-end="url(#arb)"/>
+      <line x1="305" y1="48" x2="338" y2="48" stroke="#3B9EFF" stroke-width="2" marker-end="url(#arb)"/>
+      <line x1="490" y1="48" x2="523" y2="48" stroke="#3B9EFF" stroke-width="2" marker-end="url(#arb)"/>
+      <line x1="665" y1="48" x2="698" y2="48" stroke="#3B9EFF" stroke-width="2" marker-end="url(#arb)"/>
+    </svg>
+    <div class="dg-cap">Vision inference path — camera to on-screen reveal, entirely on-device</div>
+  </div>
+
+  <hr class="dv"/>
+
+  <!-- 9.2 STT -->
+  <h3>9.2 · On-Board Speech-to-Text</h3>
+  <p>
+    Professor Oak listens through the USB microphone. Audio is recorded on the board and transcribed
+    by <strong>whisper.cpp</strong> — a C/C++ port of OpenAI's Whisper that runs efficiently on CPU
+    with no GPU and no cloud call. The transcription appears on screen above the trainer character and
+    becomes the question sent to the assistant.
+  </p>
+  <div class="tbl-scroll">
+    <table class="tbl">
+      <tr><td class="q">Engine</td><td>whisper.cpp — local CPU inference</td></tr>
+      <tr><td class="q">Model</td><td>Whisper <span class="tag">tiny.en</span> (<span class="tag">ggml-tiny.en.bin</span>)</td></tr>
+      <tr><td class="q">Capture</td><td><span class="tag">arecord</span> · 16 kHz · mono · S16_LE</td></tr>
+      <tr><td class="q">Audio in</td><td>USB C-Media dongle (mic)</td></tr>
+      <tr><td class="q">Trigger</td><td>Scan button toggles listen / stop</td></tr>
+    </table>
+  </div>
+  <div class="co d">
+    <div class="co-ic">⚠️</div>
+    <div class="co-b">
+      <strong>Engineering note</strong>
+      <p>USB audio is captured through <span class="tag">plughw</span> (not raw <span class="tag">hw</span>) so the stream is
+      resampled to the 16 kHz mono format whisper.cpp requires — the difference between garbage
+      transcriptions and clean ones.</p>
+    </div>
+  </div>
+
+  <hr class="dv"/>
+
+  <!-- 9.3 TTS -->
+  <h3>9.3 · On-Board Text-to-Speech &amp; the Oak Assistant</h3>
+  <p>
+    The transcribed question is answered by the Professor Oak assistant, and the reply is spoken
+    aloud <strong>on the board</strong> using the <strong>eSpeak</strong> engine through the USB
+    speaker. Oak is trainer-aware — he knows which profile is active and can reference the trainer's
+    own XP, badges and progress — and a physical mute button (GPIO 10) cuts the audio instantly
+    mid-sentence for a natural, interruptible conversation.
+  </p>
+
+  <div class="dg">
+    <svg viewBox="0 0 820 90" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <marker id="arv" markerWidth="8" markerHeight="8" refX="7" refY="3" orient="auto">
+          <path d="M0,0 L7,3 L0,6 Z" fill="#3DDC84"/>
+        </marker>
+      </defs>
+      <rect x="10"  y="28" width="95"  height="40" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="57"  y="52" text-anchor="middle" font-size="10" fill="#E9E9EE">🎤 Mic</text>
+      <rect x="140" y="28" width="165" height="40" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="222" y="47" text-anchor="middle" font-size="10" fill="#E9E9EE">whisper.cpp</text>
+      <text x="222" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">STT · on-board</text>
+      <rect x="340" y="28" width="140" height="40" rx="6" fill="#141417" stroke="#A78BFA" stroke-width="1.5"/>
+      <text x="410" y="52" text-anchor="middle" font-size="10" fill="#A78BFA" font-weight="700">Oak assistant</text>
+      <rect x="515" y="28" width="150" height="40" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
+      <text x="590" y="47" text-anchor="middle" font-size="10" fill="#E9E9EE">eSpeak</text>
+      <text x="590" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">TTS · on-board</text>
+      <rect x="700" y="28" width="110" height="40" rx="6" fill="#141417" stroke="#FFD233" stroke-width="1.5"/>
+      <text x="755" y="52" text-anchor="middle" font-size="10" fill="#FFD233">🔊 Speaker</text>
+      <line x1="105" y1="48" x2="138" y2="48" stroke="#3DDC84" stroke-width="2" marker-end="url(#arv)"/>
+      <line x1="305" y1="48" x2="338" y2="48" stroke="#3DDC84" stroke-width="2" marker-end="url(#arv)"/>
+      <line x1="480" y1="48" x2="513" y2="48" stroke="#3DDC84" stroke-width="2" marker-end="url(#arv)"/>
+      <line x1="665" y1="48" x2="698" y2="48" stroke="#3DDC84" stroke-width="2" marker-end="url(#arv)"/>
+    </svg>
+    <div class="dg-cap">Voice loop — speech in and speech out both execute on the Pokédex</div>
+  </div>
+
+  <div class="co t">
+    <div class="co-ic">🧠</div>
+    <div class="co-b">
+      <strong>Why this counts as Physical AI</strong>
+      <p>A camera sees, a neural network on the board decides, a microphone hears, and a speaker
+      responds — all on an Arduino UNO Q you can hold in one hand, with the core perception loops
+      running entirely offline. The only optional network hop is the language reasoning behind Oak's
+      replies; every sensing and acting step lives on the device.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════ PHASE 4 ════ -->
+<section class="sec" id="s4">
+  <div class="sh"><div class="snum">10</div><h2>Phase 4 — Print &amp; Assembly</h2></div>
+
+  <p>
+    The enclosure is designed in Fusion 360 (document <strong>pokedexV3.1</strong>). Export each
+    body individually: right-click body → <em>Save as Mesh</em> → STL, binary, high refinement.
+  </p>
+
+  <h3>9.1 — Print settings</h3>
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Parameter</th><th>Shells &amp; Lid</th><th>Button Caps</th><th>Dome Lens</th><th>Inserts</th></tr></thead>
+    <tbody>
+      <tr><td>Material</td><td class="q">PLA</td><td class="q">PLA</td><td class="q">PETG clear</td><td class="q">PLA</td></tr>
+      <tr><td>Layer height</td><td class="q">0.20 mm</td><td class="q">0.12 mm</td><td class="q">0.12 mm</td><td class="q">0.16 mm</td></tr>
+      <tr><td>Wall count</td><td class="q">3</td><td class="q">4</td><td class="q">4</td><td class="q">3</td></tr>
+      <tr><td>Infill</td><td class="q">20%</td><td class="q">0%</td><td class="q">100%</td><td class="q">15%</td></tr>
+      <tr><td>Supports</td><td class="q">Hinge only</td><td class="q">None</td><td class="q">None</td><td class="q">None</td></tr>
+      <tr><td>Horizontal expansion</td><td class="q">−0.10 mm</td><td class="q">−0.05 mm</td><td class="q">0 mm</td><td class="q">−0.05 mm</td></tr>
+      <tr><td>Approx. time</td><td class="q">~9 h total</td><td class="q">~40 min</td><td class="q">~25 min</td><td class="q">~1 h</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="co t">
+    <div class="co-ic">📏</div>
+    <div class="co-b">
+      <strong>Why negative horizontal expansion</strong>
+      <p>Extruded filament spreads slightly beyond its commanded path, so a modelled 6.0 mm button
+      hole prints at roughly 5.8 mm and the cap will not seat. A −0.10 mm horizontal expansion
+      compensates. Print one button cap and its matching hole as a test coupon before committing
+      to the nine-hour shell print.</p>
+    </div>
+  </div>
+
+  <h3>9.2 — Critical geometry</h3>
+  <p>These dimensions are load-bearing for the design. Changing any one of them breaks lid closure.</p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Feature</th><th>Value</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td>Button cap top face</td><td class="q">z = −3.7 mm</td><td class="n">Sits 0.3 mm proud of the recessed field. Higher and the lid strikes it; lower and the cap feels dead.</td></tr>
+      <tr><td>Recessed panel field</td><td class="q">z = −4.0 mm</td><td class="n">The reference datum for every cap height.</td></tr>
+      <tr><td>LidFacePlate recess</td><td class="q">z = −9 … −7 mm</td><td class="n">Provides the pocket the caps sit into when closed.</td></tr>
+      <tr><td>Hinge axis</td><td class="q">x = 115 mm, z = −2 mm, axis +Y</td><td class="n">Closed position maps as z_closed = −4 mm − z_open.</td></tr>
+      <tr><td>Lid rotation</td><td class="q">180°</td><td class="n">Full fold-flat closure.</td></tr>
+      <tr><td>Mounting bosses</td><td class="q">6, shortened</td><td class="n">Shortened specifically to clear the recessed faceplate. Do not restore earlier heights.</td></tr>
+      <tr><td>Minimum clearance</td><td class="q">0.3 mm</td><td class="n">Between LidFacePlate inner face and every cap top, closed.</td></tr>
+      <tr><td>Hinge pin bore</td><td class="q">Ø3.2 mm</td><td class="n">Continuous through all knuckles; takes an M3 bolt with light clearance.</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>9.3 — Assembly sequence</h3>
+  <p>Order matters — several steps become impossible if done out of sequence.</p>
+
+  <ol class="steps">
+    <li><div class="sn">1</div><div class="sb"><strong>Dry-fit everything first</strong>
+      <p>Before any glue or solder, test-fit every printed part together. Sand button holes with 220-grit until caps slide freely. Fixing fit problems after wiring is painful.</p></div></li>
+    <li><div class="sn">2</div><div class="sb"><strong>Seat the display in its bezel</strong>
+      <p>Press the panel in from the front. Run a thin hot-glue bead around the inside edge only — keep glue off the ribbon connector. Let it set fully before handling.</p></div></li>
+    <li><div class="sn">3</div><div class="sb"><strong>Mount the UNO Q</strong>
+      <p>Seat the board on the UNO Q Mount body, rotated 90°. Secure with four M2.5×6 mm screws. Attach the mount into the left shell before any cables are connected.</p></div></li>
+    <li><div class="sn">4</div><div class="sb"><strong>Route cables before closing anything</strong>
+      <p>HDMI first (it is the stiffest and least forgiving), then camera USB, then sound card USB, then the ESP32 link. Leave a 15 mm service loop at the hinge so the lid can open without tension.</p></div></li>
+    <li><div class="sn">5</div><div class="sb"><strong>Install buttons and the ESP32-C3</strong>
+      <p>Press tactile switches through their holes from outside. Hot-glue the ESP32-C3 to a flat interior area of the right shell with its USB-C port facing the cable exit. Solder per §7.3, then press each cap on — light thumb pressure only.</p></div></li>
+    <li><div class="sn">6</div><div class="sb"><strong>Mount camera, mic and speaker</strong>
+      <p>Press-fit the camera into the front lens cutout. Mount the mic near the OAK button side so the user naturally speaks toward it. Position the speaker facing an outlet slot, not into solid wall.</p></div></li>
+    <li><div class="sn">7</div><div class="sb"><strong>Fit the shoulder LED and dome lens</strong>
+      <p>Push the LED through from inside, then snap the clear Dome_Lens over it from outside. It should click without glue. If it is loose, a single drop of CA on the flange is enough.</p></div></li>
+    <li><div class="sn">8</div><div class="sb"><strong>Press in the 18 dummy inserts</strong>
+      <p>Work top row downward. The retention flanges hold them — no adhesive. Going bottom-up tends to misalign the last row.</p></div></li>
+    <li><div class="sn">9</div><div class="sb"><strong>Install the hinge pin and test closure</strong>
+      <p>Push the M3×20 mm pin through all knuckles from the outside. Open and close ten times. Confirm the LidFacePlate never contacts a cap — hold it up to a light and look for the 0.3 mm gap.</p></div></li>
+    <li><div class="sn">10</div><div class="sb"><strong>Close up and power on</strong>
+      <p>Fit six M3×8 mm screws at the shell bosses. Snap the BackPlate onto its perimeter clips last — it is designed to come off again for servicing, so do not glue it.</p></div></li>
+  </ol>
+
+  <div class="ckp">
+    <div class="hd">▶ CHECKPOINT 4</div>
+    <ul>
+      <li>Lid opens and closes smoothly through the full 180°</li>
+      <li>Visible clearance between faceplate and every button cap when closed</li>
+      <li>All 10 buttons actuate through their caps with a clean click</li>
+      <li>No cable pinch at the hinge when opening</li>
+      <li>Camera lens is centred in its cutout and unobstructed</li>
+      <li>Dome lens is seated and the status LED is visible through it</li>
+      <li>BackPlate snaps on and off without tools</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ════ VALIDATION ════ -->
+<section class="sec" id="test">
+  <div class="sh"><div class="snum">11</div><h2>Validation &amp; Test Results</h2></div>
+
+  <p>
+    Run this suite after assembly. Record your own numbers in the right-hand column — a build
+    that passes all of these is a working Q-dexter.
+  </p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>#</th><th>Test</th><th>Method</th><th>Pass Criterion</th><th>Result</th></tr></thead>
+    <tbody>
+      <tr><td>T1</td><td>Display output</td><td class="n">Run screen_test.py</td><td class="n">Frame renders, correct 640×480, no tearing</td><td class="ok">☐</td></tr>
+      <tr><td>T2</td><td>Keypad coverage</td><td class="n">Press each button 10×</td><td class="n">100 correct events, zero misses, zero doubles</td><td class="ok">☐</td></tr>
+      <tr><td>T3</td><td>Input latency</td><td class="n">Press-to-visual-response</td><td class="n">Under 100 ms, subjectively instant</td><td class="ok">☐</td></tr>
+      <tr><td>T4</td><td>Camera enumeration</td><td class="n">ls /dev/video0</td><td class="n">Present after cold boot, every boot</td><td class="ok">☐</td></tr>
+      <tr><td>T5</td><td>Vision inference</td><td class="n">Scan a known card 20×</td><td class="n">Correct species in top-3 consistently</td><td class="ok">☐</td></tr>
+      <tr><td>T6</td><td>Inference time</td><td class="n">Time predict() end-to-end</td><td class="n">Under 2 s from press to result</td><td class="ok">☐</td></tr>
+      <tr><td>T7</td><td>UI responsiveness under load</td><td class="n">Press D-pad during a scan</td><td class="n">Menu still responds; loop never blocks</td><td class="ok">☐</td></tr>
+      <tr><td>T8</td><td>Audio capture rate</td><td class="n">arecord then check file size</td><td class="n">~160 KB for 5 s (confirms 16 kHz)</td><td class="ok">☐</td></tr>
+      <tr><td>T9</td><td>Speech recognition</td><td class="n">10 spoken questions</td><td class="n">Transcript non-empty and intelligible</td><td class="ok">☐</td></tr>
+      <tr><td>T10</td><td>TTS output</td><td class="n">Trigger an Oak reply</td><td class="n">Audible and clear through the speaker</td><td class="ok">☐</td></tr>
+      <tr><td>T11</td><td>Profile persistence</td><td class="n">Earn XP, power-cycle, reopen</td><td class="n">XP and badges retained exactly</td><td class="ok">☐</td></tr>
+      <tr><td>T12</td><td>Database integrity</td><td class="n">Scroll to entry #1025</td><td class="n">All entries load, no gaps or crashes</td><td class="ok">☐</td></tr>
+      <tr><td>T13</td><td>USB stability soak</td><td class="n">Run 30 min continuously</td><td class="n">No device drops; dmesg free of xHCI resets</td><td class="ok">☐</td></tr>
+      <tr><td>T14</td><td>Serial reconnect</td><td class="n">Unplug and replug the ESP32</td><td class="n">App recovers automatically, no crash</td><td class="ok">☐</td></tr>
+      <tr><td>T15</td><td>Mechanical cycling</td><td class="n">Open/close the lid 50×</td><td class="n">No cap contact, no cable strain, hinge intact</td><td class="ok">☐</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="co i">
+    <div class="co-ic">📊</div>
+    <div class="co-b">
+      <strong>Soak test command</strong>
+      <p>For T13, leave this running in a second SSH session and check it after 30 minutes.
+      A clean run prints nothing.</p>
+    </div>
+  </div>
+
+  <div class="cb">
+    <div class="cl">BASH — USB stability soak</div>
+<pre>sudo dmesg -w | grep -iE "xhci|disconnect|reset|over-current"</pre>
+  </div>
+</section>
+
+<!-- ════ TROUBLESHOOTING ════ -->
+<section class="sec" id="trouble">
+  <div class="sh"><div class="snum">12</div><h2>Troubleshooting Reference</h2></div>
+
+  <p>Every failure encountered during this build, with its actual root cause and fix.</p>
+
+  <div class="tbl-scroll">
+  <table class="tbl">
+    <thead><tr><th>Symptom</th><th>Likely Cause</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Display stays black</td><td class="n">Panel has no micro-USB power</td><td class="n">HDMI carries no useful power. Power the panel from the hub.</td></tr>
+      <tr><td>pygame opens on SSH, not the panel</td><td class="n">SDL env vars set after import</td><td class="n">Set <span class="tag">SDL_VIDEODRIVER</span> and <span class="tag">SDL_FBDEV</span> before <span class="tag">import pygame</span>.</td></tr>
+      <tr><td>USB devices vanish mid-session</td><td class="n">xHCI reset from current overdraw</td><td class="n">Move camera and sound card onto the powered hub.</td></tr>
+      <tr><td>ESP32-C3 will not boot</td><td class="n">Button wired to GPIO 8 or 9</td><td class="n">Strapping pins. Rewire to a pin from the table in §05.</td></tr>
+      <tr><td>No <span class="tag">/dev/ttyACM0</span></td><td class="n">Device enumerated elsewhere or no permission</td><td class="n">Check <span class="tag">ls /dev/tty*</span>; add user to <span class="tag">dialout</span> and re-login.</td></tr>
+      <tr><td>One press sends several letters</td><td class="n">Contact bounce</td><td class="n">Raise <span class="tag">DEBOUNCE_MS</span>; add the 100 nF cap across the switch.</td></tr>
+      <tr><td>Buttons dead but LED is on</td><td class="n">GND rail not continuous</td><td class="n">Check continuity from each switch common to ESP32 GND.</td></tr>
+      <tr><td>Transcript is always empty</td><td class="n">Parse failure hidden by broad except</td><td class="n">Verify <span class="tag">import re</span>; catch specific exceptions and log them.</td></tr>
+      <tr><td>Whisper output is gibberish</td><td class="n">Wrong sample rate</td><td class="n">Use <span class="tag">plughw:1,0</span>, never <span class="tag">hw:1,0</span>. Confirm ~160 KB per 5 s.</td></tr>
+      <tr><td>pip install fails, disk full</td><td class="n">Build cache on the small root partition</td><td class="n">Export <span class="tag">TMPDIR=$HOME/tmp</span> before installing.</td></tr>
+      <tr><td>Scan freezes the whole UI</td><td class="n">Inference running on the main thread</td><td class="n">Move <span class="tag">predict()</span> into a worker thread; poll for the result.</td></tr>
+      <tr><td>First scan slow, rest fast</td><td class="n">Interpreter loaded lazily</td><td class="n">Construct <span class="tag">PokemonVision</span> at startup, not on first use.</td></tr>
+      <tr><td>Button caps will not seat</td><td class="n">No horizontal-expansion compensation</td><td class="n">Reprint holes at −0.10 mm expansion, or sand with 220-grit.</td></tr>
+      <tr><td>Lid will not close flat</td><td class="n">Caps too tall or bosses restored</td><td class="n">Confirm cap tops at z = −3.7 mm and bosses shortened.</td></tr>
+      <tr><td>Cable pinches at the hinge</td><td class="n">No service loop</td><td class="n">Reroute with 15 mm of slack at the hinge.</td></tr>
+      <tr><td>App crashes when ESP32 replugged</td><td class="n">Unhandled SerialException</td><td class="n">Use the reconnect loop from §7.2.</td></tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- ════ REPLICATION ════ -->
+<section class="sec" id="repro">
+  <div class="sh"><div class="snum">13</div><h2>Replication Checklist</h2></div>
+
+  <p>
+    Work top to bottom. Do not start a phase until the previous checkpoint passes — this is the
+    difference between a four-hour build and a four-day one.
+  </p>
+
+  <div class="two">
+    <div>
+      <h4>Before you start</h4>
+      <div class="ckp"><div class="hd">PREP</div><ul>
+        <li>All BOM items sourced (§04)</li>
+        <li>3D printer calibrated, first-layer dialled in</li>
+        <li>Test coupon printed: one cap + one hole</li>
+        <li>UNO Q boots to Ubuntu, SSH works</li>
+        <li>Soldering iron and multimeter ready</li>
+      </ul></div>
+
+      <h4>Phase 1 — Display</h4>
+      <div class="ckp"><div class="hd">DISPLAY</div><ul>
+        <li>HDMI connected, panel independently powered</li>
+        <li><span class="tag">/dev/fb0</span> present at 640×480</li>
+        <li>screen_test.py renders correctly</li>
+      </ul></div>
+
+      <h4>Phase 2 — Keypad</h4>
+      <div class="ckp"><div class="hd">KEYPAD</div><ul>
+        <li>Firmware flashed, no strapping pins used</li>
+        <li>GND rail continuous across all switches</li>
+        <li>All 10 buttons send correct distinct bytes</li>
+        <li>No double-fires; status LED solid</li>
+      </ul></div>
+    </div>
+
+    <div>
+      <h4>Phase 3 — Software</h4>
+      <div class="ckp"><div class="hd">SOFTWARE</div><ul>
+        <li>Dependencies installed with TMPDIR set</li>
+        <li>whisper.cpp built, tiny.en downloaded</li>
+        <li>arecord produces ~160 KB per 5 s</li>
+        <li>espeak audible on the speaker</li>
+        <li>App boots to the home screen</li>
+        <li>Scan returns a prediction under 2 s</li>
+      </ul></div>
+
+      <h4>Phase 4 — Assembly</h4>
+      <div class="ckp"><div class="hd">ASSEMBLY</div><ul>
+        <li>All parts dry-fitted before wiring</li>
+        <li>Cables routed with hinge service loop</li>
+        <li>Caps seated, all buttons actuate</li>
+        <li>Lid closes with 0.3 mm clearance</li>
+        <li>BackPlate snaps on, removable</li>
+      </ul></div>
+
+      <h4>Final</h4>
+      <div class="ckp"><div class="hd">VALIDATION</div><ul>
+        <li>All 15 tests in §10 pass</li>
+        <li>30-minute soak with no USB drops</li>
+        <li>Profile survives a power cycle</li>
+      </ul></div>
+    </div>
+  </div>
+
+  <hr class="dv"/>
+
+  <h3>Extending the project</h3>
+  <ul class="pl">
+    <li><strong>Expand the vision model</strong> — retrain MobileNetV2 on more species. The label file and inference wrapper need no code changes, only a new <span class="tag">.tflite</span> and <span class="tag">labels.txt</span>.</li>
+    <li><strong>Battery power</strong> — a 5 V 3 A power bank in place of the mains adapter makes it genuinely portable.</li>
+    <li><strong>Trade over serial</strong> — two Q-dexters connected by USB could exchange caught Pokémon using the same byte-protocol pattern as the keypad.</li>
+    <li><strong>Haptics</strong> — a small vibration motor on a spare ESP32-C3 GPIO gives physical feedback on a successful catch.</li>
+    <li><strong>More screens</strong> — implement the <span class="tag">Screen</span> ABC and add one route entry. Nothing else changes.</li>
+  </ul>
+</section>
+
+<hr class="dv"/>
+
+<section class="sec" style="padding-top:1.5rem">
+  <h3 style="font-family:var(--px);font-size:.6rem;color:var(--red);letter-spacing:.08em;line-height:1.7">
+    Built by Jayant · Nagpur, India · 2026
+  </h3>
+  <p style="margin-top:.9rem">
+    Q-dexter is a solo submission to the <strong>Arduino Physical AI Challenge India 2026</strong>,
+    Gaming · Robotics &amp; Interactive AI track.
+  </p>
+  <p>
+    If you build one, open an issue on the repository with your photos and your results from the
+    §10 validation table. Deviations from the expected numbers are useful — they make this guide
+    better for the next builder.
+  </p>
+</section>
+
+</main>
+
+<footer>
+  <span class="flogo">Q-DEXTER BUILD GUIDE</span>
+  <p>Documentation format inspired by <a href="https://howtomechatronics.com" target="_blank" rel="noopener">HowToMechatronics.com</a>.</p>
+  <p style="margin-top:.5rem">Fan-made educational project. Not affiliated with or endorsed by Nintendo, Creatures Inc., or Game Freak. Pokémon and Pokédex are trademarks of their respective owners.</p>
+  <p style="margin-top:.5rem">© 2026 Jayant</p>
+</footer>
+
+</body>
+</html>
