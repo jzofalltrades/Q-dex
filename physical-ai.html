@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Physical AI — On-Device Pokémon Recognition | Q-dexter</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
+:root{
+  --red:#CC0000; --red-d:#8B0000; --red-g:rgba(204,0,0,.15);
+  --gold:#FFD233; --blue:#3B9EFF; --green:#3DDC84; --purple:#A78BFA;
+  --bg:#0B0B0D; --s1:#141417; --s2:#1C1C21; --s3:#26262C;
+  --bd:#2E2E36; --tx:#E9E9EE; --mut:#8C8C9E; --dim:#5A5A6A;
+  --mono:'JetBrains Mono',monospace; --body:'Inter',sans-serif; --px:'Press Start 2P',monospace;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{background:var(--bg);color:var(--tx);font-family:var(--body);font-size:15.5px;line-height:1.72;-webkit-font-smoothing:antialiased}
+nav{position:sticky;top:0;z-index:200;background:rgba(11,11,13,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);height:56px;display:flex;align-items:center;gap:1.2rem;padding:0 1.5rem}
+.nl{font-family:var(--px);font-size:.58rem;color:var(--red);text-decoration:none;flex-shrink:0;letter-spacing:.04em}
+.nav-links{display:flex;list-style:none;overflow-x:auto;scrollbar-width:none;gap:.1rem}
+.nav-links::-webkit-scrollbar{display:none}
+.nav-links a{color:var(--mut);text-decoration:none;font-size:.76rem;padding:.35rem .7rem;border-radius:4px;white-space:nowrap;transition:.18s}
+.nav-links a:hover{color:var(--tx);background:var(--s2)}
+.nav-links a.home{color:var(--gold);font-weight:700}
+.hero{position:relative;overflow:hidden;padding:4rem 1.5rem 3rem;text-align:center;background:radial-gradient(ellipse 75% 55% at 50% 0%,rgba(59,158,255,.16),transparent 70%),var(--bg);border-bottom:1px solid var(--bd)}
+.hero::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 31px,rgba(255,255,255,.02) 31px,rgba(255,255,255,.02) 32px);pointer-events:none}
+.eyebrow{display:inline-block;background:var(--blue);color:#031;font-family:var(--px);font-size:.42rem;letter-spacing:.14em;padding:.4rem 1rem;border-radius:3px;margin-bottom:1.4rem}
+.hero h1{font-family:var(--px);font-size:clamp(.9rem,3.4vw,1.6rem);line-height:1.7;color:#fff;margin-bottom:1.1rem;text-shadow:0 0 45px rgba(59,158,255,.25);position:relative}
+.hero h1 span{color:var(--blue)}
+.hsub{color:var(--mut);font-size:1.02rem;max-width:680px;margin:0 auto 1.6rem;position:relative}
+.hbadges{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;position:relative}
+.badge{background:var(--s1);border:1px solid var(--bd);border-radius:999px;padding:.28rem .85rem;font-size:.75rem;color:var(--mut)}
+.badge.b{border-color:var(--blue);color:var(--blue)}
+.badge.g{border-color:#1f9d5a;color:var(--green)}
+.badge.y{border-color:var(--gold);color:var(--gold)}
+.badge.p{border-color:#7c5cd6;color:var(--purple)}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:1px;background:var(--bd);border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)}
+.stat{background:var(--bg);padding:1.4rem .8rem;text-align:center}
+.stat .n{font-family:var(--px);font-size:.95rem;color:var(--blue);display:block;margin-bottom:.5rem}
+.stat .l{font-size:.68rem;color:var(--dim);text-transform:uppercase;letter-spacing:.1em}
+.wrap{max-width:900px;margin:0 auto;padding:0 1.5rem}
+section{padding:3rem 0;border-bottom:1px solid var(--bd)}
+h2{font-family:var(--px);font-size:1.05rem;color:#fff;margin-bottom:.6rem;line-height:1.5;display:flex;align-items:center;gap:.6rem}
+h2::before{content:'';width:4px;height:22px;background:var(--blue);border-radius:2px;flex-shrink:0}
+.lead{color:var(--mut);margin-bottom:1.6rem;font-size:1rem}
+h3{font-size:1.06rem;color:var(--tx);margin:1.8rem 0 .7rem;font-weight:700}
+p{margin-bottom:1rem;color:var(--tx)}
+p.m{color:var(--mut)}
+ul,ol{margin:0 0 1rem 1.3rem;color:var(--tx)}
+li{margin-bottom:.5rem}
+code{font-family:var(--mono);font-size:.86em;background:var(--s2);padding:.12rem .4rem;border-radius:4px;color:var(--gold);border:1px solid var(--bd)}
+pre{background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:1.1rem;overflow-x:auto;margin-bottom:1.2rem}
+pre code{background:none;border:none;padding:0;color:var(--tx);font-size:.82rem;line-height:1.6}
+.tbl{width:100%;border-collapse:collapse;margin-bottom:1.2rem;font-size:.9rem;border:1px solid var(--bd);border-radius:8px;overflow:hidden}
+.tbl th{background:var(--s2);color:var(--blue);text-align:left;padding:.7rem .9rem;font-weight:700;font-size:.82rem;text-transform:uppercase;letter-spacing:.03em}
+.tbl td{padding:.7rem .9rem;border-top:1px solid var(--bd);color:var(--tx)}
+.tbl tr:nth-child(even) td{background:var(--s1)}
+.card{background:var(--s1);border:1px solid var(--bd);border-radius:10px;padding:1.3rem 1.4rem;margin-bottom:1.2rem}
+.card.blue{border-left:3px solid var(--blue)}
+.card.gold{border-left:3px solid var(--gold)}
+.card.green{border-left:3px solid var(--green)}
+.card h4{font-size:.95rem;margin-bottom:.5rem;color:#fff}
+.pipeline{display:flex;flex-direction:column;gap:.6rem;margin:1.4rem 0}
+.pstep{display:flex;gap:.9rem;align-items:flex-start;background:var(--s1);border:1px solid var(--bd);border-radius:8px;padding:.9rem 1.1rem}
+.pnum{font-family:var(--px);font-size:.6rem;color:#031;background:var(--blue);min-width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pstep .pt{font-weight:700;color:#fff;display:block;margin-bottom:.15rem;font-size:.95rem}
+.pstep .pd{color:var(--mut);font-size:.9rem}
+.big{font-family:var(--px);color:var(--green);font-size:1.1rem}
+footer{padding:3rem 1.5rem;text-align:center;color:var(--dim);font-size:.85rem}
+footer a{color:var(--blue);text-decoration:none}
+.confmatrix{display:inline-grid;grid-template-columns:auto repeat(4,44px);gap:2px;font-family:var(--mono);font-size:.72rem;margin:.5rem 0 1.2rem}
+.confmatrix div{padding:.4rem;text-align:center;background:var(--s2);border-radius:3px}
+.confmatrix .hd{color:var(--blue);background:transparent;font-weight:700}
+.confmatrix .diag{background:rgba(61,220,132,.25);color:var(--green);font-weight:700}
+.confmatrix .zero{color:var(--dim)}
+</style>
+</head>
+<body id="top">
+<nav>
+  <a class="nl" href="index.html">Q-DEXTER</a>
+  <ul class="nav-links">
+    <li><a class="home" href="index.html">← Build Guide</a></li>
+    <li><a href="#what">The Model</a></li>
+    <li><a href="#why">Why On-Device</a></li>
+    <li><a href="#dataset">Dataset</a></li>
+    <li><a href="#arch">Architecture</a></li>
+    <li><a href="#training">Training</a></li>
+    <li><a href="#results">Results</a></li>
+    <li><a href="#quant">Quantization</a></li>
+    <li><a href="#deploy">Deployment</a></li>
+    <li><a href="viewer.html">3D Model</a></li>
+  </ul>
+</nav>
+
+<div class="hero">
+  <div class="eyebrow">PHYSICAL AI · ON-DEVICE INTELLIGENCE</div>
+  <h1>Teaching the Pokédex to <span>See</span><br/>Without the Internet</h1>
+  <p class="hsub">A MobileNetV2 neural network, trained by transfer learning and quantized to run entirely on the Arduino UNO Q's CPU — no cloud, no API, no connection. This is the Physical AI at the heart of Q-dexter.</p>
+  <div class="hbadges">
+    <span class="badge b">MobileNetV2</span>
+    <span class="badge g">95.8% quantized accuracy</span>
+    <span class="badge y">2.59 MB model</span>
+    <span class="badge p">int8 · fully offline</span>
+  </div>
+</div>
+
+<div class="stats">
+  <div class="stat"><span class="n">4</span><span class="l">Pokémon classes</span></div>
+  <div class="stat"><span class="n">95.8%</span><span class="l">Val accuracy (quantized)</span></div>
+  <div class="stat"><span class="n">2.59 MB</span><span class="l">On-device model</span></div>
+  <div class="stat"><span class="n">160²</span><span class="l">Input resolution</span></div>
+  <div class="stat"><span class="n">0</span><span class="l">Internet required</span></div>
+</div>
+
+<div class="wrap">
+
+<section id="what">
+  <h2>The Physical AI: "Who's That Pokémon?"</h2>
+  <p class="lead">Q-dexter has two ways to recognise a Pokémon. One asks the internet. The other thinks for itself.</p>
+  <p>The <strong>Reverse Image Version</strong> uploads a photo and queries Google Lens — powerful, covering all 1025 Pokémon, but dependent on a network connection. The <strong>PhyAI Challenge</strong> mode is the opposite: a neural network we trained ourselves, running <em>directly on the device's processor</em>, that recognises four Pokémon — Bulbasaur, Charizard, Pikachu and Squirtle — from the live camera feed with <strong>no internet whatsoever</strong>.</p>
+  <p>This is the literal meaning of <em>Physical AI</em>: intelligence embedded in the physical device, computing locally, in real time, from its own sensors. When you point the camera and the name appears with no network round-trip, that answer was computed on the Arduino itself.</p>
+  <div class="card blue">
+    <h4>At a glance</h4>
+    <p class="m" style="margin:0">A MobileNetV2 classifier, trained by transfer learning on a free Colab GPU, fine-tuned, then quantized to an int8 <code>.tflite</code> model of 2.59 MB. It runs on the UNO Q via the LiteRT (ai-edge-litert) runtime, classifying camera frames roughly twice a second at 160×160 resolution.</p>
+  </div>
+</section>
+
+<section id="why">
+  <h2>Why On-Device, Not Cloud</h2>
+  <p class="lead">The reverse-image mode already works. So why train our own model at all?</p>
+  <p>Because a challenge about <em>Physical AI</em> is asking a specific question: can the device itself be intelligent? Offloading every decision to a cloud API sidesteps that question. Running a model locally answers it. Four concrete reasons drove the decision:</p>
+  <div class="card"><h4>1 · No connection dependency</h4><p class="m" style="margin:0">The reverse-image path fails the moment Wi-Fi drops. The on-device model has no such failure mode — it works in a field, a basement, or on a stage with no network, which is exactly where a "handheld" device needs to work.</p></div>
+  <div class="card"><h4>2 · Instant, no round-trip</h4><p class="m" style="margin:0">Cloud recognition means capture → upload → API → response — often seconds. The local model returns an answer in a fraction of that, fast enough to classify the live camera feed continuously rather than on a single button press.</p></div>
+  <div class="card"><h4>3 · Zero per-use cost</h4><p class="m" style="margin:0">Every cloud query costs money and quota. The on-device model, once trained, runs unlimited times for free.</p></div>
+  <div class="card"><h4>4 · It proves the concept</h4><p class="m" style="margin:0">Training and deploying a real neural network onto a constrained embedded Linux board — and having it actually work from the camera — is the demonstration the challenge is looking for.</p></div>
+</section>
+
+<section id="dataset">
+  <h2>The Dataset</h2>
+  <p class="lead">Four visually distinct Pokémon, ~40 images each, gathered and organised into class folders.</p>
+  <p>The four classes were chosen deliberately: <strong>Bulbasaur</strong> (green/blue, quadruped), <strong>Charizard</strong> (orange, winged), <strong>Pikachu</strong> (yellow, bipedal) and <strong>Squirtle</strong> (blue, shelled) are visually separable by colour and silhouette, which is exactly what makes a small-data classifier viable. The dataset was structured so folder names become the class labels:</p>
+  <pre><code>pokemon_data.zip
+  bulbasaur/   (~40 images)
+  charizard/   (~40 images)
+  pikachu/     (~40 images)
+  squirtle/    (~40 images)</code></pre>
+  <table class="tbl">
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Classes</td><td>4 (bulbasaur, charizard, pikachu, squirtle)</td></tr>
+    <tr><td>Images per class</td><td>~40</td></tr>
+    <tr><td>Total images</td><td>~160</td></tr>
+    <tr><td>Train / validation split</td><td>80% / 20% (seed 42, reproducible)</td></tr>
+    <tr><td>Training images per class</td><td>~32 after the split</td></tr>
+    <tr><td>Input resolution</td><td>160 × 160 × 3 (RGB)</td></tr>
+  </table>
+  <div class="card gold">
+    <h4>The honest constraint</h4>
+    <p class="m" style="margin:0">~32 training images per class is a <em>very</em> small dataset. A network trained from scratch on this would simply memorise the photos. Two techniques make it work anyway: <strong>transfer learning</strong> (reusing a model that already understands images) and <strong>data augmentation</strong> (manufacturing variety from what little we have). Both are described below.</p>
+  </div>
+</section>
+
+<section id="arch">
+  <h2>Architecture — MobileNetV2 Transfer Learning</h2>
+  <p class="lead">We don't teach the model to see from scratch. We borrow a model that already can.</p>
+  <p><strong>MobileNetV2</strong> is a convolutional network designed specifically for mobile and embedded devices — small, fast, efficient. Pre-trained on ImageNet (over a million photos across 1000 categories), it already knows how to detect edges, textures, shapes and colours. We freeze all of that learned knowledge and train only a small classifier head on top that maps its understanding onto <em>our</em> four Pokémon. This is why the whole thing works on ~160 images instead of the millions you'd otherwise need.</p>
+  <h3>The model, layer by layer</h3>
+  <pre><code>Input (160×160×3)
+   │
+   ├─ Data augmentation      (train-time only: flip, rotate, zoom, brightness, contrast)
+   ├─ MobileNetV2 preprocess (scale pixels to [-1, 1])
+   ├─ MobileNetV2 base       (ImageNet weights — frozen in phase 1)
+   ├─ GlobalAveragePooling2D (collapse feature maps to a vector)
+   ├─ Dropout(0.3)           (regularisation — fights overfitting)
+   └─ Dense(4, softmax)      (the only fully-trained head → 4 class probabilities)</code></pre>
+  <table class="tbl">
+    <tr><th>Design choice</th><th>Value</th><th>Why</th></tr>
+    <tr><td>Base network</td><td>MobileNetV2 (ImageNet)</td><td>Built for embedded; strong features for free</td></tr>
+    <tr><td>Input size</td><td>160 × 160</td><td>Light enough for the UNO Q's CPU</td></tr>
+    <tr><td>Pooling</td><td>GlobalAveragePooling2D</td><td>Compact, fewer parameters than Flatten</td></tr>
+    <tr><td>Dropout</td><td>0.3</td><td>Prevents memorising the small dataset</td></tr>
+    <tr><td>Head</td><td>Dense(4) softmax</td><td>Four class probabilities</td></tr>
+  </table>
+</section>
+
+<section id="training">
+  <h2>Training — Two Phases</h2>
+  <p class="lead">Trained on a free Colab T4 GPU, in two deliberate stages.</p>
+  <p>Before any training, <strong>data augmentation</strong> is applied so the model never sees the exact same image twice. With so few photos, this is what prevents memorisation:</p>
+  <pre><code>RandomFlip('horizontal')
+RandomRotation(0.15)
+RandomZoom(0.15)
+RandomBrightness(0.2)
+RandomContrast(0.2)</code></pre>
+  <div class="pipeline">
+    <div class="pstep"><span class="pnum">1</span><div><span class="pt">Phase 1 — Frozen base (15 epochs max)</span><span class="pd">The entire MobileNetV2 base is frozen. Only the new Dense head trains, learning to map existing features onto the four Pokémon. Fast, and safe from overfitting. Adam optimiser, learning rate 0.001.</span></div></div>
+    <div class="pstep"><span class="pnum">2</span><div><span class="pt">Phase 2 — Fine-tuning (10 epochs max)</span><span class="pd">The last ~20 layers of MobileNetV2 are unfrozen and trained with a much smaller learning rate (0.00001), letting the network adjust its higher-level features for Pokémon-specific shapes and colours without destroying what it already knew.</span></div></div>
+    <div class="pstep"><span class="pnum">3</span><div><span class="pt">Early stopping</span><span class="pd">Both phases watch validation accuracy and stop early if it plateaus (patience 5), restoring the best weights seen. The model never trains past its peak.</span></div></div>
+  </div>
+  <table class="tbl">
+    <tr><th>Hyperparameter</th><th>Phase 1</th><th>Phase 2</th></tr>
+    <tr><td>Trainable layers</td><td>Head only</td><td>Head + last ~20 base layers</td></tr>
+    <tr><td>Learning rate</td><td>0.001</td><td>0.00001</td></tr>
+    <tr><td>Max epochs</td><td>15</td><td>10</td></tr>
+    <tr><td>Optimiser</td><td colspan="2">Adam</td></tr>
+    <tr><td>Loss</td><td colspan="2">Categorical cross-entropy</td></tr>
+    <tr><td>Batch size</td><td colspan="2">8 (small dataset → small batches)</td></tr>
+  </table>
+</section>
+
+<section id="results">
+  <h2>Results</h2>
+  <p class="lead">The number that matters: <span class="big">95.8%</span> validation accuracy on the exported, quantized model.</p>
+  <p>Accuracy was measured not on the original float model, but on the <em>final int8 model that actually ships on the device</em> — 23 of 24 held-out validation images classified correctly. This is the honest figure, because it's the model that runs on the Arduino, quantization losses included.</p>
+  <table class="tbl">
+    <tr><th>Metric</th><th>Result</th></tr>
+    <tr><td>Validation accuracy (quantized, on-device model)</td><td><strong style="color:var(--green)">95.8% (23 / 24)</strong></td></tr>
+    <tr><td>Held-out validation set</td><td>20% of the data, never seen in training</td></tr>
+    <tr><td>Live camera accuracy (real-world)</td><td>~60% — lower, and honestly so (see below)</td></tr>
+  </table>
+  <h3>Confusion matrix (validation set)</h3>
+  <p class="m">Where the model agrees and disagrees with the truth. The green diagonal is correct predictions; near-perfect separation across all four classes.</p>
+  <div class="confmatrix">
+    <div class="hd"></div><div class="hd">bul</div><div class="hd">cha</div><div class="hd">pik</div><div class="hd">squ</div>
+    <div class="hd">bul</div><div class="diag">6</div><div class="zero">0</div><div class="zero">0</div><div class="zero">0</div>
+    <div class="hd">cha</div><div class="zero">0</div><div class="diag">6</div><div class="zero">0</div><div class="zero">0</div>
+    <div class="hd">pik</div><div class="zero">0</div><div class="zero">0</div><div class="diag">5</div><div class="zero">1</div>
+    <div class="hd">squ</div><div class="zero">0</div><div class="zero">0</div><div class="zero">0</div><div class="diag">6</div>
+  </div>
+  <div class="card green">
+    <h4>Why we report ~60% for live use, not 95.8%</h4>
+    <p class="m" style="margin:0">The 95.8% is on clean validation photos. In the real world — a phone screen or a toy under room lighting, at odd angles, with a busy background — live accuracy is closer to 60%. We document <em>both</em> numbers on purpose: the validation figure proves the model learned, the live figure is the honest field performance. Hiding the gap would be the wrong kind of documentation. This is also why the on-device mode is presented as a demonstration, while the 1025-Pokémon reverse-image mode remains the primary recognition path.</p>
+  </div>
+</section>
+
+<section id="quant">
+  <h2>Quantization — Making It Fit</h2>
+  <p class="lead">A GPU-trained model is too heavy for an embedded CPU. Quantization is what shrinks it.</p>
+  <p>The trained model uses 32-bit floating-point weights. To run efficiently on the UNO Q's CPU, it's converted to <strong>8-bit integers (int8)</strong> — roughly a 4× reduction in size and a large speed-up, at the cost of a little accuracy. Crucially, the converter needs <em>real images</em> to calibrate the integer ranges correctly:</p>
+  <pre><code>converter = tf.lite.TFLiteConverter.from_keras_model(model)
+converter.optimizations = [tf.lite.Optimize.DEFAULT]
+converter.representative_dataset = representative_dataset  # real training images
+converter.target_spec.supported_ops = [tf.lite.OpsSet.TFLITE_BUILTINS_INT8]
+converter.inference_input_type  = tf.uint8
+converter.inference_output_type = tf.uint8</code></pre>
+  <table class="tbl">
+    <tr><th>Property</th><th>Value</th></tr>
+    <tr><td>Format</td><td>TensorFlow Lite (<code>.tflite</code>)</td></tr>
+    <tr><td>Quantization</td><td>Full int8, calibrated on real training images</td></tr>
+    <tr><td>Model size</td><td>2.59 MB</td></tr>
+    <tr><td>Input tensor</td><td>[1, 160, 160, 3] · uint8</td></tr>
+    <tr><td>Output tensor</td><td>[1, 4] · uint8 (per-class confidence)</td></tr>
+  </table>
+  <p class="m">Because quantization can cost accuracy, the exported model is re-validated <em>after</em> conversion — the 95.8% figure above is that post-quantization number, not the float model's.</p>
+</section>
+
+<section id="deploy">
+  <h2>Deployment on the UNO Q</h2>
+  <p class="lead">From a Colab download to a live camera classifier on the device.</p>
+  <p>Two files travel together: <code>pokedex_phyai.tflite</code> (the model) and <code>labels.txt</code> (the class order — turns a class number back into a name). On the device, inference runs through <strong>LiteRT (ai-edge-litert)</strong>, not full TensorFlow, which would overflow the board's limited storage.</p>
+  <div class="pipeline">
+    <div class="pstep"><span class="pnum">1</span><div><span class="pt">Grab a camera frame</span><span class="pd">OpenCV captures a BGR frame from the USB camera.</span></div></div>
+    <div class="pstep"><span class="pnum">2</span><div><span class="pt">Preprocess</span><span class="pd">Convert BGR→RGB, resize to 160×160, cast to uint8 — exactly matching the training pipeline.</span></div></div>
+    <div class="pstep"><span class="pnum">3</span><div><span class="pt">Invoke the model</span><span class="pd">The LiteRT interpreter runs the frame through the int8 network on the CPU.</span></div></div>
+    <div class="pstep"><span class="pnum">4</span><div><span class="pt">Read the result</span><span class="pd">argmax of the 4 outputs gives the class; the value becomes a confidence score. Below a 60% threshold the model stays silent rather than guess.</span></div></div>
+    <div class="pstep"><span class="pnum">5</span><div><span class="pt">Show it live</span><span class="pd">The recognised name appears on-screen with its confidence, updating roughly twice a second — continuous, not one-shot.</span></div></div>
+  </div>
+  <div class="card blue">
+    <h4>One hard-won deployment lesson</h4>
+    <p class="m" style="margin:0">The obvious runtime, <code>tflite-runtime</code>, has no install candidate for this ARM board. The working path is <code>ai-edge-litert</code> — Google's current LiteRT package — imported as <code>from ai_edge_litert.interpreter import Interpreter</code>. The app tries three runtimes in order and reports exactly which failed and why, so a silent load failure can never masquerade as a model problem.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Summary</h2>
+  <table class="tbl">
+    <tr><th>Stage</th><th>What we did</th></tr>
+    <tr><td>Dataset</td><td>4 classes × ~40 images, 80/20 split, seed 42</td></tr>
+    <tr><td>Model</td><td>MobileNetV2 transfer learning + custom Dense(4) head</td></tr>
+    <tr><td>Training</td><td>2-phase (frozen → fine-tune), augmentation, early stopping, Colab T4</td></tr>
+    <tr><td>Export</td><td>Full int8 quantization, calibrated on real images → 2.59 MB .tflite</td></tr>
+    <tr><td>Accuracy</td><td>95.8% quantized validation (23/24); ~60% live, reported honestly</td></tr>
+    <tr><td>Deployment</td><td>LiteRT on the UNO Q CPU, live camera, ~2 fps, fully offline</td></tr>
+  </table>
+  <p>The full training notebook — every cell, runnable end-to-end on a free Colab GPU — is included in the repository as <code>pokedex_phyai_train.ipynb</code>.</p>
+</section>
+
+</div>
+
+<footer>
+  <p>Q-dexter · Physical AI · Arduino Physical AI Challenge India 2026<br/>
+  <a href="index.html">← Back to Build Guide</a> · <a href="viewer.html">3D Model Viewer →</a> · <a href="https://github.com/jzofalltrades/Q-dex" target="_blank">Source on GitHub</a></p>
+</footer>
+</body>
+</html>

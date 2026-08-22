@@ -164,6 +164,7 @@ footer a{color:var(--red);text-decoration:none}
     <li><a href="#s4">4 · Assembly</a></li>
     <li><a href="#test">Validation</a></li>
     <li><a href="#trouble">Troubleshooting</a></li>
+    <li><a href="physical-ai.html" style="color:var(--blue);font-weight:700">◆ Physical AI</a></li>
     <li><a href="viewer.html" style="color:var(--gold);font-weight:700">◆ 3D Model</a></li>
   </ul>
 </nav>
@@ -188,10 +189,11 @@ footer a{color:var(--red);text-decoration:none}
 
 <div class="stats">
   <div class="stat"><span class="n">1025</span><span class="l">Pokémon DB</span></div>
-  <div class="stat"><span class="n">2</span><span class="l">Processors</span></div>
+  <div class="stat"><span class="n">1</span><span class="l">Processor</span></div>
   <div class="stat"><span class="n">72</span><span class="l">Badges · 9 Regions</span></div>
   <div class="stat"><span class="n">10</span><span class="l">Physical Buttons</span></div>
-  <div class="stat"><span class="n">1</span><span class="l">Month to Build</span></div>
+  <div class="stat"><span class="n">1 month</span><span class="l">Original Build</span></div>
+  <div class="stat"><span class="n">&lt;1 week</span><span class="l">To Replicate</span></div>
 </div>
 
 <main class="wrap">
@@ -259,7 +261,7 @@ footer a{color:var(--red);text-decoration:none}
     following the obvious path.
   </p>
 
-  <h4>Decision 1 — Split the workload across two processors</h4>
+  <h4>Decision 1 — Split the workload: one processor, one controller</h4>
   <p>
     The Arduino UNO Q is a Linux board. Linux is not real-time: polling GPIO from Python means
     missed button presses whenever the scheduler is busy running inference. So the UNO Q does
@@ -292,7 +294,7 @@ footer a{color:var(--red);text-decoration:none}
     <div class="co-ic">💡</div>
     <div class="co-b">
       <strong>Real-world takeaway</strong>
-      <p>The two-processor pattern here generalises: any Linux SBC project needing responsive
+      <p>This split-workload pattern generalises: any Linux SBC project needing responsive
       physical input benefits from offloading GPIO to a cheap MCU over serial. The ESP32-C3
       Super Mini costs under ₹250 and eliminates an entire class of latency bugs.</p>
     </div>
