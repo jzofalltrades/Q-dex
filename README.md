@@ -1,4 +1,11 @@
-# Q-dexter — A Real Handheld Pokédex
+# Q-dexter 🔴
+
+[![Flash in browser](https://img.shields.io/badge/📖_Build_Guide-View-CC0000?style=flat-square)](https://jzofalltrades.github.io/Q-dex/)
+[![3D Viewer](https://img.shields.io/badge/🎮_3D_Viewer-Rotate_it-2EA043?style=flat-square)](https://jzofalltrades.github.io/Q-dex/viewer.html)
+![board](https://img.shields.io/badge/board-Arduino_UNO_Q-CC0000?style=flat-square)
+![controller](https://img.shields.io/badge/controller-ESP32--C3-8957E5?style=flat-square)
+![AI](https://img.shields.io/badge/AI-MobileNetV2_95.8%25-1F6FEB?style=flat-square)
+![Pokédex](https://img.shields.io/badge/Pokédex-1025-FFD233?style=flat-square)
 
 A fully working handheld Pokédex built on the **Arduino UNO Q**, for the
 **Arduino Physical AI Challenge India 2026**. Point it at a Pokémon, press
@@ -54,9 +61,11 @@ step-by-step build phases are in the **[Build Guide](https://jzofalltrades.githu
 | `keypad_serial.ino` | ESP32-C3 firmware (keypad + WS2812 lens LED) |
 | `pokedex_phyai.tflite` | On-device Pokémon classifier (TFLite) |
 | `labels.txt` | Class labels for the on-device model |
+| `pokedex_phyai_train.ipynb` | The full Colab training notebook (reproducible) |
+| `dataset/` | Training images for the on-device model |
 | `badges/` | All 72 gym-badge images, by region |
 | `build_db.py`, `build_locations.py` | Database build scripts |
-| `index.html`, `viewer.html` | The build-guide website and 3D viewer |
+| `index.html`, `physical-ai.html`, `viewer.html` | Build-guide website, Physical AI page, 3D viewer |
 | `models/` | 3D model of the enclosure (`.glb`) |
 | `cad/` | Fusion 360 / STL enclosure files |
 
