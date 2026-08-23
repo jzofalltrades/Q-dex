@@ -140,6 +140,24 @@ ul.pl li{margin-bottom:.35rem;font-size:.9rem}
 
 hr.dv{border:none;border-top:1px solid var(--bd);margin:2rem 0}
 
+/* gallery + media */
+.showcase{max-width:1000px;margin:2.5rem auto 0;padding:0 1.5rem}
+.showcase h2{font-family:var(--px);font-size:.85rem;color:var(--gold);text-align:center;margin-bottom:.4rem;letter-spacing:.03em}
+.showcase .sub{text-align:center;color:var(--mut);font-size:.9rem;margin-bottom:1.6rem}
+.vidwrap{position:relative;width:100%;max-width:400px;margin:0 auto 2rem;aspect-ratio:9/16;border-radius:14px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
+.vidwrap iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vidwrap-wide{position:relative;width:100%;max-width:720px;margin:0 auto 1rem;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
+.vidwrap-wide iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.vidplaceholder{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;color:var(--mut);gap:.6rem;text-align:center;padding:1rem}
+.vidplaceholder .ic{font-size:2.4rem}
+.grid-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.grid-photos figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
+.grid-photos img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .3s}
+.grid-photos figure:hover img{transform:scale(1.04)}
+.grid-photos figcaption{padding:.6rem .8rem;font-size:.8rem;color:var(--mut)}
+.inline-photo{margin:1.4rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
+.inline-photo img{width:100%;display:block}
+.inline-photo figcaption{padding:.6rem .9rem;font-size:.82rem;color:var(--mut);margin:0}
 footer{border-top:1px solid var(--bd);padding:2.2rem 1.5rem;text-align:center;color:var(--dim);font-size:.78rem;margin-top:3.5rem}
 footer a{color:var(--red);text-decoration:none}
 .flogo{font-family:var(--px);font-size:.52rem;color:var(--red);display:block;margin-bottom:.7rem}
@@ -152,6 +170,7 @@ footer a{color:var(--red);text-decoration:none}
 <nav>
   <a class="nl" href="#top">Q-DEX</a>
   <ul class="nav-links">
+    <li><a href="#showcase">Gallery</a></li>
     <li><a href="#overview">Overview</a></li>
     <li><a href="#innovation">Innovation</a></li>
     <li><a href="#arch">Architecture</a></li>
@@ -197,6 +216,30 @@ footer a{color:var(--red);text-decoration:none}
   <div class="stat"><span class="n">2 months</span><span class="l">Original Build</span></div>
   <div class="stat"><span class="n">&lt;2 weeks</span><span class="l">To Replicate</span></div>
 </div>
+
+<section class="showcase" id="showcase">
+  <h2>See It In Action</h2>
+  <p class="sub">The finished Q-dex — a real handheld Pokédex you can hold, scan with, and play.</p>
+
+  <div class="vidwrap">
+    <iframe src="https://www.youtube.com/embed/zDSubjo5cWw" title="Q-dex intro" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <h2 style="margin-top:2.4rem">Full Demo &amp; Walkthrough</h2>
+  <p class="sub">Every mode explained and tested — reverse image search, on-device AI, Professor Oak, trainer progress, games and more.</p>
+  <div class="vidwrap-wide">
+    <iframe src="https://www.youtube.com/embed/R14b9jk_p9c" title="Q-dex full demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+  </div>
+
+  <h2 style="margin-top:2.4rem">The Finished Device</h2>
+  <div class="grid-photos">
+    <figure><img src="images/device-open-menu.jpg" alt="Q-dex open, main menu on screen" loading="lazy"/><figcaption>Open and running — the main menu</figcaption></figure>
+    <figure><img src="images/device-standing-leds.jpg" alt="Q-dex standing upright with indicator LEDs lit" loading="lazy"/><figcaption>Indicator LEDs and lens lit up</figcaption></figure>
+    <figure><img src="images/device-front-website.jpg" alt="Q-dex front view with build guide behind" loading="lazy"/><figcaption>The device beside its own build guide</figcaption></figure>
+    <figure><img src="images/device-front-menu.jpg" alt="Q-dex front view, main menu" loading="lazy"/><figcaption>Front view — Kanto-red shell</figcaption></figure>
+    <figure><img src="images/device-closed-back.jpg" alt="Q-dex closed, back view" loading="lazy"/><figcaption>Closed — the clamshell back</figcaption></figure>
+  </div>
+</section>
 
 <main class="wrap">
 
@@ -484,6 +527,15 @@ footer a{color:var(--red);text-decoration:none}
     </svg>
     <div class="dg-cap">Fig. 2a — Reverse Image Version: camera → GitHub → Google Lens → Pokédex entry.</div>
   </div>
+
+  <figure class="inline-photo">
+    <img src="images/mode-reverse-camera.jpg" alt="Q-dex in Reverse Image mode, camera pointed at a Pikachu plush" loading="lazy"/>
+    <figcaption>Reverse Image mode live — the camera view with "CATCH 'EM ALL", scanning a Pikachu.</figcaption>
+  </figure>
+  <figure class="inline-photo">
+    <img src="images/entry-pikachu-stats.jpg" alt="Pikachu Pokédex entry number 025 showing base stats" loading="lazy"/>
+    <figcaption>...and the result: the full Pokédex entry for #025 Pikachu, with base stats, on the device.</figcaption>
+  </figure>
 
   <h4 style="font-size:.95rem;margin-top:1.4rem">Path 2 — PhyAI Challenge (on-device, offline)</h4>
   <div class="dg">
@@ -1998,6 +2050,11 @@ ls /dev/ttyACM*      # is the ESP32 detected?</pre>
     The enclosure is designed in Fusion 360 (document <strong>pokedexV3.3</strong>). Export each
     body individually: right-click body → <em>Save as Mesh</em> → STL, binary, high refinement.
   </p>
+
+  <figure class="inline-photo">
+    <img src="images/build-backpanel-inserts.jpg" alt="Back panel with the display fitted and brass heat-set inserts installed" loading="lazy"/>
+    <figcaption>The back panel with the display fitted and M2/M3 brass heat-set inserts melted into the printed bosses.</figcaption>
+  </figure>
 
   <div class="co g">
     <div class="co-ic">📦</div>
