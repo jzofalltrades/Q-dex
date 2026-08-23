@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Physical AI — On-Device Pokémon Recognition | Q-dexter</title>
+<title>Physical AI — On-Device Pokémon Recognition | Q-dex</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
 :root{
@@ -78,7 +78,7 @@ footer a{color:var(--blue);text-decoration:none}
 </head>
 <body id="top">
 <nav>
-  <a class="nl" href="index.html">Q-DEXTER</a>
+  <a class="nl" href="index.html">Q-DEX</a>
   <ul class="nav-links">
     <li><a class="home" href="index.html">← Build Guide</a></li>
     <li><a href="#what">The Model</a></li>
@@ -89,6 +89,7 @@ footer a{color:var(--blue);text-decoration:none}
     <li><a href="#results">Results</a></li>
     <li><a href="#quant">Quantization</a></li>
     <li><a href="#deploy">Deployment</a></li>
+    <li><a href="#voice">Voice AI</a></li>
     <li><a href="viewer.html">3D Model</a></li>
   </ul>
 </nav>
@@ -96,12 +97,13 @@ footer a{color:var(--blue);text-decoration:none}
 <div class="hero">
   <div class="eyebrow">PHYSICAL AI · ON-DEVICE INTELLIGENCE</div>
   <h1>Teaching the Pokédex to <span>See</span><br/>Without the Internet</h1>
-  <p class="hsub">A MobileNetV2 neural network, trained by transfer learning and quantized to run entirely on the Arduino UNO Q's CPU — no cloud, no API, no connection. This is the Physical AI at the heart of Q-dexter.</p>
+  <p class="hsub">A MobileNetV2 neural network, trained by transfer learning and quantized to run entirely on the Arduino UNO Q's CPU — plus an on-device voice loop (whisper.cpp + eSpeak). This is the Physical AI at the heart of Q-dex: it sees, hears and speaks, mostly without the internet.</p>
   <div class="hbadges">
     <span class="badge b">MobileNetV2</span>
     <span class="badge g">95.8% quantized accuracy</span>
     <span class="badge y">2.59 MB model</span>
     <span class="badge p">int8 · fully offline</span>
+    <span class="badge">+ on-device voice</span>
   </div>
 </div>
 
@@ -117,7 +119,7 @@ footer a{color:var(--blue);text-decoration:none}
 
 <section id="what">
   <h2>The Physical AI: "Who's That Pokémon?"</h2>
-  <p class="lead">Q-dexter has two ways to recognise a Pokémon. One asks the internet. The other thinks for itself.</p>
+  <p class="lead">Q-dex has two ways to recognise a Pokémon. One asks the internet. The other thinks for itself.</p>
   <p>The <strong>Reverse Image Version</strong> uploads a photo and queries Google Lens — powerful, covering all 1025 Pokémon, but dependent on a network connection. The <strong>PhyAI Challenge</strong> mode is the opposite: a neural network we trained ourselves, running <em>directly on the device's processor</em>, that recognises four Pokémon — Bulbasaur, Charizard, Pikachu and Squirtle — from the live camera feed with <strong>no internet whatsoever</strong>.</p>
   <p>This is the literal meaning of <em>Physical AI</em>: intelligence embedded in the physical device, computing locally, in real time, from its own sensors. When you point the camera and the name appears with no network round-trip, that answer was computed on the Arduino itself.</p>
   <div class="card blue">
@@ -271,6 +273,37 @@ converter.inference_output_type = tf.uint8</code></pre>
   </div>
 </section>
 
+<section id="voice">
+  <div class="eyebrow" style="margin-top:1rem">PHYSICAL AI · PART TWO</div>
+  <h2>The Other Half: Voice AI</h2>
+  <p class="lead">Seeing is only half of it. Q-dex also <em>listens</em> and <em>talks</em> — and, like the vision model, the listening and speaking both happen on the device itself.</p>
+
+  <p>Point the camera and the Pokédex recognises a Pokémon. But press the talk button and you can also have a conversation with <strong>Professor Oak</strong>. That voice assistant is a chain of three AI stages, and two of the three run entirely on the Arduino UNO Q — only the language reasoning in the middle uses the network.</p>
+
+  <div class="pipeline">
+    <div class="pstep"><span class="pnum">1</span><div><span class="pt">You speak — whisper.cpp transcribes (on-device)</span><span class="pd">Your spoken question is recorded from the USB microphone and turned into text by whisper.cpp, running locally on the board. No cloud speech API.</span></div></div>
+    <div class="pstep"><span class="pnum">2</span><div><span class="pt">Claude thinks — the answer is written (cloud)</span><span class="pd">The transcribed text is sent to Claude, an AI language model, which writes Professor Oak's reply. This is the one step in the loop that uses the internet.</span></div></div>
+    <div class="pstep"><span class="pnum">3</span><div><span class="pt">eSpeak speaks — Oak talks back (on-device)</span><span class="pd">Oak's reply is spoken aloud on the board by the eSpeak engine through the USB speaker, and the lens LED blinks in time with his voice.</span></div></div>
+  </div>
+
+  <h3>whisper.cpp — offline speech-to-text</h3>
+  <p><strong>What it is:</strong> whisper.cpp is a fast, lightweight C++ port of OpenAI's Whisper speech-recognition model. It converts recorded audio into text — entirely on the device, with no internet.</p>
+  <p><strong>Why we use it:</strong> to answer a spoken question, the device first has to turn your <em>voice</em> into <em>text</em>. Running that locally (rather than a cloud speech API) means no round trip, no per-use cost, and the assistant keeps working offline. We use the <code>tiny.en</code> English model — the best accuracy-for-speed trade-off on this hardware: small enough to run quickly on the UNO Q, accurate enough for short questions. Audio is captured with <code>arecord</code> at 16&nbsp;kHz mono via the <code>plughw:1,0</code> ALSA device (the raw <code>hw</code> device returns 44.1&nbsp;kHz and breaks recognition).</p>
+
+  <h3>eSpeak — offline text-to-speech</h3>
+  <p><strong>What it is:</strong> eSpeak is a compact, open-source speech synthesiser that turns text into spoken audio, running locally on the board.</p>
+  <p><strong>Why we use it:</strong> once Oak's reply comes back as text, eSpeak reads it aloud through the PAM8403 amplifier and USB speaker — no cloud voice service, works offline. A physical mute button (GPIO&nbsp;10) cuts the audio instantly, mid-sentence, so the conversation feels natural and interruptible. While Oak talks, the WS2812 lens LED blinks teal, driven by the ESP32.</p>
+
+  <h3>Claude — the brain behind Oak</h3>
+  <p><strong>What it is:</strong> Claude is an AI language model (an LLM). It is the component that actually <em>writes</em> what Professor Oak says.</p>
+  <p><strong>Why it's here — and why it's the one cloud step:</strong> generating natural, in-character, context-aware answers is beyond what fits on the board, so this single stage runs in the cloud. Claude is <strong>trainer-aware</strong> — it's given the active trainer's profile, so Oak can reference your real XP, badges and progress rather than generic replies. The honest framing: in Q-dex's voice loop, <em>hearing</em> (whisper.cpp) and <em>speaking</em> (eSpeak) are on-device; only the <em>thinking</em> uses the network.</p>
+
+  <div class="card green">
+    <h4>On-device vs cloud — the honest picture</h4>
+    <p class="m" style="margin:0">Q-dex uses five AI components. Three run <strong>on the device</strong>: MobileNetV2 (vision), whisper.cpp (speech-to-text) and eSpeak (text-to-speech). Two use <strong>the cloud</strong>: Claude (Oak's language reasoning) and Google Lens (the 1025-Pokémon reverse-image search). Every step that <em>senses</em> or <em>acts</em> — seeing, hearing, speaking — happens on the Arduino itself; only the heaviest language and whole-dex-image reasoning reaches out to the network. That balance is the point: as much intelligence in the physical device as the hardware can genuinely hold.</p>
+  </div>
+</section>
+
 <section>
   <h2>Summary</h2>
   <table class="tbl">
@@ -281,6 +314,9 @@ converter.inference_output_type = tf.uint8</code></pre>
     <tr><td>Export</td><td>Full int8 quantization, calibrated on real images → 2.59 MB .tflite</td></tr>
     <tr><td>Accuracy</td><td>95.8% quantized validation (23/24); ~60% live, reported honestly</td></tr>
     <tr><td>Deployment</td><td>LiteRT on the UNO Q CPU, live camera, ~2 fps, fully offline</td></tr>
+    <tr><td>Voice — hearing</td><td>whisper.cpp (tiny.en) speech-to-text, on-device, 16&nbsp;kHz via plughw</td></tr>
+    <tr><td>Voice — speaking</td><td>eSpeak text-to-speech, on-device, USB speaker, GPIO&nbsp;10 mute</td></tr>
+    <tr><td>Voice — thinking</td><td>Claude (LLM) writes Professor Oak's trainer-aware replies — the one cloud step</td></tr>
   </table>
   <p>The full training notebook — every cell, runnable end-to-end on a free Colab GPU — is included in the repository as <code>pokedex_phyai_train.ipynb</code>.</p>
 </section>
@@ -288,7 +324,7 @@ converter.inference_output_type = tf.uint8</code></pre>
 </div>
 
 <footer>
-  <p>Q-dexter · Physical AI · Arduino Physical AI Challenge India 2026<br/>
+  <p>Q-dex · Physical AI · Arduino Physical AI Challenge India 2026<br/>
   <a href="index.html">← Back to Build Guide</a> · <a href="viewer.html">3D Model Viewer →</a> · <a href="https://github.com/jzofalltrades/Q-dex" target="_blank">Source on GitHub</a></p>
 </footer>
 </body>
