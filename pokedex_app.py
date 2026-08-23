@@ -1340,6 +1340,7 @@ def clear_trigs():
 MAIN_MENU=0; RIV_MENU=1; GAMEPLAY=2; BROWSER=3; DETAIL=4; CAUGHT=5; PHYAI=6
 TRAINER=7; TRAINER_NEW=8; TRAINER_LIST=9; DATA_MENU=11
 MANUAL=16; HELP_MENU=17; OAK=18; MORE_GAMES=19
+GAME_FLAPPY=20; GAME_TETRIS=21; GAME_SNAKE=22
 SEARCH=12; LOG=13; FAVS=14; CONFIRM=15
 
 def find_camera():
@@ -2108,6 +2109,8 @@ class App:
                 TRAINER_NEW:self.h_trainer_new, TRAINER_LIST:self.h_trainer_list,
                 MANUAL:self.h_manual, HELP_MENU:self.h_help_menu, DATA_MENU:self.h_data_menu,
                 MORE_GAMES:self.h_more_games,
+                GAME_FLAPPY:self.h_game_flappy, GAME_TETRIS:self.h_game_tetris,
+                GAME_SNAKE:self.h_game_snake,
                 SEARCH:self.h_search, LOG:self.h_log, FAVS:self.h_favs,
                 CONFIRM:self.h_confirm,
             }[self.state]
@@ -2126,14 +2129,7 @@ class App:
             self._draw_mute()
 
             # composite the off-screen canvas into the bezel-visible area
-            self._display.fill((0, 0, 0))
-            if self._visible.width == SCREEN_W and self._visible.height == SCREEN_H:
-                self._display.blit(self.screen, (0, 0))
-            else:
-                scaled = pygame.transform.smoothscale(
-                    self.screen, (self._visible.width, self._visible.height))
-                self._display.blit(scaled, (self._visible.x, self._visible.y))
-            pygame.display.flip()
+            self._present()
             # 30fps with the throw animation off. 60 only existed to make the
             # throw smooth, and burning CPU for frames nothing needs is a bad
             # trade on a board that's browning out. THROW_ANIM=True -> put
@@ -3226,22 +3222,355 @@ class App:
         self._footer('enter = switch    tab = delete    cancel = back')
 
     # ══════════ HOW TO PLAY - MODE PICKER ══════════
+    # ══════════════════════════════════════════════════════════
+    #  MORE GAMES  -  a little arcade that runs on the Pokedex.
+    #  Three native pygame games (Flappy, Tetris, Snake) play right
+    #  on this screen using the keypad, plus a launcher for real DOOM.
+    #  Every game is driven by the same edge-triggered buttons the rest
+    #  of the app uses (trig()), so no new input plumbing is needed.
+    # ══════════════════════════════════════════════════════════
     def h_more_games(self):
-        """Placeholder for extra games, to be filled in later. For now it just
-        shows a 'coming soon' screen so the menu item is live and navigable."""
-        if trig('back') or trig('select'):
-            self.state = MAIN_MENU
-        trig('up'); trig('down')
+        items = ['Flappy Bird', 'Tetris', 'Snake', 'DOOM  (yes, really)', 'Back']
+        if trig('down'): self.mg_sel = (self.mg_sel + 1) % len(items)
+        if trig('up'):   self.mg_sel = (self.mg_sel - 1) % len(items)
+        if trig('select'):
+            if   self.mg_sel == 0: self._flappy_init();  self.state = GAME_FLAPPY
+            elif self.mg_sel == 1: self._tetris_init();  self.state = GAME_TETRIS
+            elif self.mg_sel == 2: self._snake_init();   self.state = GAME_SNAKE
+            elif self.mg_sel == 3: self._launch_doom()
+            else:                  self.state = MAIN_MENU
+        if trig('back'): self.state = MAIN_MENU
         clear_trigs()
 
         s = self.screen; F = self.F
         s.fill(BG)
         self._title('MORE GAMES')
-        msg = F['dbig'].render('COMING SOON', True, YELLOW)
-        s.blit(msg, (SCREEN_W//2 - msg.get_width()//2, 200))
-        sub = F['dsml'].render('New games will appear here.', True, GREY)
-        s.blit(sub, (SCREEN_W//2 - sub.get_width()//2, 250))
-        self._footer('cancel = back')
+        self._menu_items(items, self.mg_sel, 96, gap=52)
+        self._footer('enter = play    cancel = back')
+
+    # ---- DOOM: launch the real thing as an external program ----
+    # DOOM runs as a timed demo: we launch the real engine, let its built-in
+    # attract/demo loop play for DOOM_DEMO_SECS, then close it and come back.
+    # No key injection needed - it is a "yes, it really runs DOOM" showcase
+    # that always returns cleanly on its own.
+    DOOM_DEMO_SECS = 25
+
+    def _launch_doom(self):
+        """Play a short DOOM demo, then automatically return to the games menu.
+        The real chocolate-doom engine renders its own attract demo; we time it
+        and kill it, so the Pokedex always comes back without any input."""
+        import shutil, subprocess
+        engine = None
+        for cand in ('chocolate-doom', 'prboom-plus', 'prboom'):
+            if shutil.which(cand):
+                engine = cand; break
+        if engine is None:
+            self.popup = ['DOOM not installed', 'run the setup command', 'in the guide']
+            self.popup_until = time.time() + 4.0
+            return
+
+        # free the camera so DOOM has the machine to itself
+        try: self.stop_cam()
+        except Exception: pass
+
+        # draw a quick "LOADING DOOM" frame so the handoff is not a black flash
+        s = self.screen; s.fill((20, 0, 0))
+        t1 = self.F['big'].render('LOADING DOOM...', True, (230, 60, 40))
+        s.blit(t1, (SCREEN_W//2 - t1.get_width()//2, 200))
+        t2 = self.F['sml'].render('yes, it really runs DOOM', True, YELLOW)
+        s.blit(t2, (SCREEN_W//2 - t2.get_width()//2, 250))
+        self._present()   # push this frame to the display before DOOM takes over
+
+        proc = None
+        try:
+            # -nomouse keeps DOOM from grabbing the pointer; it plays its demo.
+            proc = subprocess.Popen([engine, '-nomouse'],
+                                    stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            deadline = time.time() + self.DOOM_DEMO_SECS
+            while time.time() < deadline:
+                if proc.poll() is not None:
+                    break            # DOOM exited early on its own
+                # let the user cut it short with BACK / MUTE
+                if trig('back') or trig('mute'):
+                    break
+                time.sleep(0.1)
+        except Exception as e:
+            self.popup = ['Could not start DOOM', str(e)[:28]]
+            self.popup_until = time.time() + 4.0
+        finally:
+            # always shut DOOM down and reclaim the screen
+            if proc is not None and proc.poll() is None:
+                proc.terminate()
+                try: proc.wait(timeout=2)
+                except Exception:
+                    proc.kill()
+            import subprocess as _sp
+            _sp.run(['pkill', '-9', 'chocolate-doom'], stderr=_sp.DEVNULL)
+            clear_trigs()
+
+        self.popup = ['DOOM demo complete', 'and yes - it runs DOOM']
+        self.popup_until = time.time() + 3.0
+        self.state = MORE_GAMES
+
+    # ══════════════════ FLAPPY BIRD ══════════════════
+    def _flappy_init(self):
+        self.fb = {
+            'y': SCREEN_H / 2, 'vy': 0.0, 'pipes': [], 'spawn': 0,
+            'score': 0, 'best': getattr(self, '_fb_best', 0),
+            'dead': False, 'started': False,
+        }
+
+    def h_game_flappy(self):
+        g = self.fb
+        FLAP, GRAV, GAP, SPEED, PW = -6.2, 0.45, 150, 3.2, 52
+        BIRD_X = 120
+
+        if trig('back'):
+            self.state = MORE_GAMES; clear_trigs(); return
+        # SCAN or SELECT = flap (either button, whichever is comfy)
+        flap = trig('scan') or trig('select')
+        trig('up'); trig('down'); trig('left'); trig('right'); trig('tab')
+
+        if g['dead']:
+            if flap: self._flappy_init()
+            clear_trigs()
+        else:
+            if flap:
+                g['started'] = True
+                g['vy'] = FLAP
+            if g['started']:
+                g['vy'] += GRAV
+                g['y']  += g['vy']
+                g['spawn'] -= 1
+                if g['spawn'] <= 0:
+                    g['spawn'] = 92
+                    import random as _r
+                    cy = _r.randint(110, SCREEN_H - 110)
+                    g['pipes'].append({'x': SCREEN_W + 10, 'cy': cy, 'scored': False})
+                for p in g['pipes']:
+                    p['x'] -= SPEED
+                    if not p['scored'] and p['x'] + PW < BIRD_X:
+                        p['scored'] = True; g['score'] += 1
+                        if g['score'] > g['best']:
+                            g['best'] = g['score']; self._fb_best = g['best']
+                g['pipes'] = [p for p in g['pipes'] if p['x'] > -PW]
+                # collisions
+                if g['y'] < 0 or g['y'] > SCREEN_H:
+                    g['dead'] = True
+                for p in g['pipes']:
+                    if BIRD_X + 14 > p['x'] and BIRD_X - 14 < p['x'] + PW:
+                        if g['y'] - 14 < p['cy'] - GAP/2 or g['y'] + 14 > p['cy'] + GAP/2:
+                            g['dead'] = True
+            clear_trigs()
+
+        s = self.screen
+        s.fill((78, 168, 220))  # sky
+        for p in g['pipes']:
+            pygame.draw.rect(s, (60, 180, 75), (p['x'], 0, PW, p['cy'] - GAP//2))
+            pygame.draw.rect(s, (60, 180, 75), (p['x'], p['cy'] + GAP//2, PW, SCREEN_H))
+            pygame.draw.rect(s, (40, 140, 55), (p['x'], 0, PW, p['cy'] - GAP//2), 3)
+            pygame.draw.rect(s, (40, 140, 55), (p['x'], p['cy'] + GAP//2, PW, SCREEN_H), 3)
+        pygame.draw.rect(s, (222, 184, 90), (0, SCREEN_H - 24, SCREEN_W, 24))
+        pygame.draw.circle(s, YELLOW, (BIRD_X, int(g['y'])), 15)
+        pygame.draw.circle(s, (30, 30, 30), (BIRD_X + 6, int(g['y']) - 4), 3)
+        pygame.draw.polygon(s, ORANGE, [(BIRD_X + 12, int(g['y'])),
+                            (BIRD_X + 24, int(g['y']) - 4), (BIRD_X + 24, int(g['y']) + 4)])
+        s.blit(self.F['dbig'].render(str(g['score']), True, WHITE), (SCREEN_W//2 - 8, 20))
+        if not g['started']:
+            t = self.F['med'].render('SCAN / SELECT to flap', True, WHITE)
+            s.blit(t, (SCREEN_W//2 - t.get_width()//2, SCREEN_H//2 + 40))
+        if g['dead']:
+            self._game_over(s, g['score'], g['best'])
+        self._footer('scan/select = flap    cancel = back')
+
+    # ══════════════════ TETRIS ══════════════════
+    def _tetris_init(self):
+        self.tet = {
+            'grid': [[0]*10 for _ in range(20)], 'piece': None, 'px': 0, 'py': 0,
+            'rot': 0, 'kind': 0, 'fall': 0, 'score': 0, 'lines': 0,
+            'dead': False, 'best': getattr(self, '_tet_best', 0),
+        }
+        self._tetris_new_piece()
+
+    TET_SHAPES = [
+        [[1,1,1,1]],                     # I
+        [[1,1],[1,1]],                   # O
+        [[0,1,0],[1,1,1]],               # T
+        [[1,0,0],[1,1,1]],               # J
+        [[0,0,1],[1,1,1]],               # L
+        [[0,1,1],[1,1,0]],               # S
+        [[1,1,0],[0,1,1]],               # Z
+    ]
+    TET_COLS = [(80,200,235),(245,205,60),(190,110,205),(70,110,220),
+                (240,150,50),(70,200,90),(220,70,70)]
+
+    def _tetris_rotate(self, shape):
+        return [list(row) for row in zip(*shape[::-1])]
+
+    def _tetris_collide(self, shape, px, py):
+        g = self.tet['grid']
+        for r, row in enumerate(shape):
+            for c, v in enumerate(row):
+                if not v: continue
+                x, y = px + c, py + r
+                if x < 0 or x >= 10 or y >= 20: return True
+                if y >= 0 and g[y][x]: return True
+        return False
+
+    def _tetris_new_piece(self):
+        import random as _r
+        t = self.tet
+        t['kind'] = _r.randint(0, 6)
+        t['piece'] = [list(row) for row in self.TET_SHAPES[t['kind']]]
+        t['px'] = 3; t['py'] = -len(t['piece'])
+        if self._tetris_collide(t['piece'], t['px'], 0):
+            t['dead'] = True
+
+    def _tetris_lock(self):
+        t = self.tet; g = t['grid']
+        for r, row in enumerate(t['piece']):
+            for c, v in enumerate(row):
+                if v and t['py'] + r >= 0:
+                    g[t['py'] + r][t['px'] + c] = t['kind'] + 1
+        # clear full lines
+        newg = [row for row in g if not all(row)]
+        cleared = 20 - len(newg)
+        if cleared:
+            t['lines'] += cleared
+            t['score'] += (0, 40, 100, 300, 1200)[cleared]
+            if t['score'] > t['best']:
+                t['best'] = t['score']; self._tet_best = t['best']
+            newg = [[0]*10 for _ in range(cleared)] + newg
+        t['grid'] = newg
+        self._tetris_new_piece()
+
+    def h_game_tetris(self):
+        t = self.tet
+        if trig('back'):
+            self.state = MORE_GAMES; clear_trigs(); return
+        if t['dead']:
+            if trig('select') or trig('scan'): self._tetris_init()
+            clear_trigs()
+        else:
+            # tap controls: left/right move, up rotate, down soft-drop one row
+            if trig('left')  and not self._tetris_collide(t['piece'], t['px']-1, t['py']): t['px'] -= 1
+            if trig('right') and not self._tetris_collide(t['piece'], t['px']+1, t['py']): t['px'] += 1
+            if trig('up'):
+                rot = self._tetris_rotate(t['piece'])
+                if not self._tetris_collide(rot, t['px'], t['py']): t['piece'] = rot
+            drop = trig('down')
+            trig('scan'); trig('select'); trig('tab')
+            # gravity
+            t['fall'] += 1
+            step = 2 if drop else 14   # ~ every 14 frames, faster on soft-drop
+            if t['fall'] >= step:
+                t['fall'] = 0
+                if not self._tetris_collide(t['piece'], t['px'], t['py']+1):
+                    t['py'] += 1
+                else:
+                    self._tetris_lock()
+            clear_trigs()
+
+        s = self.screen; s.fill(BLACK)
+        CELL = 20; OX = SCREEN_W//2 - 5*CELL; OY = 30
+        pygame.draw.rect(s, PANEL, (OX-3, OY-3, 10*CELL+6, 20*CELL+6), border_radius=4)
+        g = t['grid']
+        for r in range(20):
+            for c in range(10):
+                if g[r][c]:
+                    col = self.TET_COLS[g[r][c]-1]
+                    pygame.draw.rect(s, col, (OX+c*CELL, OY+r*CELL, CELL-1, CELL-1))
+        if not t['dead']:
+            for r, row in enumerate(t['piece']):
+                for c, v in enumerate(row):
+                    if v and t['py']+r >= 0:
+                        pygame.draw.rect(s, self.TET_COLS[t['kind']],
+                            (OX+(t['px']+c)*CELL, OY+(t['py']+r)*CELL, CELL-1, CELL-1))
+        s.blit(self.F['med'].render('Score %d'%t['score'], True, WHITE), (OX+10*CELL+16, 40))
+        s.blit(self.F['sml'].render('Lines %d'%t['lines'], True, GREY), (OX+10*CELL+16, 70))
+        s.blit(self.F['sml'].render('Best %d'%t['best'], True, YELLOW), (OX+10*CELL+16, 92))
+        if t['dead']:
+            self._game_over(s, t['score'], t['best'])
+        self._footer('left/right move  up rotate  down drop  cancel back')
+
+    # ══════════════════ SNAKE ══════════════════
+    def _snake_init(self):
+        import random as _r
+        self.snk = {
+            'body': [(5, 10), (4, 10), (3, 10)], 'dir': (1, 0), 'ndir': (1, 0),
+            'food': (14, 10), 'grow': 0, 'move': 0, 'score': 0,
+            'dead': False, 'best': getattr(self, '_snk_best', 0),
+        }
+
+    def _snake_place_food(self):
+        import random as _r
+        g = self.snk
+        while True:
+            f = (_r.randint(0, self._SNK_W-1), _r.randint(0, self._SNK_H-1))
+            if f not in g['body']:
+                g['food'] = f; return
+
+    _SNK_W = 24; _SNK_H = 18
+
+    def h_game_snake(self):
+        g = self.snk
+        if trig('back'):
+            self.state = MORE_GAMES; clear_trigs(); return
+        if g['dead']:
+            if trig('select') or trig('scan'): self._snake_init()
+            clear_trigs()
+        else:
+            # queue a direction; can't reverse straight back
+            dx, dy = g['dir']
+            if trig('up')    and dy == 0: g['ndir'] = (0, -1)
+            if trig('down')  and dy == 0: g['ndir'] = (0, 1)
+            if trig('left')  and dx == 0: g['ndir'] = (-1, 0)
+            if trig('right') and dx == 0: g['ndir'] = (1, 0)
+            trig('scan'); trig('select'); trig('tab')
+            g['move'] += 1
+            if g['move'] >= 6:   # snake steps every 6 frames (~5/sec at 30fps)
+                g['move'] = 0
+                g['dir'] = g['ndir']
+                hx, hy = g['body'][0]
+                nh = (hx + g['dir'][0], hy + g['dir'][1])
+                if (nh[0] < 0 or nh[0] >= self._SNK_W or nh[1] < 0 or
+                        nh[1] >= self._SNK_H or nh in g['body']):
+                    g['dead'] = True
+                else:
+                    g['body'].insert(0, nh)
+                    if nh == g['food']:
+                        g['score'] += 1
+                        if g['score'] > g['best']:
+                            g['best'] = g['score']; self._snk_best = g['best']
+                        self._snake_place_food()
+                    else:
+                        g['body'].pop()
+            clear_trigs()
+
+        s = self.screen; s.fill((18, 26, 40))
+        CELL = 20; OX = (SCREEN_W - self._SNK_W*CELL)//2; OY = 40
+        pygame.draw.rect(s, PANEL, (OX-3, OY-3, self._SNK_W*CELL+6, self._SNK_H*CELL+6), border_radius=4)
+        fx, fy = g['food']
+        pygame.draw.circle(s, RED, (OX+fx*CELL+CELL//2, OY+fy*CELL+CELL//2), CELL//2-2)
+        for i, (bx, by) in enumerate(g['body']):
+            col = GREEN if i else (120, 240, 140)
+            pygame.draw.rect(s, col, (OX+bx*CELL+1, OY+by*CELL+1, CELL-2, CELL-2), border_radius=4)
+        s.blit(self.F['med'].render('Score %d'%g['score'], True, WHITE), (OX, 10))
+        s.blit(self.F['sml'].render('Best %d'%g['best'], True, YELLOW), (SCREEN_W-110, 14))
+        if g['dead']:
+            self._game_over(s, g['score'], g['best'])
+        self._footer('d-pad = steer    cancel = back')
+
+    # ---- shared game-over overlay ----
+    def _game_over(self, s, score, best):
+        ov = pygame.Surface((SCREEN_W, SCREEN_H), pygame.SRCALPHA)
+        ov.fill((0, 0, 0, 170)); s.blit(ov, (0, 0))
+        t1 = self.F['big'].render('GAME OVER', True, RED)
+        s.blit(t1, (SCREEN_W//2 - t1.get_width()//2, 150))
+        t2 = self.F['dmed'].render('Score %d    Best %d' % (score, best), True, WHITE)
+        s.blit(t2, (SCREEN_W//2 - t2.get_width()//2, 205))
+        t3 = self.F['sml'].render('SCAN / SELECT = play again    cancel = menu', True, YELLOW)
+        s.blit(t3, (SCREEN_W//2 - t3.get_width()//2, 250))
 
     def h_help_menu(self):
         items = ['Reverse Image Version', 'PhyAI Challenge', 'Back']
@@ -3579,6 +3908,18 @@ class App:
         s=self.screen
         t=self.F['tiny'].render(text,True,GREY)
         s.blit(t,(SCREEN_W//2-t.get_width()//2,SCREEN_H-24))
+
+    def _present(self):
+        """Composite the off-screen canvas into the bezel-visible area and flip.
+        Used by the main loop and by the DOOM handoff frame."""
+        self._display.fill((0, 0, 0))
+        if self._visible.width == SCREEN_W and self._visible.height == SCREEN_H:
+            self._display.blit(self.screen, (0, 0))
+        else:
+            scaled = pygame.transform.smoothscale(
+                self.screen, (self._visible.width, self._visible.height))
+            self._display.blit(scaled, (self._visible.x, self._visible.y))
+        pygame.display.flip()
 
     def _wrap(self, text, font, maxw):
         words=text.split(); lines=[]; line=""
