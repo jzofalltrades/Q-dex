@@ -366,9 +366,25 @@
 
   /* RESPONSIVE */
   @media (max-width: 600px) {
-    .sidebar { display: none; }
+    /* hide the text handle to save header space, keep buttons */
     .handle-tag { display: none; }
+    /* header: tighter */
+    header { padding: .5rem .7rem; }
+    .logo { font-size: .8rem; }
+    .version-btn { font-size: .65rem; padding: .3rem .6rem; }
+    .icon-btn { width: 30px; height: 30px; }
+    /* sidebar becomes a compact panel docked at the bottom, still usable */
+    .sidebar {
+      position: fixed; left: 0; right: 0; bottom: 0; top: auto;
+      width: 100%; max-height: 42vh; overflow-y: auto;
+      border-radius: 14px 14px 0 0; z-index: 50;
+    }
+    .controls-list { font-size: .82rem; }
+    /* let the 3D canvas own touch gestures (pinch/drag) instead of the page */
+    canvas { touch-action: none; }
+    body { overflow: hidden; }
   }
+canvas{touch-action:none}
 </style>
 </head>
 <body>
@@ -380,7 +396,7 @@
   </div>
 
   <div class="version-toggle">
-    <button class="version-btn active" id="btn-v1" onclick="loadVersion('v1')">Q-DEXTER</button>
+    <button class="version-btn active" id="btn-v1" onclick="loadVersion('v1')">Q-DEX</button>
   </div>
 
   <div class="header-actions">

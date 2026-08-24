@@ -163,6 +163,55 @@ footer a{color:var(--red);text-decoration:none}
 .flogo{font-family:var(--px);font-size:.52rem;color:var(--red);display:block;margin-bottom:.7rem}
 
 @media print{nav{display:none}body{background:#fff;color:#000}}
+
+/* ══════ MOBILE RESPONSIVE ══════ */
+@media (max-width: 640px){
+  body{font-size:15px}
+  /* nav: horizontal scroll, never wrap-break */
+  nav{padding:0 .8rem;gap:.5rem}
+  .nav-links{gap:0}
+  .nav-links a{font-size:.72rem;padding:.3rem .5rem}
+  /* hero: smaller title + padding */
+  .hero{padding:2.6rem 1rem 2.2rem}
+  .hero h1{font-size:clamp(.85rem,5.5vw,1.3rem);line-height:1.7}
+  .hsub{font-size:.92rem}
+  .eyebrow{font-size:.4rem;padding:.35rem .7rem;margin-bottom:1rem}
+  /* stats: 2 across instead of cramped auto-fit */
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:1rem .5rem}
+  .stat .n{font-size:.8rem}
+  .stat .l{font-size:.6rem}
+  /* content padding */
+  .wrap{padding:0 1rem}
+  .toc{padding:1.2rem 1.1rem}
+  /* section headers */
+  .sh h2{font-size:1.2rem}
+  .snum{font-size:.55rem;padding:.4rem .5rem}
+  h3{font-size:1.05rem}
+  /* tables always scroll horizontally, never overflow the page */
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.tbl{font-size:.82rem}
+  table.tbl th,table.tbl td{padding:.5rem .6rem}
+  /* code blocks scroll instead of stretching the page */
+  pre{font-size:.72rem;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .cb,.cl{font-size:.72rem}
+  /* SVG diagrams scale to fit width */
+  .dg svg,svg{max-width:100%;height:auto}
+  /* callouts + grids collapse to one column */
+  .two,.grid-photos,.fgrid{grid-template-columns:1fr !important}
+  /* showcase videos: fit width */
+  .vidwrap{max-width:100%}
+  .vidwrap-wide{max-width:100%}
+  .grid-photos img{height:190px}
+  /* inline photos full width */
+  .inline-photo img{width:100%}
+  /* reduce big side paddings on callouts */
+  .co{padding:.9rem 1rem;gap:.7rem}
+}
+@media (max-width: 400px){
+  .stats{grid-template-columns:1fr}
+  .hero h1{font-size:1.05rem}
+}
 </style>
 </head>
 <body>
@@ -1996,11 +2045,13 @@ ls /dev/ttyACM*      # is the ESP32 detected?</pre>
   <!-- 9.3 TTS -->
   <h3>9.3 · On-Board Text-to-Speech &amp; the Oak Assistant</h3>
   <p>
-    The transcribed question is answered by the Professor Oak assistant, and the reply is spoken
-    aloud <strong>on the board</strong> using the <strong>eSpeak</strong> engine through the USB
-    speaker. Oak is trainer-aware — he knows which profile is active and can reference the trainer's
-    own XP, badges and progress — and a physical mute button (GPIO 10) cuts the audio instantly
-    mid-sentence for a natural, interruptible conversation.
+    The transcribed question is answered by the Professor Oak assistant. The brain that actually
+    writes Oak's reply is <strong>Claude</strong>, an AI language model — this is the one step in the
+    voice loop that uses the network, while the listening (whisper.cpp) and speaking (eSpeak) both run
+    on the board. The generated answer is then spoken aloud <strong>on the device</strong> through the
+    <strong>eSpeak</strong> engine and the USB speaker. Oak is trainer-aware — Claude is given the
+    active profile so he can reference the trainer's own XP, badges and progress — and a physical mute
+    button (GPIO 10) cuts the audio instantly mid-sentence for a natural, interruptible conversation.
   </p>
 
   <div class="dg">
@@ -2016,7 +2067,8 @@ ls /dev/ttyACM*      # is the ESP32 detected?</pre>
       <text x="222" y="47" text-anchor="middle" font-size="10" fill="#E9E9EE">whisper.cpp</text>
       <text x="222" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">STT · on-board</text>
       <rect x="340" y="28" width="140" height="40" rx="6" fill="#141417" stroke="#A78BFA" stroke-width="1.5"/>
-      <text x="410" y="52" text-anchor="middle" font-size="10" fill="#A78BFA" font-weight="700">Oak assistant</text>
+      <text x="410" y="47" text-anchor="middle" font-size="10" fill="#A78BFA" font-weight="700">Claude (Oak)</text>
+      <text x="410" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">LLM · cloud</text>
       <rect x="515" y="28" width="150" height="40" rx="6" fill="#141417" stroke="#3DDC84" stroke-width="1.5"/>
       <text x="590" y="47" text-anchor="middle" font-size="10" fill="#E9E9EE">eSpeak</text>
       <text x="590" y="60" text-anchor="middle" font-size="8" fill="#8C8C9E">TTS · on-board</text>
@@ -2036,8 +2088,8 @@ ls /dev/ttyACM*      # is the ESP32 detected?</pre>
       <strong>Why this counts as Physical AI</strong>
       <p>A camera sees, a neural network on the board decides, a microphone hears, and a speaker
       responds — all on an Arduino UNO Q you can hold in one hand, with the core perception loops
-      running entirely offline. The only optional network hop is the language reasoning behind Oak's
-      replies; every sensing and acting step lives on the device.</p>
+      running entirely offline. The only network hop is Claude generating the words of Oak's
+      replies; every sensing and acting step — seeing, hearing, speaking — lives on the device.</p>
     </div>
   </div>
 </section>

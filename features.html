@@ -80,6 +80,33 @@ table.tbl td.n{color:var(--gold)}
 footer{text-align:center;padding:2.5rem 1.5rem;color:var(--dim);font-size:.85rem}
 footer a{color:var(--red);text-decoration:none}
 a.back{color:var(--blue);text-decoration:none;font-size:.85rem;font-family:var(--mono)}
+
+/* ══════ MOBILE RESPONSIVE ══════ */
+@media (max-width: 640px){
+  body{font-size:15px}
+  nav{padding:0 .8rem;gap:.5rem}
+  .nav-links a{font-size:.72rem;padding:.3rem .5rem}
+  .hero{padding:2.6rem 1rem 2.2rem}
+  .hero h1{font-size:clamp(.85rem,5.5vw,1.3rem);line-height:1.7}
+  .hsub{font-size:.92rem}
+  .eyebrow{font-size:.4rem}
+  .wrap{padding:0 1rem}
+  .sh h2,h2{font-size:1.2rem}
+  h3{font-size:1.02rem}
+  /* feature cards: single column */
+  .fgrid{grid-template-columns:1fr}
+  /* chains (pipelines) wrap cleanly */
+  .chain{flex-direction:column;align-items:stretch}
+  .chain .ar{transform:rotate(90deg);align-self:center}
+  /* tables scroll */
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  table.tbl{font-size:.82rem}
+  table.tbl th,table.tbl td{padding:.5rem .6rem}
+  .co{padding:.9rem 1rem;gap:.7rem}
+}
+@media (max-width: 400px){
+  .hero h1{font-size:1.05rem}
+}
 </style>
 </head>
 <body>

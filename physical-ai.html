@@ -74,6 +74,42 @@ footer a{color:var(--blue);text-decoration:none}
 .confmatrix .hd{color:var(--blue);background:transparent;font-weight:700}
 .confmatrix .diag{background:rgba(61,220,132,.25);color:var(--green);font-weight:700}
 .confmatrix .zero{color:var(--dim)}
+
+/* ══════ MOBILE RESPONSIVE ══════ */
+@media (max-width: 640px){
+  body{font-size:15px}
+  nav{padding:0 .8rem;gap:.5rem}
+  .nav-links a{font-size:.72rem;padding:.3rem .5rem}
+  .hero{padding:2.6rem 1rem 2.2rem}
+  .hero h1{font-size:clamp(.85rem,5.5vw,1.25rem);line-height:1.7}
+  .hsub{font-size:.92rem}
+  .eyebrow{font-size:.4rem}
+  /* stats 2-up */
+  .stats{grid-template-columns:1fr 1fr}
+  .stat{padding:1rem .5rem}
+  .stat .n{font-size:.78rem}
+  .stat .l{font-size:.58rem}
+  .wrap{padding:0 1rem}
+  h2{font-size:1.2rem}
+  h3{font-size:1.02rem}
+  /* tables scroll horizontally */
+  .tbl,table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;white-space:nowrap;font-size:.8rem}
+  /* code blocks scroll */
+  pre,code{font-size:.72rem}
+  pre{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  /* pipeline steps: stack tighter */
+  .pstep{gap:.6rem}
+  /* confusion matrix scales/scrolls */
+  .confmatrix{font-size:.62rem;grid-template-columns:auto repeat(4,32px)}
+  /* cards + cols to single column */
+  .card{padding:1rem}
+  [class*="grid"],.two{grid-template-columns:1fr !important}
+}
+@media (max-width: 400px){
+  .stats{grid-template-columns:1fr}
+  .hero h1{font-size:1rem}
+  .confmatrix{grid-template-columns:auto repeat(4,26px);font-size:.55rem}
+}
 </style>
 </head>
 <body id="top">
