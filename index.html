@@ -725,6 +725,19 @@ footer a{color:var(--red);text-decoration:none}
     WS2812 lens LED), and the USB/HDMI interconnect on the UNO Q. Both are given here at pin level.
   </p>
 
+  <h3>5.0 — Full system schematic</h3>
+  <p>
+    The complete picture — how power, USB data, HDMI and the GPIO peripherals all connect. A
+    Portronics C-Konnect USB-C hub feeds the UNO Q (100&nbsp;W PD power in), sends HDMI to the display,
+    and provides the USB host link that chains through two USB hubs to the camera, keyboard, audio
+    dongle and ESP32. A separate 5&nbsp;V supply (ground common with the UNO Q) powers the PAM8403
+    amplifier and the indicator LEDs.
+  </p>
+  <figure class="inline-photo" style="background:#0B0B0D">
+    <img src="images/qdex_schematic.png" alt="Q-dex full system schematic showing power, USB data, HDMI and GPIO wiring" loading="lazy"/>
+    <figcaption>Full system schematic — power (red), USB data (blue), HDMI (purple), ESP32 GPIO / WS2812 (yellow/green) and the external 5&nbsp;V rail (orange).</figcaption>
+  </figure>
+
   <h3>5.1 — ESP32-C3 keypad schematic</h3>
 
   <p>
