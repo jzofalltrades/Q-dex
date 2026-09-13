@@ -65,6 +65,14 @@ step-by-step build phases are in the **[Build Guide](https://jzofalltrades.githu
 Arduino UNO Q · ESP32-C3 Super Mini · USB camera · PAM8403 amplifier + speaker ·
 WS2812 LED · indicator LEDs · 3D-printed enclosure. Full BOM in the build guide.
 
+## License
+
+This project's code and designs are released under the MIT License — see the LICENSE file. You're free to build your own, modify it, and share it, with credit.
+
+**Non-commercial fan project.** Pokémon and all related names, data, and cries are trademarks of Nintendo / Game Freak / The Pokémon Company. Q-dex is an independent fan project, not affiliated with or endorsed by Nintendo, and may not be sold commercially.
+
+
+
 ## Built by
 
 [jzofalltrades](https://github.com/jzofalltrades) — solo entry, Arduino
