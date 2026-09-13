@@ -603,6 +603,53 @@ class CatchDB:
                           (str(tid),))
         self.conn.commit()
 
+    # ---------- GOD MODE (non-destructive) ----------
+    def ensure_god_trainer(self, app_db):
+        """Hidden fully-completed trainer: all catches + max XP. app_db is the
+        App.db dict {name:{id,region,...}}. Never touches real trainers."""
+        r=self.conn.execute("SELECT tid FROM trainers WHERE name='__GOD__'").fetchone()
+        now=datetime.now().strftime('%Y-%m-%d %H:%M')
+        if r:
+            gid=r[0]
+        else:
+            cur=self.conn.execute(
+                "INSERT INTO trainers(name,city,age,gender,team,xp,created) "
+                "VALUES('__GOD__','Cerulean',99,'','Blue',?,?)",(999999,now))
+            gid=cur.lastrowid
+        have=self.conn.execute('SELECT COUNT(*) FROM catches WHERE tid=?',(gid,)).fetchone()[0]
+        if have < 1000 and app_db:
+            for name,v in app_db.items():
+                pid=v.get('id')
+                if pid:
+                    self.conn.execute('INSERT OR IGNORE INTO catches VALUES(?,?,?,1,?,?)',
+                                      (gid,pid,name,now,now))
+        self.conn.commit()
+        return gid
+
+    def enter_god(self, app_db):
+        real=self.tid
+        if real is not None:
+            rn=self.conn.execute('SELECT name FROM trainers WHERE tid=?',(real,)).fetchone()
+            if rn and rn[0]=='__GOD__':
+                rr=self.conn.execute("SELECT tid FROM trainers WHERE name!='__GOD__' ORDER BY tid LIMIT 1").fetchone()
+                real=rr[0] if rr else None
+        self._real_tid=real
+        gid=self.ensure_god_trainer(app_db)
+        self.set_active(gid); return True
+
+    def exit_god(self):
+        real=getattr(self,'_real_tid',None)
+        if real is None:
+            rr=self.conn.execute("SELECT tid FROM trainers WHERE name!='__GOD__' ORDER BY tid LIMIT 1").fetchone()
+            real=rr[0] if rr else None
+        if real is not None: self.set_active(real)
+        self._real_tid=None
+
+    def in_god_mode(self):
+        if self.tid is None: return False
+        r=self.conn.execute('SELECT name FROM trainers WHERE tid=?',(self.tid,)).fetchone()
+        return bool(r and r[0]=='__GOD__')
+
     # ---------- trainers ----------
     def create_trainer(self, name, city, age, gender, team):
         now = datetime.now().strftime('%Y-%m-%d %H:%M')
@@ -635,7 +682,7 @@ class CatchDB:
     def all_trainers(self):
         return [{'tid': r[0], 'name': r[1], 'team': r[2], 'xp': r[3]}
                 for r in self.conn.execute(
-                    'SELECT tid,name,team,xp FROM trainers ORDER BY tid')]
+                    'SELECT tid,name,team,xp FROM trainers WHERE name!="__GOD__" ORDER BY tid')]
 
     def delete_trainer(self, tid):
         for t in ('catches', 'favourites', 'log'):
@@ -1343,6 +1390,7 @@ TRAINER=7; TRAINER_NEW=8; TRAINER_LIST=9; DATA_MENU=11
 MANUAL=16; HELP_MENU=17; OAK=18; MORE_GAMES=19
 GAME_FLAPPY=20; GAME_TETRIS=21; GAME_SNAKE=22
 SEARCH=12; LOG=13; FAVS=14; CONFIRM=15
+GODMODE_PW=23
 
 def find_camera():
     """Auto-detect the USB camera. Device number shifts between reboots, so
@@ -2105,6 +2153,7 @@ class App:
 
             handler={
                 MAIN_MENU:self.h_main, RIV_MENU:self.h_riv, GAMEPLAY:self.h_game,
+                GODMODE_PW:self.h_godmode_pw,
                 BROWSER:self.h_browser, DETAIL:self.h_detail, CAUGHT:self.h_caught,
                 PHYAI:self.h_phyai, OAK:self.h_oak, TRAINER:self.h_trainer,
                 TRAINER_NEW:self.h_trainer_new, TRAINER_LIST:self.h_trainer_list,
@@ -2142,10 +2191,17 @@ class App:
     # ── MAIN MENU ──
     def h_main(self):
         items=['Reverse Image Version','PhyAI Challenge','How to Play',
-               'Professor Oak','Trainer Status','Data','More Games','Exit']
+               'Professor Oak','Trainer Status','Data','More Games','God Mode','Exit']
+        if self.catchdb.in_god_mode():
+            items=['Exit God Mode']+items
         if trig('down'): self.main_sel=(self.main_sel+1)%len(items)
         if trig('up'):   self.main_sel=(self.main_sel-1)%len(items)
+        god=self.catchdb.in_god_mode()
         if trig('select'):
+            if god and self.main_sel==0:
+                self.catchdb.exit_god(); self.main_sel=0; clear_trigs(); return
+            _i = (self.main_sel-1) if god else self.main_sel
+            self.main_sel=_i
             if self.main_sel==0: self.state=RIV_MENU; self.riv_sel=0
             elif self.main_sel==1:
                 self.state=PHYAI
@@ -2162,6 +2218,8 @@ class App:
             elif self.main_sel==4: self.state=TRAINER; self.tr_sel=0; self.tr_tab=0
             elif self.main_sel==5: self.state=DATA_MENU; self.dm_sel=0
             elif self.main_sel==6: self.state=MORE_GAMES; self.mg_sel=0
+            elif self.main_sel==7:
+                self.state=GODMODE_PW; self.gm_pw=''; self.gm_kx=0; self.gm_ky=0; self.gm_err=False
             else:
                 self.confirm={'msg':'Exit Pokedex?',
                               'sub':'The app will close and you will be back at the desktop.',
@@ -2171,7 +2229,7 @@ class App:
         clear_trigs()
 
         s=self.screen; s.fill(BG)
-        self._title("MAIN MENU")
+        self._title("GOD MODE" if self.catchdb.in_god_mode() else "MAIN MENU")
         self._menu_items(items, self.main_sel, 62, gap=37)
 
         # trainer strip along the bottom
@@ -3230,6 +3288,56 @@ class App:
     #  Every game is driven by the same edge-triggered buttons the rest
     #  of the app uses (trig()), so no new input plumbing is needed.
     # ══════════════════════════════════════════════════════════
+
+    # ══════════ GOD MODE — password gate ══════════
+    def h_godmode_pw(self):
+        PW='yoda'
+        rows=['ABCDEFG','HIJKLMN','OPQRSTU','VWXYZ<','ok']
+        for at,dv in (('gm_pw',''),('gm_kx',0),('gm_ky',0),('gm_err',False)):
+            if not hasattr(self,at): setattr(self,at,dv)
+        def rl(y): return len(rows[y])
+        if trig('down'): self.gm_ky=(self.gm_ky+1)%len(rows); self.gm_kx=min(self.gm_kx,rl(self.gm_ky)-1)
+        if trig('up'):   self.gm_ky=(self.gm_ky-1)%len(rows); self.gm_kx=min(self.gm_kx,rl(self.gm_ky)-1)
+        if trig('right'):self.gm_kx=(self.gm_kx+1)%rl(self.gm_ky)
+        if trig('left'): self.gm_kx=(self.gm_kx-1)%rl(self.gm_ky)
+        if trig('select'):
+            row=rows[self.gm_ky]
+            if row=='ok':
+                if self.gm_pw.lower()==PW:
+                    self.catchdb.enter_god(self.db)
+                    self.state=MAIN_MENU; self.main_sel=0
+                else:
+                    self.gm_err=True; self.gm_pw=''
+            else:
+                ch=row[self.gm_kx]
+                if ch=='<': self.gm_pw=self.gm_pw[:-1]
+                elif len(self.gm_pw)<12: self.gm_pw+=ch
+                self.gm_err=False
+        if trig('back'): self.state=MAIN_MENU
+        clear_trigs()
+        s=self.screen; F=self.F; s.fill(BG)
+        pygame.draw.rect(s,RED,(0,0,SCREEN_W,36))
+        s.blit(F['med'].render('GOD MODE',True,WHITE),(12,7))
+        box=pygame.Rect(SCREEN_W//2-160,60,320,46)
+        pygame.draw.rect(s,(24,24,30),box,border_radius=8)
+        pygame.draw.rect(s,RED if self.gm_err else YELLOW,box,2,border_radius=8)
+        s.blit(F['big'].render('*'*len(self.gm_pw),True,WHITE),(box.x+16,box.y+8))
+        if self.gm_err:
+            s.blit(F['sml'].render('Wrong password',True,RED),(box.x+2,box.y+52))
+        ky0=140; kh=44; kw=44; gx=8; gy=10
+        for ry,row in enumerate(rows):
+            if row=='ok':
+                bx=SCREEN_W//2-60; by=ky0+ry*(kh+gy); sel=(self.gm_ky==ry)
+                pygame.draw.rect(s,GREEN if sel else (40,60,45),(bx,by,120,kh),border_radius=8)
+                s.blit(F['med'].render('OK',True,WHITE),(bx+46,by+10)); continue
+            tot=len(row)*(kw+gx)-gx; sx=SCREEN_W//2-tot//2
+            for cx,ch in enumerate(row):
+                bx=sx+cx*(kw+gx); by=ky0+ry*(kh+gy); sel=(self.gm_ky==ry and self.gm_kx==cx)
+                pygame.draw.rect(s,HILITE if sel else (32,32,40),(bx,by,kw,kh),border_radius=6)
+                lab='DEL' if ch=='<' else ch; fnt=F['sml'] if ch=='<' else F['med']
+                tw=fnt.size(lab)[0]; s.blit(fnt.render(lab,True,WHITE),(bx+kw//2-tw//2,by+10))
+        self._footer('d-pad = move    enter = type/submit    cancel = back')
+
     def h_more_games(self):
         items = ['Flappy Bird', 'Tetris', 'Snake', 'DOOM  (yes, really)', 'Back']
         if trig('down'): self.mg_sel = (self.mg_sel + 1) % len(items)

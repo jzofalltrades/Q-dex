@@ -13,3 +13,8 @@ __pycache__/
 *.log
 capture.jpg
 pokedex.log
+apply_godmode.py
+godmode_broken_debug.py
+*.bak_*
+backup_godmode_working_*
+main
