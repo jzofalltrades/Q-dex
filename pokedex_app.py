@@ -1305,6 +1305,7 @@ def oak_ask(question, history, trainer=None, progress_context=None):
         except Exception as e:
             last_err = e
             _oak_last_error[0] = f'{type(e).__name__}: {e}'
+            print('OAK ERROR:', type(e).__name__, e)
             time.sleep(1.5)   # brief pause before retry - lets a blip pass
     # all attempts failed
     return ("Sorry, I couldn't reach my knowledge banks just now - the "
