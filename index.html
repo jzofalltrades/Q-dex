@@ -152,8 +152,8 @@ hr.dv{border:none;border-top:1px solid var(--bd);margin:2rem 0}
 .vidplaceholder .ic{font-size:2.4rem}
 .grid-photos{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .grid-photos figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
-.grid-photos img{width:100%;height:220px;object-fit:cover;display:block;transition:transform .3s}
-.grid-photos figure:hover img{transform:scale(1.04)}
+.grid-photos img{width:100%;height:300px;object-fit:contain;background:#0a0a0a;display:block;transition:transform .3s}
+.grid-photos figure:hover img{transform:scale(1.02)}
 .grid-photos figcaption{padding:.6rem .8rem;font-size:.8rem;color:var(--mut)}
 .inline-photo{margin:1.4rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
 .inline-photo img{width:100%;display:block}
@@ -202,7 +202,7 @@ footer a{color:var(--red);text-decoration:none}
   /* showcase videos: fit width */
   .vidwrap{max-width:100%}
   .vidwrap-wide{max-width:100%}
-  .grid-photos img{height:190px}
+  .grid-photos img{height:260px;object-fit:contain}
   /* inline photos full width */
   .inline-photo img{width:100%}
   /* reduce big side paddings on callouts */
