@@ -155,6 +155,10 @@ hr.dv{border:none;border-top:1px solid var(--bd);margin:2rem 0}
 .grid-photos img{width:100%;height:300px;object-fit:contain;background:#0a0a0a;display:block;transition:transform .3s}
 .grid-photos figure:hover img{transform:scale(1.02)}
 .grid-photos figcaption{padding:.6rem .8rem;font-size:.8rem;color:var(--mut)}
+.grid-screens{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:14px;margin-top:1rem}
+.grid-screens figure{margin:0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:#000}
+.grid-screens img{width:100%;height:auto;display:block}
+.grid-screens figcaption{padding:.6rem .8rem;font-size:.82rem;color:var(--mut)}
 .inline-photo{margin:1.4rem 0;border-radius:12px;overflow:hidden;border:1px solid var(--bd);background:var(--s1)}
 .inline-photo img{width:100%;display:block}
 .inline-photo figcaption{padding:.6rem .9rem;font-size:.82rem;color:var(--mut);margin:0}
@@ -287,6 +291,22 @@ footer a{color:var(--red);text-decoration:none}
     <figure><img src="images/device-front-website.jpg" alt="Q-dex front view with build guide behind" loading="lazy"/><figcaption>The device beside its own build guide</figcaption></figure>
     <figure><img src="images/device-front-menu.jpg" alt="Q-dex front view, main menu" loading="lazy"/><figcaption>Front view — Kanto-red shell</figcaption></figure>
     <figure><img src="images/device-closed-back.jpg" alt="Q-dex closed, back view" loading="lazy"/><figcaption>Closed — the clamshell back</figcaption></figure>
+  </div>
+
+  <h2 style="margin-top:2.6rem">On the Screen — Live</h2>
+  <p class="sub">Actual captures from the device: the Pokédex entry tabs, the badge case, the games and the trainer profile.</p>
+  <div class="grid-screens">
+    <figure><img src="images/screens/charizard-stats.gif" alt="Charizard Pokedex entry cycling through Stats, Location, Evolution, Moves, Cry tabs" loading="lazy"/><figcaption>A full Pokédex entry — the five tabs (Stats · Location · Evolution · Moves · Cry) on Charizard #006.</figcaption></figure>
+    <figure><img src="images/screens/badges.gif" alt="The badge case animating through earned gym badges" loading="lazy"/><figcaption>The badge case — 64 procedurally-drawn gym badges across 9 regions.</figcaption></figure>
+    <figure><img src="images/screens/trainer-info.png" alt="Trainer Status screen showing level, XP and progress" loading="lazy"/><figcaption>Trainer Status — level, XP bar, caught count and progress, per trainer.</figcaption></figure>
+    <figure><img src="images/screens/menu-more-games.png" alt="More Games menu with Flappy Bird, Tetris, Snake and DOOM" loading="lazy"/><figcaption>More Games — a built-in arcade: Flappy Bird, Tetris, Snake… and DOOM.</figcaption></figure>
+    <figure><img src="images/screens/game-flappy.png" alt="Flappy Bird running on the Pokedex" loading="lazy"/><figcaption>Flappy Bird, rebuilt to play on the Pokédex keypad.</figcaption></figure>
+  </div>
+
+  <h2 style="margin-top:2.6rem">Screen Capture — Everything Working</h2>
+  <p class="sub">A full run through the device, captured straight from the screen.</p>
+  <div class="vidwrap-wide">
+    <iframe src="https://www.youtube.com/embed/IeF03xAhXo4" title="Q-dex screen capture — working demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
   </div>
 </section>
 
