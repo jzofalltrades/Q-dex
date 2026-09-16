@@ -507,8 +507,8 @@ renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputEncoding = THREE.sRGBEncoding;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.2;
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.toneMappingExposure = 1.0;
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x0a0a0a);
@@ -527,7 +527,7 @@ controls.minDistance = 0.05;
 controls.maxDistance = 5;
 
 // ─── LIGHTING ────────────────────────────────────────────────────────────────
-const ambient = new THREE.AmbientLight(0xffffff, 0.4);
+const ambient = new THREE.AmbientLight(0xffffff, 0.55);
 scene.add(ambient);
 
 const key = new THREE.DirectionalLight(0xffffff, 1.2);
@@ -536,7 +536,7 @@ key.castShadow = true;
 key.shadow.mapSize.set(2048, 2048);
 scene.add(key);
 
-const fill = new THREE.DirectionalLight(0xE3350D, 0.3);
+const fill = new THREE.DirectionalLight(0xffffff, 0.35);
 fill.position.set(-2, 1, -2);
 scene.add(fill);
 
